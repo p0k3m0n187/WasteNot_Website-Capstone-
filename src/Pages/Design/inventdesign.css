@@ -1,0 +1,319 @@
+* {
+    box-sizing: border-box;
+}
+
+.inventory-cont {
+    margin: 0;
+}
+
+.invent-title h1 {
+    position: flex;
+    margin-left: 8%;
+    font-size: 3.5vw;
+    color: white;
+    text-shadow: -1px -1px 3px #12841D, 1px -1px 3px #12841D, -1px 1px 3px #12841D, 1px 1px 3px #12841D;
+}
+
+.stock-title h1 {
+    position: flex;
+    margin-top: 2%;
+    margin-left: 7%;
+    font-size: 2vw;
+    color: white;
+    border: 2px solid #049215;
+    width: 92%;
+    padding: 1vw;
+    background-color: #03c04a;
+
+
+}
+
+.total-invent {
+    position: absolute;
+    margin-left: 85%;
+    margin-top: -5.5%;
+    height: 13%;
+    border: 2px solid white;
+    width: 10%;
+    border-radius: 0.5vw;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+    background-color: #03c04a;
+    padding: 0.4vw;
+
+}
+
+.total-invent h2 {
+    position: flex;
+    color: white;
+    font-size: 1.1vw;
+    text-align: center;
+}
+
+.total-invent h1 {
+    font-size: 2vw;
+    position: absolute;
+    color: white;
+    margin-left: 6vw;
+}
+
+.total-invent svg {
+    position: absolute;
+    font-size: 2.5vw;
+    color: rgb(241, 241, 241);
+    margin-left: 1vw;
+}
+
+.scrollable-cont {
+    padding: 0.5vw;
+    justify-content: center;
+    align-items: center;
+    overflow-x: auto;
+    position: flex;
+    width: 92%;
+    height: 53%;
+    top: 45%;
+    margin-left: 7%;
+    background-color: #ccc;
+    border: 2px solid #13d82a;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.ingredient {
+    align-items: center;
+    margin-bottom: 1vw;
+    display: flex;
+    position: flex;
+    padding: 1vw;
+    margin-right: 10px;
+    border: 2px solid #13d82a;
+    background-color: white;
+    border-radius: 2vw;
+}
+
+.ingred-sample {
+    position: flex;
+    margin-left: 2%;
+    width: 6vw;
+    height: 6vw;
+    border-radius: 50%;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.50);
+}
+
+.ingredient h2 {
+    font-size: 2vw;
+    margin-left: 1.5vw;
+}
+
+.percent-bar {
+    position: absolute;
+    margin-left: 25%;
+    height: 1.2vw;
+    width: 50%;
+    background-color: #ccc;
+    border: 1px solid #999;
+    border-radius: 1.5vw;
+}
+
+.percent-bar-fill {
+    height: 100%;
+    background-color: #13d82a;
+    width: 50%;
+    border-radius: 1.5vw;
+}
+
+.remaining {
+    font-size: 1.5vw;
+    position: flex;
+    display: flex;
+    color: #13d82a;
+}
+
+.total {
+    font-size: 1.5vw;
+    margin-top: -1.5vw;
+    color: #13d82a;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.popup-inventory {
+    position: fixed;
+    height: 95%;
+    width: 95%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    padding: 1vw;
+    z-index: 1000;
+    overflow-y: auto; /* Allow vertical scrolling if content exceeds the window height */
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+.popup-content {
+    text-align: center;
+}
+
+.open-popup{
+    position: absolute;
+    background-color: white;
+    border: none;
+    font-size: 3vw;
+    color: #a39f9f;
+    margin-left: 80%;
+}
+
+.open-popup :hover{
+    background-color: white;
+    border: none;
+    font-size: 3vw;
+    color: #13d82a;
+}
+
+.close {
+    position: absolute;
+    top: 1vw;
+    right: 1vw;
+    color: #13d82a;
+    font-size: 2vw;
+    cursor: pointer;
+    background-color: #fff;
+    border-radius: 50%;
+    padding: 0.5em;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 999;
+}
+
+.scrollable-approval{
+    display: flex;
+    overflow-x: auto;
+    width: 100%;
+    height: 42vw;
+    border: 2px bold #020202;
+    background-color: #ccc;
+    margin-top: 1.5vw;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.scrollable-approval thead{
+    font-size: 1vw;
+}
+
+.scrollable-approval table{
+    width: 100%;
+    height: 20vw;
+    border-collapse:collapse;
+    position: flex;
+    text-align: center; 
+}
+
+.scrollable-approval td{
+    padding: 1vw;
+    height: 1vw;
+}
+
+.scrollable-approval td h3{
+    display: absolute;
+    font-size: 1.5vw;
+}
+
+.scrollable-approval td{
+    border: none;
+    border-bottom: 4px solid #020202;
+    background-color: white;
+}
+
+.scrollable-approval th{
+    background-color: #c4c4c4;
+    color: rgb(0, 0, 0);
+    padding: 1vw;
+    border: none;
+}
+
+.scrollable-approval .bttn-addtomarket{
+    border-radius: 0.5vw;
+    background-color: #24b134;
+    color: black;
+    border: 2px solid #ffffff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 1vw;
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-thickness: 0.1em;
+    box-shadow: -0.5em 1rem 1rem rgba(0, 0, 0, 0.4);
+    width: 60%;
+    height: 2.5vw;
+    margin-bottom: 0.5vw; 
+}
+
+.scrollable-approval .bttn-addtomarket:hover{
+    background-color: white;
+    color: #13d82a;
+    border: 2px solid #13d82a;
+}
+
+.close {
+    position: absolute;
+    top: 0.1vw;
+    right: 1vw;
+    color: #13d82a;
+    font-size: 2vw;
+    cursor: pointer;
+    background-color: #fff;
+    border-radius: 50%;
+    padding: 0.5em;
+}
+
+.popup-confirmation {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    z-index: 1001;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+.popup-confirmation label {
+    font-size: 16px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.popup-confirmation input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+}
+
+.popup-confirmation button {
+    background-color: #24b134;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.popup-confirmation button:hover {
+    background-color: #13d82a;
+}
+
+.popup-confirmation + .backdrop {
+    background-color: rgba(0, 0, 0, 0); /* Make it transparent when confirmation popup is open */
+    pointer-events: none; /* Allow clicks to go through the backdrop to elements underneath */
+}
