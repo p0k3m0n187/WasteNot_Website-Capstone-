@@ -13,27 +13,7 @@ export const Menu = (props) => {
     const auth = getAuth();
     const user = auth.currentUser;
 
-    // const prepareDataForBackend = (menuItem) => {
-    //     // Assuming menuItem.ingredientsList is an array
-    //     const ingredientsString = JSON.stringify(menuItem.ingredientsList);
-    //     // Now you can send the ingredientsString to your backend
-    //     // using your preferred method (e.g., fetch or axios).
-    //     // Example using fetch:
-    //     fetch('your-backend-endpoint', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify({ ingredientsList: ingredientsString }),
-    //     })
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             // Handle the response from the backend if needed
-    //         })
-    //         .catch(error => {
-    //             console.error('Error sending data to backend:', error);
-    //         });
-    // };
+   
 
     useEffect(() => {
         const fetchMenuData = async () => {
