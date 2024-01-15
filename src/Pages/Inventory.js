@@ -57,6 +57,7 @@ export const Inventory = (props) => {
 
     const openPopup = (item) => {
         setSelectedItem(item);
+        // setShowConfirmation(true);
     };
 
     const closePopup = () => {
@@ -67,42 +68,45 @@ export const Inventory = (props) => {
 
     const handleConfirm = async () => {
         try {
-            // Ensure that the 'Quantity' field has a valid value
-            const quantityValue = parseInt(priceInput, 10); // Convert 'priceInput' to a number
-    
+            const quantityValue = parseInt(priceInput, 10);
+
             if (isNaN(quantityValue) || quantityValue <= 0) {
-                // Handle the case where 'priceInput' is not a valid positive number
                 console.error('Invalid Quantity value');
                 return;
             }
-    
-            // Assuming other necessary fields like 'Item_name', 'Price', etc. are defined
-    
-            // Data to be added to the 'sale_items' collection
+
+            // Ensure that selectedHistoryItem is defined
+            if (!selectedItem || inventoryHistory.length === 0) {
+                console.error('Selected item or history is undefined');
+                return;
+            }
+
+            const selectedHistoryItem = inventoryHistory[0];
+
             const saleItemData = {
                 Item_name: selectedItem.Item_name,
-                Price: quantityValue, // Set the 'Price' field with the entered quantity value
-                Quantity: quantityValue, // Set the 'Quantity' field with a valid value
-                ItemId: selectedItem.ItemId, // Add ItemId to the sale item
-                Restaurant_Id: user?.uid, // Add Restaurant_Id to the sale item
+                Price: quantityValue,
+                Quantity: selectedHistoryItem.item_quantity,
+                ItemId: selectedItem.ItemId,
+                Restaurant_Id: user?.uid,
             };
-    
-            // Add the document to the 'sale_items' collection
+
             const saleItemDocRef = await addDoc(collection(db, 'sale_items'), saleItemData);
-    
+
             console.log('Sale item added with ID: ', saleItemDocRef.id);
-    
+
             // Delete the document from 'ingredients_history'
-            await deleteDoc(doc(db, 'ingredients_history', selectedItem.id));
-    
+            await deleteDoc(doc(db, 'ingredients_history', selectedHistoryItem.id));
+
             console.log('Ingredients history item deleted successfully.');
-            window.alert("Inventory Item added to the Market Successfully")
-            // After performing the action, close the popup
+            window.alert("Inventory Item added to the Market Successfully");
+
             closePopup();
         } catch (error) {
             console.error('Error handling confirmation: ', error);
         }
     };
+    
     
 
     return (
@@ -172,21 +176,21 @@ export const Inventory = (props) => {
                                         ))}
                                     </tbody>
                                 </table>
-                                {showConfirmation && (
-                                    <div className="popup-confirmation">
-                                        <span className="close" onClick={closePopup}>&times;</span>
-                                        <div>
-                                            <label htmlFor="priceInput">Enter the price:</label>
-                                            <input
-                                                type="number"
-                                                id="priceInput"
-                                                value={priceInput}
-                                                onChange={(e) => setPriceInput(e.target.value)}
-                                            />
-                                            <button onClick={handleConfirm}>Confirm</button>
-                                            <button style={{ backgroundColor: '#f83535', color: '#ffffff', marginLeft: "1vw" }} onClick={closePopup}>Cancel</button>
-                                        </div>
-                                    </div>
+                                {selectedItem && showConfirmation && (
+                <div className="popup-confirmation">
+                    <span className="close" onClick={closePopup}>&times;</span>
+                    <div>
+                        <label htmlFor="priceInput">Enter the price:</label>
+                        <input
+                            type="number"
+                            id="priceInput"
+                            value={priceInput}
+                            onChange={(e) => setPriceInput(e.target.value)}
+                        />
+                        <button onClick={handleConfirm}>Confirm</button>
+                        <button style={{ backgroundColor: '#f83535', color: '#ffffff', marginLeft: "1vw" }} onClick={closePopup}>Cancel</button>
+                    </div>
+                </div>
                                 )}
                             </div>
                         </div>

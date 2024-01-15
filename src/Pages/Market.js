@@ -16,56 +16,7 @@ export const Market = (props) => {
     const auth = getAuth();
     const user = auth.currentUser;
 
-    useEffect(() => {
-        // const fetchMarketRequests = async () => {
-        //     try {
-        //         const inventorySnapshot = await getDocs(collection(db, 'inventory'));
-        //         const ingredientsHistorySnapshot = await getDocs(collection(db, 'ingredients_history'));
-        //         const marketRequestsSnapshot = await getDocs(collection(db, 'market_request'));
-
-        //         console.log('inventorySnapshot:', inventorySnapshot.docs.map(doc => doc.data()));
-        //         console.log('ingredientsHistorySnapshot:', ingredientsHistorySnapshot.docs.map(doc => doc.data()));
-        //         console.log('marketRequestsSnapshot:', marketRequestsSnapshot.docs.map(doc => doc.data()));
-
-        //         const inventoryData = inventorySnapshot.docs.reduce((acc, doc) => {
-        //             acc[doc.id] = doc.data();
-        //             return acc;
-        //         }, {});
-
-        //         const ingredientsHistoryData = ingredientsHistorySnapshot.docs.reduce((acc, doc) => {
-        //             acc[doc.id] = doc.data();
-        //             return acc;
-        //         }, {});
-
-        //         const marketRequestsData = marketRequestsSnapshot.docs.map(doc => ({
-        //             id: doc.id,
-        //             ...doc.data(),
-        //         }));
-
-        //         console.log('inventoryData:', inventoryData);
-        //         console.log('ingredientsHistoryData:', ingredientsHistoryData);
-        //         console.log('marketRequestsData:', marketRequestsData);
-
-        //         const mergedMarketRequests = marketRequestsData.map(request => {
-        //             const inventoryItem = inventoryData[request.itemId];
-        //             const ingredientsHistoryItem = ingredientsHistoryData[request.itemId];
-
-        //             return {
-        //                 id: request.id,
-        //                 Item_name: inventoryItem ? inventoryItem.Item_name : 'N/A',
-        //                 Date_added: ingredientsHistoryItem ? ingredientsHistoryItem.Date_added : 'N/A',
-        //                 Expiry_date: ingredientsHistoryItem ? ingredientsHistoryItem.Expiry_date : 'N/A',
-        //                 item_quantity: request.item_quantity,
-        //             };
-        //         });
-
-        //         console.log('mergedMarketRequests:', mergedMarketRequests);
-
-        //         setMarketRequests(mergedMarketRequests);
-        //     } catch (error) {
-        //         console.error('Error fetching market requests:', error);
-        //     }
-        // };
+    useEffect(() => {   
         const fetchSaleItems = async () => {
             try {
                 const saleItemsSnapshot = await getDocs(collection(db, 'sale_items'));
@@ -146,8 +97,8 @@ export const Market = (props) => {
                             {saleItems.map(item => (
                                 <tr key={item.id}>
                                     <td><img className='market-img' src={image} alt="ingredient" /><h2>{item.Item_name}</h2></td>
-                                    <td><h3>Price: {isValidNumber(item.Price) ? `P${item.Price.toFixed(2)}` : 'N/A'}</h3></td>
-                                    <td><h1>Total: {isValidNumber(item.Quantity) ? `${item.Quantity}kg` : 'N/A'}</h1></td>
+                                    <td><h3>{isValidNumber(item.Price) ? `P${item.Price.toFixed(2)}` : 'N/A'}</h3></td>
+                                    <td><h1> {item.Quantity} grams</h1></td>
                                 </tr>
                             ))}
                         </tbody>

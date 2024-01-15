@@ -27,6 +27,7 @@ export const Homepage = (props) => {
     const [staffData, setStaffData] = useState([]);
     const [adminId, setAdminId] = useState('');
     const [inventoryData, setInventoryData] = useState([]);
+    const [salesData, setSalesData] = useState([]);
     const [showPopup, setShowPopup] = useState(false);
     const [showPopup5, setShowPopup5] = useState(false);
     const [showBackdrop, setShowBackdrop] = useState(false);
@@ -169,6 +170,34 @@ export const Homepage = (props) => {
 
         fetchData();
     }, [adminId]);
+    useEffect(() => {
+        const fetchSalesData = async () => {
+            try {
+                // Assuming you have a 'sales_item' collection
+                const salesCollection = collection(db, 'sale_items');
+    
+                // Add a where clause to filter based on adminId and Restaurant_Id
+                const salesQuery = query(
+                    salesCollection,
+                    where('Restaurant_Id', '==', adminId),
+                );
+    
+                const salesSnapshot = await getDocs(salesQuery);
+    
+                const salesList = salesSnapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data(),
+                }));
+    
+                setSalesData(salesList);
+            } catch (error) {
+                console.error('Error fetching sales data: ', error);
+            }
+        };
+    
+        fetchSalesData();
+    }, [adminId, user?.uid]);
+    
 
     return (
         <>
@@ -202,7 +231,7 @@ export const Homepage = (props) => {
                         <div className="title-market"><h4>Market</h4></div>
                         <br />
                         <FaWarehouse />
-                        <p>200</p>
+                        <p>{salesData.length}</p>
                     </button>
                     </Link>
 
@@ -333,7 +362,6 @@ export const Homepage = (props) => {
                 </div>
                 <br />
 
-
                 {inventoryData.length > 0 ? (
                     <>
                         <h1>Inventory</h1>
@@ -342,7 +370,7 @@ export const Homepage = (props) => {
                             {inventoryData.slice(0, 5).map((item, index) => (
                                 <div key={index} className="item">
                                     {/* Use the imageUrl to construct the image URL */}
-                                    <img className="sample" src={ingredient} alt={`sale_items${index + 1}`} />
+                                    <img className="sample" src={ingredient} alt={`inventory${index + 1}`} />
                                     <h3>{item.Item_name}</h3>
                                 </div>
                             ))}
@@ -354,15 +382,26 @@ export const Homepage = (props) => {
                     <p></p>
                 )}
 
-                <h1>Market</h1>
-                <Link to="/market"><button class='click'>See All</button></Link>
-                <div class='market-cont'>
-                    <div class="item"><img class='sample' src={market} alt="item1" /><h3>Item 1</h3><h5>Available: 10Kg</h5></div>
-                    <div class="item"><img class='sample' src={market} alt="item1" /><h3>Item 2</h3><h5>Available: 10Kg</h5></div>
-                    <div class="item"><img class='sample' src={market} alt="item1" /><h3>Item 3</h3><h5>Available: 10Kg</h5></div>
-                    <div class="item"><img class='sample' src={market} alt="item1" /><h3>Item 4</h3><h5>Available: 10Kg</h5></div>
-                    <div class="item"><img class='sample' src={market} alt="item1" /><h3>Item 5</h3><h5>Available: 10Kg</h5></div>
-                </div>
+                    {salesData.length > 0 ? (
+                    <>
+                        <h1>Market</h1>
+                        <Link to="/market"><button className='click'>See All</button></Link>
+                        <div className='market-cont'>
+                            {salesData.slice(0, 5).map((item, index) => (
+                                <div key={index} className="item">
+                                    {/* Use the imageUrl to construct the image URL */}
+                                    <img className="sample" src={market} alt={`sale_items${index + 1}`} />
+                                    <h3>{item.Item_name}</h3>
+                                </div>
+                            ))}
+                        </div>
+                        <br />
+                    </>
+                ) : (
+                    // Render a message or component when there is no data
+                    <p></p>
+                )}
+
             </div>
         </>
     );
