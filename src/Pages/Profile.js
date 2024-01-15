@@ -108,7 +108,7 @@ export const Profile = (props) => {
       restocity: userData ? userData.restaurantCity : '',
       restocode: userData ? userData.zipCode : '',
       restodescrip: userData ? userData.restaurantDesc : '', // Add other fields as needed
-      profileImage: formData.selectedImage || userData.restaurantLogo,
+      profileImage: formData.selectedImage || userData.restaurantLogo
     });
 
     // Exit edit mode
@@ -149,9 +149,9 @@ export const Profile = (props) => {
           contactNum: formData.contactnum,
           restaurantPermit: formData.restoPermit,
           restaurantCity: formData.restocity,
-          zipCode: formData.restocode,
+          zipCode: formData.restocode, 
           restaurantDesc: formData.restodescrip,
-          restaurantLogo:formData.selectedImage,
+          restaurantLogo:formData.selectedImage
         };
   
         // Check if selectedImage is available, then include it in the updatedData

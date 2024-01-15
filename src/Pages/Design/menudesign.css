@@ -46,16 +46,16 @@
     display: flex;
 }
 
-.dish_name h2{
+/* .dish_name h2{
     margin-top: 2vw;
     text-align: center;
     color: #ffffff;
     text-shadow: 1px 1px 3px #24b134, 1px 1px 3px #24b134, 1px 1px 3px #24b134, 1px 1px 3px #24b134;
     font-weight: 1000;
-    margin-left: 5vw; /* Adjust the margin to center the text */
+    margin-left: 5vw; 
     flex: 1;
     padding-right: 10vw;
-}
+} */
 
 .menu-table td .menu-img {
     margin-bottom: -4vw;
@@ -141,7 +141,36 @@
     overflow-x: auto;
     width: auto;
     height: 120%;
+    margin-top: 1vw;
     text-align: justify;
     padding: 0.5vw;
     font-size: 1vw;
+}
+
+.selected-dish{
+    font-size: 2vw;
+    border: none;
+    background-color: #D9D9D9;
+    position:relative;
+    text-align: center;
+    margin-top: 2vw;
+    width: 15vw;
+    gap: 10vw;
+    color: #ffffff;
+    text-shadow: 1px 1px 3px #24b134, 1px 1px 3px #24b134, 1px 1px 3px #24b134, 1px 1px 3px #24b134;
+    font-weight: 1000;
+}
+
+.del-button{
+    position: absolute;
+    margin-top: -2.5vw;
+    margin-left: 1vw;
+    color: rgb(243, 55, 55);
+    font-size: 1.2vw;
+    background-color: #D9D9D9;
+    border: none;
+}
+
+.del-button:hover{
+    color: rgb(181, 4, 4);
 }

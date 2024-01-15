@@ -26,7 +26,6 @@ export const AddDish = (props) => {
         const hasEmptyFields = ingredientsList.some(
             (ingredient) => ingredient.ingredients.trim() === '' || ingredient.grams.trim() === ''
         );
-    
         if (!hasEmptyFields) {
             setIngredientsList([...ingredientsList, { ingredients: '', grams: '' }]);
         } else {

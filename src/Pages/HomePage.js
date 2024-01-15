@@ -336,17 +336,14 @@ export const Homepage = (props) => {
 
                 {inventoryData.length > 0 ? (
                     <>
-                        <h1>Market</h1>
-                        <Link to="/market"><button className='click'>See All</button></Link>
-                        <div className='market-cont'>
+                        <h1>Inventory</h1>
+                        <Link to="/inventory"><button className='click'>See All</button></Link>
+                        <div className='invent-cont'>
                             {inventoryData.slice(0, 5).map((item, index) => (
                                 <div key={index} className="item">
                                     {/* Use the imageUrl to construct the image URL */}
-                                    <img className="sample" src={item.imageUrl} alt={`sale_items${index + 1}`} />
+                                    <img className="sample" src={ingredient} alt={`sale_items${index + 1}`} />
                                     <h3>{item.Item_name}</h3>
-                                    {/* Add your additional item details */}
-                                    <h4>{`₱${item.Price}`}</h4>
-                                    <h5>{`Available: ${item.Quantity}Kg`}</h5>
                                 </div>
                             ))}
                         </div>
@@ -354,12 +351,12 @@ export const Homepage = (props) => {
                     </>
                 ) : (
                     // Render a message or component when there is no data
-                    <p>No inventory data available.</p>
+                    <p></p>
                 )}
 
-                <h1>Ingredients</h1>
-                <Link to="/inventory"><button class='click'>See All</button></Link>
-                <div class='invent-cont'>
+                <h1>Market</h1>
+                <Link to="/market"><button class='click'>See All</button></Link>
+                <div class='market-cont'>
                     <div class="item"><img class='sample' src={market} alt="item1" /><h3>Item 1</h3><h5>Available: 10Kg</h5></div>
                     <div class="item"><img class='sample' src={market} alt="item1" /><h3>Item 2</h3><h5>Available: 10Kg</h5></div>
                     <div class="item"><img class='sample' src={market} alt="item1" /><h3>Item 3</h3><h5>Available: 10Kg</h5></div>
@@ -369,4 +366,4 @@ export const Homepage = (props) => {
             </div>
         </>
     );
-};
+}; 
