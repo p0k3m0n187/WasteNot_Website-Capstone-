@@ -9,6 +9,7 @@ import {
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { getAuth } from 'firebase/auth';
+import market from "../images/Market.png";
 
 export const Market = (props) => {
     // const [marketRequests, setMarketRequests] = useState([]);
@@ -96,7 +97,7 @@ export const Market = (props) => {
                         <tbody>
                             {saleItems.map(item => (
                                 <tr key={item.id}>
-                                    <td><img className='market-img' src={image} alt="ingredient" /><h2>{item.Item_name}</h2></td>
+                                    <td><img className='market-img' src={market} alt="ingredient" /><h2>{item.Item_name}</h2></td>
                                     <td><h3>{isValidNumber(item.Price) ? `P${item.Price.toFixed(2)}` : 'N/A'}</h3></td>
                                     <td><h1> {item.Quantity} grams</h1></td>
                                 </tr>

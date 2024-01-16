@@ -61,30 +61,29 @@ export const Staff = (props) => {
 
   const handleDelete = async (staffId, userId) => {
     const confirmation = window.confirm('Confirm delete?');
-
+  
     if (!confirmation) {
       return;
     }
-
+  
     try {
       // Delete the staff member from Firestore
       const staffDocRef = doc(db, 'users', staffId);
       await deleteDoc(staffDocRef);
-
+  
       // Disable the authentication of the staff member
       const auth = getAuth();
-      const user = auth.currentUser;
-
-      if (user && user.uid === userId) {
-        // Only attempt to delete user if the current user is the one being deleted
+  
+      // Only attempt to delete user if the current user is the one being deleted
+      if (auth.currentUser && auth.currentUser.uid === userId) {
         await deleteUser(auth.currentUser);
       }
-
+  
       // Update the staffData state after deletion
       setStaffData((prevStaffData) =>
         prevStaffData.filter((staffMember) => staffMember.id !== staffId)
       );
-
+  
       alert('Staff member deleted successfully');
     } catch (error) {
       console.error('Error deleting staff member: ', error.message);

@@ -163,8 +163,7 @@
 
 .del-button{
     position: absolute;
-    margin-top: -2.5vw;
-    margin-left: 1vw;
+    margin-left: 2vw;
     color: rgb(243, 55, 55);
     font-size: 1.2vw;
     background-color: #D9D9D9;

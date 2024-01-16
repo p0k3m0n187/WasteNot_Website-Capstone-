@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import "firebase/firestore";
 import Sidebar from '../components/Sidebar';
 import Navbar2 from '../components/NavBar2';
-import image from "../images/steak_sample.png";
 import './Design/inventdesign.css';
 import { db } from '../config/firebase';
-import { collection, getDocs, query, where, addDoc,deleteDoc,doc} from 'firebase/firestore';
+import { collection, getDocs, query, where, addDoc, deleteDoc, doc } from 'firebase/firestore';
 import { FaWarehouse, FaArrowCircleDown } from 'react-icons/fa';
 import { getAuth } from 'firebase/auth';
+import ingredient from "../images/Ingredients.png";
 
 
 export const Inventory = (props) => {
@@ -16,6 +16,7 @@ export const Inventory = (props) => {
     const [inventoryHistory, setInventoryHistory] = useState([]);
     const [priceInput, setPriceInput] = useState('');
     const [showConfirmation, setShowConfirmation] = useState(false);
+    const MAX_QUANTITY = 100; // Replace 100 with your actual maximum quantity
 
     const auth = getAuth();
     const user = auth.currentUser;
@@ -47,7 +48,7 @@ export const Inventory = (props) => {
                 );
                 const historySnapshot = await getDocs(historyQuery);
                 const historyList = historySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        
+
                 setInventoryHistory(historyList);
             }
         };
@@ -106,8 +107,8 @@ export const Inventory = (props) => {
             console.error('Error handling confirmation: ', error);
         }
     };
-    
-    
+
+
 
     return (
         <>
@@ -130,14 +131,13 @@ export const Inventory = (props) => {
                 <div className='scrollable-cont'>
                     {ingredients.map((item) => (
                         <div key={item.id} className='ingredient'>
-                            <img className='ingred-sample' src={image} alt="ingredient" />
+                            <img className='ingred-sample' src={ingredient} alt="ingredient" />
                             <h2>{item.Item_name}</h2>
                             <div className="percent-bar">
-                                <div className='percent-bar-fill'></div>
-                                <div className='remaining'>
-                                    Remaining:
-                                </div>
-                                <div className='total'> Total: {item.item_quantity}</div>
+                                <div
+                                    className='percent-bar-fill'
+                                    style={{ width: `${(item.quantity / MAX_QUANTITY) * 100}%` }}
+                                ></div>
                             </div>
                             <button className="open-popup" onClick={() => openPopup(item)}>
                                 <FaArrowCircleDown />
@@ -177,20 +177,20 @@ export const Inventory = (props) => {
                                     </tbody>
                                 </table>
                                 {selectedItem && showConfirmation && (
-                <div className="popup-confirmation">
-                    <span className="close" onClick={closePopup}>&times;</span>
-                    <div>
-                        <label htmlFor="priceInput">Enter the price:</label>
-                        <input
-                            type="number"
-                            id="priceInput"
-                            value={priceInput}
-                            onChange={(e) => setPriceInput(e.target.value)}
-                        />
-                        <button onClick={handleConfirm}>Confirm</button>
-                        <button style={{ backgroundColor: '#f83535', color: '#ffffff', marginLeft: "1vw" }} onClick={closePopup}>Cancel</button>
-                    </div>
-                </div>
+                                    <div className="popup-confirmation">
+                                        <span className="close" onClick={closePopup}>&times;</span>
+                                        <div>
+                                            <label htmlFor="priceInput">Enter the price:</label>
+                                            <input
+                                                type="number"
+                                                id="priceInput"
+                                                value={priceInput}
+                                                onChange={(e) => setPriceInput(e.target.value)}
+                                            />
+                                            <button onClick={handleConfirm}>Confirm</button>
+                                            <button style={{ backgroundColor: '#f83535', color: '#ffffff', marginLeft: "1vw" }} onClick={closePopup}>Cancel</button>
+                                        </div>
+                                    </div>
                                 )}
                             </div>
                         </div>

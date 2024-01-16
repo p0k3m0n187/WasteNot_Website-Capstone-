@@ -17,9 +17,9 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 export const Profile = (props) => {
 
   const history = useNavigate()
-
   const [userData, setUserData] = useState(null);
   const [formData, setFormData] = useState({
+    
     restaurantname: '',
     email: '',
     restoAdd: '',
