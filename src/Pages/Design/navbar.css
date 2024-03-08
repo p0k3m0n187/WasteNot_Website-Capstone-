@@ -2,18 +2,18 @@
     box-sizing: border-box;
 }
 
-body{
+body {
     margin: 0;
-    
+
 }
 
-.navbar .site-title{
+.navbar .site-title {
     padding-left: 5vw;
     font-size: 2vw;
     font-weight: 900;
 }
 
-.navbar{
+.navbar {
     background-color: #03c04a;
     color: white;
     display: flex;
@@ -24,7 +24,7 @@ body{
     height: 5vw;
 }
 
-.navbar ul{
+.navbar ul {
     padding: 1vw;
     margin: 0.1vw;
     list-style: none;
@@ -33,7 +33,7 @@ body{
     gap: 1rem;
 }
 
-nav a{
+nav a {
     color: inherit;
     text-decoration: none;
     height: 100%;
@@ -41,7 +41,7 @@ nav a{
     align-items: center;
 }
 
-.navbar img{
+.navbar img {
     width: 4vw;
     height: 4vw;
     border: 2px solid white;
@@ -50,7 +50,7 @@ nav a{
     margin-left: -4vw;
 }
 
-.aboutus{
+.aboutus {
     width: 7vw;
     height: 2vw;
     background-color: #ffff;
@@ -63,7 +63,7 @@ nav a{
     text-decoration: underline;
 }
 
-.aboutus:hover{
+.aboutus:hover {
     background-color: #57B961;
     color: white;
     border-color: white;

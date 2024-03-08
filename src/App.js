@@ -11,6 +11,7 @@ import { Market } from './Pages/Market.js';
 import { AddStaff } from './Pages/AddStaff.js';
 import { AddDish } from './Pages/AddDish.js';
 import { AboutUs } from './components/AboutUs.js';
+import { Register2 } from './Pages/Register2.js';
 
 const App = () => {
   const storedForm = localStorage.getItem('currentForm');
@@ -34,22 +35,23 @@ const App = () => {
 
   return (
     <>
-    <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<Login onFormSwitch={toggleForm} />} />
-        <Route path='/login' element={<Login onFormSwitch={toggleForm} />} />
-        <Route path='/register' element={<Register onFormSwitch={toggleForm} />} />
-        <Route path='/homepage' element={<Homepage onFormSwitch={toggleForm} />} />
-        <Route path='/staff' element={<Staff onFormSwitch={toggleForm} />} />
-        <Route path='/menu' element={<Menu onFormSwitch={toggleForm} />} />
-        <Route path='/market' element={<Market onFormSwitch={toggleForm} />} />
-        <Route path='/inventory' element={<Inventory onFormSwitch={toggleForm} />} />
-        <Route path='/profile' element={<Profile onFormSwitch={toggleForm} />} />
-        <Route path='/addstaff' element={<AddStaff onFormSwitch={toggleForm} />} />
-        <Route path='/addDish' element={<AddDish onFormSwitch={toggleForm} />} />
-        <Route path='/aboutus' element={<AboutUs onFormSwitch= {toggleForm}/>} />
-      </Routes>
-    </BrowserRouter>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<Login onFormSwitch={toggleForm} />} />
+          <Route path='/login' element={<Login onFormSwitch={toggleForm} />} />
+          <Route path='/register' element={<Register onFormSwitch={toggleForm} />} />
+          <Route path='/homepage' element={<Homepage onFormSwitch={toggleForm} />} />
+          <Route path='/staff' element={<Staff onFormSwitch={toggleForm} />} />
+          <Route path='/menu' element={<Menu onFormSwitch={toggleForm} />} />
+          <Route path='/market' element={<Market onFormSwitch={toggleForm} />} />
+          <Route path='/inventory' element={<Inventory onFormSwitch={toggleForm} />} />
+          <Route path='/profile' element={<Profile onFormSwitch={toggleForm} />} />
+          <Route path='/addstaff' element={<AddStaff onFormSwitch={toggleForm} />} />
+          <Route path='/addDish' element={<AddDish onFormSwitch={toggleForm} />} />
+          <Route path='/aboutus' element={<AboutUs onFormSwitch={toggleForm} />} />
+          <Route path='/register2' element={<Register2 onFormSwitch={toggleForm} />} />
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }

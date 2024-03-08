@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import './Design/addDishDesign.css';
 
 
-export const AddDish = (props) => {
+export const AddDish = () => {
     const [dishName, setDishName] = useState('');
     const [dishDescription, setDishDescription] = useState('');
     const [dishCategory, setDishCategory] = useState('');
