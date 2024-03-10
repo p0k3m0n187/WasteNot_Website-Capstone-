@@ -1,6 +1,6 @@
 import React from 'react';
 // import mytypography from '../theme/typhography';
-import palette from '../theme/palette';
+import palette from '../../Pages/theme/palette';
 import { Button } from '@mui/material';
 
 const ColoredButton = ({ colorKey, label }) => {
@@ -9,7 +9,7 @@ const ColoredButton = ({ colorKey, label }) => {
     const contrastText = palette[colorKey] ? palette[colorKey].contrastText : '#000';
 
     const buttonStyles = {
-        width: '150px', // Set the desired width
+        width: '100%', // Set the desired width
         height: '50px', // Set the desired height
         fontSize: '0.875rem', // Set the desired font size
         padding: '6px 8px', // Set the desired padding
@@ -18,11 +18,11 @@ const ColoredButton = ({ colorKey, label }) => {
         backgroundColor: buttonColor,
         cursor: 'pointer',
         transition: 'background-color 5s ease-in-out', // Add a smooth transition
-        border: '2px solid red',
+        border: '2px solid green',
 
         '&:hover': {
             backgroundColor: '#fff',
-            color: palette.primary.dark,
+            color: palette.primary.main,
             border: `2px solid ${palette.primary.main}`, // Add a border stroke on hover
         },
     };
