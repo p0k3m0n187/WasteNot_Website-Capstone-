@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
-import { Link } from 'react-router-dom';
+import PageTitle from './Design/pagetitle';
+import ColoredButton from '../components/atoms/confirmButton.js';
+import StyledTextField from '../components/atoms/TextField.js';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import {
   getFirestore,
@@ -8,38 +10,42 @@ import {
   setDoc,
   doc,
 } from 'firebase/firestore';
+import { Box, Grid } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
 import './Design/registerdesign.css';
-import { useNavigate } from 'react-router-dom';
 
-export const Register = (props) => {
-
-
+export const Register = () => {
   const [input, setInput] = useState({
-    restaurantname: '',
+    restaurantName: '',
     email: '',
-    restoAdd: '',
-    contactnum: '',
-    restoPermit: '',
+    restaurantStreetAddress: '',
+    contactNumber: '',
+    restaurantPermitNumber: '',
     password: '',
     confirmPassword: '',
-    restocity: '',
-    restocode: ''
+    restaurantCity: '',
+    province: '',
+    zipCode: '',
+    longitude: '',
+    latitude: '',
   });
 
   const [error, setError] = useState({
-    restaurantname: '',
+    restaurantName: '',
     email: '',
-    restoAdd: '',
-    contactnum: '',
-    restoPermit: '',
+    restaurantStreetAddress: '',
+    contactNumber: '',
+    restaurantPermitNumber: '',
     password: '',
     confirmPassword: '',
-    estocity: '',
-    restocode: ''
+    restaurantCity: '',
+    province: '',
+    zipCode: '',
+    longitude: '',
+    latitude: '',
   })
 
-  const onInputChange = (e) => {
-    const { name, value } = e.target;
+  const onInputChange = (name, value) => {
     setInput((prev) => {
       const updatedInput = { ...prev, [name]: value };
       validateInput({ target: { name, value } }); // Pass the updated input to validateInput
@@ -56,50 +62,72 @@ export const Register = (props) => {
     setSelectedImageName2(file ? file.name : ''); // Update selected image name
   }
 
-
   const validateInput = e => {
     let { name, value } = e.target;
     setError(prev => {
       const stateObj = { ...prev, [name]: "" };
 
       switch (name) {
-        case "restaurantname":
-          if (!value) {
-            stateObj[name] = "*";
+        case 'restaurantName':
+          if (!value.trim()) {
+            stateObj[name] = '* Required';
           }
           break;
 
-        case "email":
-          if (!value) {
-            stateObj[name] = "*";
+        case 'email':
+          if (!value.trim()) {
+            stateObj[name] = '* Required';
           } else if (!isValidEmail(value)) {
-            stateObj[name] = "Please enter a valid Email.";
+            stateObj[name] = 'Please enter a valid Email.';
           }
           break;
 
-        case "restoAdd":
-          if (!value) {
-            stateObj[name] = "*";
+        case 'restaurantPermitNumber':
+          if (!value.trim()) {
+            stateObj[name] = '* Required';
           }
           break;
 
-        case "contactnum":
+        case 'restaurantStreetAddress':
+          if (!value.trim()) {
+            stateObj[name] = '* Required';
+          }
+          break;
+        case 'restaurantCity':
+          if (!value.trim()) {
+            stateObj[name] = '* Required';
+          }
+          break;
+        case 'province':
+          if (!value.trim()) {
+            stateObj[name] = '* Required';
+          }
+          break;
+        case 'zipCode':
+          if (!value.trim()) {
+            stateObj[name] = '* Required';
+          }
+          break;
+        case 'contactNumber':
           if (!value) {
-            stateObj[name] = "*";
+            stateObj[name] = "* Required";
           } else if (!/^09\d{9}$/.test(value)) {
-            stateObj[name] = "*";
+            stateObj[name] = "* Required";
           }
           break;
-
-        case "restoPermit":
-          if (!value) {
-            stateObj[name] = "*";
+        case 'longitude':
+          if (!value.trim()) {
+            stateObj[name] = '* Required';
           }
           break;
-
+        case 'latitude':
+          if (!value.trim()) {
+            stateObj[name] = '* Required';
+          }
+          break;
         case "password":
           if (!value) {
-            stateObj[name] = "*";
+            stateObj[name] = "* Required";
 
           } else if (input.confirmPassword && value !== input.confirmPassword) {
             stateObj["confirmPassword"] = "Password and Confirm Password does not match.";
@@ -116,18 +144,17 @@ export const Register = (props) => {
           }
           break;
 
-        case "restocity":
+        case "longitude":
           if (!value) {
-            stateObj[name] = "*";
-          }
-          break;
-        case "restocode":
-          if (!value) {
-            stateObj[name] = "*";
+            stateObj[name] = "* Required";
           }
           break;
 
-
+        case "Latitude":
+          if (!value) {
+            stateObj[name] = "* Required";
+          }
+          break;
 
         default:
           break;
@@ -169,13 +196,16 @@ export const Register = (props) => {
 
       // Add additional user data to Firestore
       await setDoc(doc(usersCollectionRef, userCredential.user.uid), {
-        restaurantName: input.restaurantname,
+        restaurantName: input.restaurantName,
         restaurantEmail: input.email,
-        restaurantAddress: input.restoAdd,
-        contactNum: input.contactnum,
-        restaurantPermit: input.restoPermit,
-        restaurantCity: input.restocity,
-        zipCode: input.restocode,
+        restaurantAddress: input.restaurantStreetAddress,
+        contactNum: input.contactNumber,
+        restaurantPermit: input.restaurantPermitNumber,
+        restaurantCity: input.restaurantCity,
+        zipCode: input.zipCode,
+        province: input.province,
+        longitude: input.longitude,
+        latitude: input.latitude,
         role: 'admin',
       });
 
@@ -197,140 +227,160 @@ export const Register = (props) => {
   return (
     <>
       <Navbar />
-      <div className='register-container'>
-        <div className="header ">Registration</div>
-
-        <div className="app1">
-          <form onSubmit={registerUser}>
-            <label>Restaurant Name </label>{error.restaurantname && <span className='err'>{error.restaurantname}</span>}
-            <br />
-            <input
-              type="text"
-              name="restaurantname"
-              placeholder='Enter Restaurant Name'
-              value={input.restaurantname}
-              onChange={onInputChange}
-              onBlur={validateInput}></input><br />
-
-            <br />
-
-            <label>Email </label>{error.email && <span className='err'>{error.email}</span>}
-            <br />
-            <input
-              type="email"
-              name="email"
-              placeholder='Enter Email'
-              value={input.email}
-              onChange={onInputChange}
-              onBlur={validateInput}></input><br />
-            <br />
-
-            <label>Restaurant Street Address </label> {error.restoAdd && <span className='err'>{error.restoAdd}</span>}
-            <br />
-            <input
-              type="text"
-              name="restoAdd"
-              placeholder='Enter Resturant Street Address'
-              value={input.restoAdd}
-              onChange={onInputChange}
-              onBlur={validateInput}></input><br />
-            <br />
-
-            <label>Restaurant City </label>{error.restocity && <span className='err'>{error.restocity}</span>}
-            <br />
-            <input
-              type="text"
-              name="restocity"
-              placeholder='Enter Resturant Street Address'
-              value={input.restocity}
-              onChange={onInputChange}
-              onBlur={validateInput}></input><br />
-            <br />
-
-            <label>Contact Number </label> {error.contactnum && <span className='err'>{error.contactnum}</span>}
-            <br />
-            <input
-              type="tel"
-              name="contactnum"
-              placeholder='09xxxxxxxxx'
-              value={input.contactnum}
-              onChange={onInputChange}
-              onBlur={validateInput}
-              pattern="^09\d{9}$"
-              title="Please enter a valid Philippine contact number starting with 09"
-            ></input><br />
-            <Link to="/login"><button className="Back">Cancel</button></Link>
-          </form>
-        </div>
-
-        <div className='app2'>
-          <form onSubmit={registerUser}>
-            <label>Restaurant Permit Number </label> {error.restoPermit && <span className='err'>{error.restoPermit}</span>}
-            <br />
-            <input
-              type="text"
-              name="restoPermit"
-              placeholder='Enter Restaurant Permit Number'
-              value={input.restoPermit}
-              onChange={onInputChange}
-              onBlur={validateInput}></input><br />
-            <br />
-            <label>Select Restaurant Permit Image</label>
-
-            <input
-              type="file"
-              accept="image/*"
-              id="restaurantPermitImageButton"
-              className="file-upload-input"
-              onChange={handleImageChange2}
-              style={{ display: "none" }}
-            />
-            <br />
-            <label htmlFor="restaurantPermitImageButton" className="file-upload-button">
-              {selectedImageName2 || "No Files Chosen"}
-            </label>
-            <br />
-            <br />
-
-            <label>Zip Code </label> {error.restocode && <span className='err'>{error.restocode}</span>}
-            <br />
-            <input
-              type="number"
-              name="restocode"
-              placeholder='Enter Zip Code'
-              value={input.restocode}
-              onChange={onInputChange}
-              onBlur={validateInput}></input><br />
-
-            <br />
-
-            <label>Password </label> {error.password && <span className='err'>{error.password}</span>}
-            <br />
-            <input
-              type="password"
-              name="password"
-              placeholder='Enter Password'
-              value={input.password}
-              onChange={onInputChange}
-              onBlur={validateInput}></input><br />
-            <br />
-
-            <label>Confirm Password</label>
-            <br />
-            <input
-              type="password"
-              name="confirmPassword"
-              placeholder='Enter Confirm Password'
-              value={input.confirmPassword}
-              onChange={onInputChange}
-              onBlur={validateInput}></input><br />
-            {error.confirmPassword && <span className='err'>{error.confirmPassword}</span>}
-            <br />
-            <Link to="/profile"><button onClick={registerUser} type="submit" className="Register">Register</button></Link>
-            {/* <button onClick={registerUser} type="submit" className="Register">Register</button> */}
-          </form>
-        </div>
-      </div>
+      <form onSubmit={registerUser}>
+        <Box sx={{ p: 1, mb: 4, width: '100%' }}>
+          <PageTitle title="Registration" />
+          <Box sx={{ p: 1, mt: 2 }}>
+            <Box style={{ width: '50%', margin: '0 auto' }}>
+              <Grid container spacing={2} sx={{ display: 'flex', pb: 5 }}>
+                <Grid item xs={12}>
+                  <StyledTextField
+                    label="Restaurant Name"
+                    color="success"
+                    onChange={(e) => onInputChange('restaurantName', e.target.value)}
+                    onBlur={validateInput}
+                    error={!!error.restaurantName}
+                    helperText={error.restaurantName}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <StyledTextField
+                    label="Email"
+                    color="success"
+                    onChange={(e) => onInputChange('email', e.target.value)}
+                    onBlur={validateInput}
+                    error={!!error.email}
+                    helperText={error.email}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <StyledTextField
+                    label="Restaurant Permit Number"
+                    color="success"
+                    // type="number"
+                    onChange={(e) => onInputChange('restaurantPermitNumber', e.target.value)}
+                    onBlur={validateInput}
+                    error={!!error.restaurantPermitNumber}
+                    helperText={error.restaurantPermitNumber}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <StyledTextField
+                    label="Select Restaurant Permit Image"
+                    InputLabelProps={{ shrink: true }}
+                    type="file"
+                    accept="image/*"
+                    color="success"
+                    onChange={(e) => onInputChange('selectedRestaurantPermitImage', e.target.value)}
+                    onBlur={validateInput}
+                    error={!!error.selectedRestaurantPermitImage}
+                    helperText={error.selectedRestaurantPermitImage}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <StyledTextField
+                    label="Restaurant Street Address"
+                    color="success"
+                    onChange={(e) => onInputChange('restaurantStreetAddress', e.target.value)}
+                    onBlur={validateInput}
+                    error={!!error.restaurantStreetAddress}
+                    helperText={error.restaurantStreetAddress}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <StyledTextField
+                    label="Restaurant City/Municipality"
+                    color="success"
+                    onChange={(e) => onInputChange('restaurantCity', e.target.value)}
+                    onBlur={validateInput}
+                    error={!!error.restaurantCity}
+                    helperText={error.restaurantCity}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <StyledTextField
+                    label="Province"
+                    color="success"
+                    onChange={(e) => onInputChange('province', e.target.value)}
+                    onBlur={validateInput}
+                    error={!!error.province}
+                    helperText={error.province}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <StyledTextField
+                    label="Zip Code"
+                    color="success"
+                    type="number"
+                    onChange={(e) => onInputChange('zipCode', e.target.value)}
+                    onBlur={validateInput}
+                    error={!!error.zipCode}
+                    helperText={error.zipCode}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <StyledTextField
+                    label="Contact Number"
+                    color="success"
+                    type="number"
+                    onChange={(e) => onInputChange('contactNumber', e.target.value)}
+                    onBlur={validateInput}
+                    error={!!error.contactNumber}
+                    helperText={error.contactNumber}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <StyledTextField
+                    label="Longitude"
+                    color="success"
+                    type="number"
+                    onChange={(e) => onInputChange('longitude', e.target.value)}
+                    onBlur={validateInput}
+                    error={!!error.longitude}
+                    helperText={error.longitude}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <StyledTextField
+                    label="Latitude"
+                    color="success"
+                    type="number"
+                    onChange={(e) => onInputChange('latitude', e.target.value)}
+                    onBlur={validateInput}
+                    error={!!error.latitude}
+                    helperText={error.latitude}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <StyledTextField
+                    label="Password"
+                    type="password"
+                    color="success"
+                    onChange={(e) => onInputChange('password', e.target.value)}
+                    onBlur={validateInput}
+                    error={!!error.password}
+                    helperText={error.password}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <StyledTextField
+                    label="Confirm Password"
+                    type="password"
+                    color="success"
+                    onChange={(e) => onInputChange('confirmPassword', e.target.value)}
+                    onBlur={validateInput}
+                    error={!!error.confirmPassword}
+                    helperText={error.confirmPassword}
+                  />
+                </Grid>
+              </Grid>
+              <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+                <Link to="/profile"><button onClick={registerUser} type="submit" className="Register">Register</button></Link>
+              </Box>
+            </Box>
+          </Box>
+        </Box >
+      </form>
     </>
   )
 }

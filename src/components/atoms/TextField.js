@@ -13,8 +13,8 @@ const StyledTextField = ({ borderColor, borderWidth, borderRadius, ...props }) =
         '& .MuiInputBase-input': {
             paddingTop: '30px', // Adjust the padding top as needed
             borderRadius: borderRadius || '8px', // Adjust the border radius as needed
-            boxShadow: '0 5px 5px rgba(0, 0, 0, 0.6)', 
-            
+            boxShadow: '0 5px 5px rgba(0, 0, 0, 0.6)',
+
         },
     };
 
@@ -24,7 +24,7 @@ const StyledTextField = ({ borderColor, borderWidth, borderRadius, ...props }) =
             fullWidth={true}
             sx={{
                 ...outlinedStyle,
-                
+
                 color: palette.primary.main,
                 borderRadius: borderRadius || '8px', // Adjust the border radius
             }}
