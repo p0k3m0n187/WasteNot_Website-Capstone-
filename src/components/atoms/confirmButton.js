@@ -3,7 +3,7 @@ import React from 'react';
 import palette from '../../Pages/theme/palette';
 import { Button } from '@mui/material';
 
-const ColoredButton = ({ colorKey, label }) => {
+const ConfirmButton = ({ colorKey, label }) => {
     // Check if the colorKey exists in the palette, otherwise default to a specific color
     const buttonColor = palette[colorKey] ? palette[colorKey].primary : '#fff';
 
@@ -37,4 +37,4 @@ const ColoredButton = ({ colorKey, label }) => {
     );
 };
 
-export default ColoredButton;
+export default ConfirmButton;

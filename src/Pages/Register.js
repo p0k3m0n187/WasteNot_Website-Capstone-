@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import PageTitle from './Design/pagetitle';
-import ColoredButton from '../components/atoms/confirmButton.js';
 import StyledTextField from '../components/atoms/TextField.js';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import {
@@ -10,7 +9,7 @@ import {
   setDoc,
   doc,
 } from 'firebase/firestore';
-import { Box, Grid } from '@mui/material';
+import { Box, Grid, Button } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import './Design/registerdesign.css';
 
@@ -374,13 +373,40 @@ export const Register = () => {
                   />
                 </Grid>
               </Grid>
-              <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-                <Link to="/profile"><button onClick={registerUser} type="submit" className="Register">Register</button></Link>
+              <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+                <Link to="/login"><Button
+                  variant='contained'
+                  color='error'
+                  textDecoration='underline'
+                  sx={{
+                    borderColor: 'black',
+                    border: '2px solid #B20D0D',
+                    textDecoration: 'underline',
+                    width: '200px',
+                    fontWeight: 'bold',
+                    boxShadow: '-2px 4px 4px 3px rgba(0, 0, 0, 0.4)'
+                  }}>Cancel</Button></Link>
+
+                <Link to="/profile"><Button
+                  onClick={registerUser}
+                  type="submit"
+                  variant='contained'
+                  color='success'
+                  textDecoration='underline'
+                  sx={{
+                    borderColor: 'black',
+                    border: '2px solid #025515',
+                    textDecoration: 'underline',
+                    width: '200px',
+                    fontWeight: 'bold',
+                    boxShadow: '-2px 4px 4px 3px rgba(0, 0, 0, 0.4)'
+                  }}
+                >Register</Button></Link>
               </Box>
             </Box>
           </Box>
         </Box >
-      </form>
+      </form >
     </>
   )
 }
