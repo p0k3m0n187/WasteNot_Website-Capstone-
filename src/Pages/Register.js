@@ -25,8 +25,8 @@ export const Register = () => {
     restaurantCity: '',
     province: '',
     zipCode: '',
-    longitude: '',
-    latitude: '',
+    // longitude: '',
+    // latitude: '',
   });
 
   const [error, setError] = useState({
@@ -40,8 +40,8 @@ export const Register = () => {
     restaurantCity: '',
     province: '',
     zipCode: '',
-    longitude: '',
-    latitude: '',
+    // longitude: '',
+    // latitude: '',
   })
 
   const onInputChange = (name, value) => {
@@ -143,17 +143,17 @@ export const Register = () => {
           }
           break;
 
-        case "longitude":
-          if (!value) {
-            stateObj[name] = "* Required";
-          }
-          break;
+        // case "longitude":
+        //   if (!value) {
+        //     stateObj[name] = "* Required";
+        //   }
+        //   break;
 
-        case "Latitude":
-          if (!value) {
-            stateObj[name] = "* Required";
-          }
-          break;
+        // case "Latitude":
+        //   if (!value) {
+        //     stateObj[name] = "* Required";
+        //   }
+        //   break;
 
         default:
           break;
@@ -203,8 +203,8 @@ export const Register = () => {
         restaurantCity: input.restaurantCity,
         zipCode: input.zipCode,
         province: input.province,
-        longitude: input.longitude,
-        latitude: input.latitude,
+        // longitude: input.longitude,
+        // latitude: input.latitude,
         role: 'admin',
       });
 
@@ -278,7 +278,7 @@ export const Register = () => {
                 </Grid>
                 <Grid item xs={12}>
                   <StyledTextField
-                    label="Restaurant Street Address"
+                    label="Restaurant Street & Barangay Address"
                     color="success"
                     onChange={(e) => onInputChange('restaurantStreetAddress', e.target.value)}
                     onBlur={validateInput}
@@ -328,7 +328,7 @@ export const Register = () => {
                     helperText={error.contactNumber}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                {/* <Grid item xs={12} sm={6}>
                   <StyledTextField
                     label="Longitude"
                     color="success"
@@ -349,7 +349,7 @@ export const Register = () => {
                     error={!!error.latitude}
                     helperText={error.latitude}
                   />
-                </Grid>
+                </Grid> */}
                 <Grid item xs={12} sm={6}>
                   <StyledTextField
                     label="Password"
