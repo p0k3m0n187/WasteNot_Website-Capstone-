@@ -18,6 +18,8 @@ export const Register = () => {
     restaurantName: '',
     email: '',
     restaurantStreetAddress: '',
+    restaurantBarangay: '',
+    country: '',
     contactNumber: '',
     restaurantPermitNumber: '',
     password: '',
@@ -33,6 +35,8 @@ export const Register = () => {
     restaurantName: '',
     email: '',
     restaurantStreetAddress: '',
+    restaurantBarangay: '',
+    country: '',
     contactNumber: '',
     restaurantPermitNumber: '',
     password: '',
@@ -92,6 +96,13 @@ export const Register = () => {
             stateObj[name] = '* Required';
           }
           break;
+
+        case 'restaurantBarangay':
+          if (!value.trim()) {
+            stateObj[name] = '* Required';
+          }
+          break;
+
         case 'restaurantCity':
           if (!value.trim()) {
             stateObj[name] = '* Required';
@@ -107,6 +118,14 @@ export const Register = () => {
             stateObj[name] = '* Required';
           }
           break;
+
+          break;
+        case 'country':
+          if (!value.trim()) {
+            stateObj[name] = '* Required';
+          }
+          break;
+
         case 'contactNumber':
           if (!value) {
             stateObj[name] = "* Required";
@@ -114,16 +133,16 @@ export const Register = () => {
             stateObj[name] = "* Required";
           }
           break;
-        case 'longitude':
-          if (!value.trim()) {
-            stateObj[name] = '* Required';
-          }
-          break;
-        case 'latitude':
-          if (!value.trim()) {
-            stateObj[name] = '* Required';
-          }
-          break;
+        // case 'longitude':
+        //   if (!value.trim()) {
+        //     stateObj[name] = '* Required';
+        //   }
+        //   break;
+        // case 'latitude':
+        //   if (!value.trim()) {
+        //     stateObj[name] = '* Required';
+        //   }
+        //   break;
         case "password":
           if (!value) {
             stateObj[name] = "* Required";
@@ -278,12 +297,22 @@ export const Register = () => {
                 </Grid>
                 <Grid item xs={12}>
                   <StyledTextField
-                    label="Restaurant Street & Barangay Address"
+                    label="Restaurant Street"
                     color="success"
                     onChange={(e) => onInputChange('restaurantStreetAddress', e.target.value)}
                     onBlur={validateInput}
                     error={!!error.restaurantStreetAddress}
                     helperText={error.restaurantStreetAddress}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <StyledTextField
+                    label="Restaurant Barangay"
+                    color="success"
+                    onChange={(e) => onInputChange('restaurantBarangay', e.target.value)}
+                    onBlur={validateInput}
+                    error={!!error.restaurantBarangay}
+                    helperText={error.restaurantBarangay}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -315,6 +344,16 @@ export const Register = () => {
                     onBlur={validateInput}
                     error={!!error.zipCode}
                     helperText={error.zipCode}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <StyledTextField
+                    label="Country"
+                    color="success"
+                    onChange={(e) => onInputChange('country', e.target.value)}
+                    onBlur={validateInput}
+                    error={!!error.country}
+                    helperText={error.country}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>

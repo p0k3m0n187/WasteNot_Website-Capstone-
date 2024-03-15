@@ -3,6 +3,8 @@ import './Design/profiledesign.css';
 // import { Link } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Navbar2 from '../components/NavBar2';
+import { Box } from '@mui/material';
+import StyledTextField from '../components/atoms/TextField.js';
 import {
   FaPlusCircle
 } from 'react-icons/fa';
@@ -19,7 +21,7 @@ export const Profile = (props) => {
   const history = useNavigate()
   const [userData, setUserData] = useState(null);
   const [formData, setFormData] = useState({
-    
+
     restaurantname: '',
     email: '',
     restoAdd: '',
@@ -28,7 +30,7 @@ export const Profile = (props) => {
     restocity: '',
     restocode: '',
     restodescrip: '',
-    profileImage:'',
+    profileImage: '',
   });
 
 
@@ -140,31 +142,33 @@ export const Profile = (props) => {
       if (user) {
         const userId = user.uid;
         const userDocRef = doc(db, 'admin_users', userId);
-  
+
         // Create an object with the updated profile information
         const updatedData = {
           restaurantName: formData.restaurantname,
           restaurantEmail: formData.email,
-          restaurantAddress: formData.restoAdd,
+          restaurantStreetAddress: formData.restoStreetAdd,
+          restaurantBarangay: formData.restoBarangay,
+          country: formData.country,
           contactNum: formData.contactnum,
           restaurantPermit: formData.restoPermit,
           restaurantCity: formData.restocity,
-          zipCode: formData.restocode, 
+          zipCode: formData.restocode,
           restaurantDesc: formData.restodescrip,
-          restaurantLogo:formData.selectedImage
+          restaurantLogo: formData.selectedImage
         };
-  
+
         // Check if selectedImage is available, then include it in the updatedData
         if (formData.selectedImage) {
           updatedData.restaurantLogo = formData.selectedImage;
         }
-  
+
         // Update the document in the 'admin_users' collection
         await setDoc(userDocRef, updatedData, { merge: true });
-  
+
         // Fetch updated user data to reflect changes in the UI
         fetchUserData();
-  
+
         // Exit edit mode
         setIsEditable(false);
         window.alert("Profile Updated")
@@ -175,22 +179,22 @@ export const Profile = (props) => {
       console.error('Error updating user data:', error);
     }
   };
-  
+
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
-  
+
     // Generate a unique name for the file
     const fileName = `Admin_Profile/${auth.currentUser.uid}_${file.name}`;
-  
+
     // Get a reference to the storage location
     const storage = getStorage();
     const storageRef = ref(storage, fileName);
-  
+
     // Upload the file to Firebase Storage
     try {
       await uploadBytes(storageRef, file);
-  
+
       // Update formData with the selected image URL
       const downloadURL = await getDownloadURL(storageRef);
       setFormData((prev) => ({
@@ -201,8 +205,8 @@ export const Profile = (props) => {
       console.error('Error uploading image:', error);
     }
   };
-  
-  
+
+
 
   const handleSelectImageClick = () => {
     // Trigger the file input when the "Select Image" button is clicked
@@ -284,104 +288,106 @@ export const Profile = (props) => {
             </button>
           )}
 
-          <div className='form-prof'>
-            <label>Resturant Name</label>
-            <br />
-            <input
-              type="text"
-              name="restaurantname"
-              value={formData.restaurantname}
-              onChange={onInputChange}
-              disabled={!isEditable}
-            />
-            <br />
-            <br />
+          <Box sx={{ p: 1, mb: 4, width: '100%' }}>
+            <div className='form-prof'>
+              <label>Resturant Name</label>
+              <br />
+              <input
+                type="text"
+                name="restaurantname"
+                value={formData.restaurantname}
+                onChange={onInputChange}
+                disabled={!isEditable}
+              />
+              <br />
+              <br />
 
-            <label>Email</label>
-            <br />
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={onInputChange}
-              disabled={true} // Use !isEditable to conditionally disable the input
-            // disabled={someCondition ? true : false} // Disable based on someCondition
-            />
-            <br />
-            <br />
+              <label>Email</label>
+              <br />
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={onInputChange}
+                disabled={true} // Use !isEditable to conditionally disable the input
+              // disabled={someCondition ? true : false} // Disable based on someCondition
+              />
+              <br />
+              <br />
 
-            <label>Restaurant Street Address</label>
-            <br />
-            <input
-              type="text"
-              name="restoAdd"
-              value={formData.restoAdd}
-              onChange={handleInputChange}
-              disabled={!isEditable} // Use !isEditable to conditionally disable the input
-            />
-            <br />
-            <br />
+              <label>Restaurant Street Address</label>
+              <br />
+              <input
+                type="text"
+                name="restoAdd"
+                value={formData.restoAdd}
+                onChange={handleInputChange}
+                disabled={!isEditable} // Use !isEditable to conditionally disable the input
+              />
+              <br />
+              <br />
 
-            <label>Restaurant City</label>
-            <br />
+              <label>Restaurant City</label>
+              <br />
 
-            <input
-              type="text"
-              name="restocity"
-              value={formData.restocity}
-              onChange={handleInputChange}
-              disabled={!isEditable} // Use !isEditable to conditionally disable the input
-            />
-            <br />
-            <br />
+              <input
+                type="text"
+                name="restocity"
+                value={formData.restocity}
+                onChange={handleInputChange}
+                disabled={!isEditable} // Use !isEditable to conditionally disable the input
+              />
+              <br />
+              <br />
 
-            <label>Zip Code</label>
-            <br />
+              <label>Zip Code</label>
+              <br />
 
-            <input
-              type="number"
-              name="restocode"
-              value={formData.restocode}
-              onChange={handleInputChange}
-              disabled={!isEditable} // Use !isEditable to conditionally disable the input
-            />
-          </div>
-
-
-          <div className='form-prof2'>
-
-            <label>Contact number</label>
-            <br />
-            <input
-              type="tel"
-              name="contactnum"
-              value={formData.contactnum}
-              onChange={handleInputChange}
-              pattern="^09\d{9}$"
-              title="Please enter a valid Philippine contact number starting with 09"
-              disabled={!isEditable}
-            />
-            <br />
-            <br />
-
-
-
-
-            <label>Restaurant Description</label>
-            <br />
-
-            <div className='description'><input
-              type="text"
-              name="restodescrip"
-              value={formData.restodescrip}
-              onChange={handleInputChange}
-              placeholder="Update Restaurant Description"
-              disabled={!isEditable} // Use !isEditable to conditionally disable the input
-            />
+              <input
+                type="number"
+                name="restocode"
+                value={formData.restocode}
+                onChange={handleInputChange}
+                disabled={!isEditable} // Use !isEditable to conditionally disable the input
+              />
             </div>
-            <br />
 
-          </div>
+
+            <div className='form-prof2'>
+
+              <label>Contact number</label>
+              <br />
+              <input
+                type="tel"
+                name="contactnum"
+                value={formData.contactnum}
+                onChange={handleInputChange}
+                pattern="^09\d{9}$"
+                title="Please enter a valid Philippine contact number starting with 09"
+                disabled={!isEditable}
+              />
+              <br />
+              <br />
+
+
+
+
+              <label>Restaurant Description</label>
+              <br />
+
+              <div className='description'><input
+                type="text"
+                name="restodescrip"
+                value={formData.restodescrip}
+                onChange={handleInputChange}
+                placeholder="Update Restaurant Description"
+                disabled={!isEditable} // Use !isEditable to conditionally disable the input
+              />
+              </div>
+              <br />
+
+            </div>
+          </Box>
         </form>
       </div>
       <div>

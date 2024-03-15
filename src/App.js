@@ -11,7 +11,6 @@ import { Market } from './Pages/Market.js';
 import { AddStaff } from './Pages/AddStaff.js';
 import { AddDish } from './Pages/AddDish.js';
 import { AboutUs } from './components/AboutUs.js';
-import { Register2 } from './Pages/Register2.js';
 
 const App = () => {
   const storedForm = localStorage.getItem('currentForm');
@@ -49,7 +48,6 @@ const App = () => {
           <Route path='/addstaff' element={<AddStaff onFormSwitch={toggleForm} />} />
           <Route path='/addDish' element={<AddDish onFormSwitch={toggleForm} />} />
           <Route path='/aboutus' element={<AboutUs onFormSwitch={toggleForm} />} />
-          <Route path='/register2' element={<Register2 onFormSwitch={toggleForm} />} />
         </Routes>
       </BrowserRouter>
     </>

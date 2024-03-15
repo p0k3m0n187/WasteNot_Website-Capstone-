@@ -7,7 +7,7 @@ const StyledTextField = ({ borderColor, borderWidth, borderRadius, paddingTop, .
     const outlinedStyle = {
         '& .MuiOutlinedInput-notchedOutline': {
             borderColor: borderColor || palette.primary.main,
-            borderWidth: borderWidth || '1px',
+            borderWidth: borderWidth || '1.5px',
             borderRadius: borderRadius || '8px', // Adjust the border radius as needed
         },
         '& .MuiInputBase-input': {
@@ -22,12 +22,14 @@ const StyledTextField = ({ borderColor, borderWidth, borderRadius, paddingTop, .
             variant='outlined'
             fullWidth={true}
             size='small'
+
             sx={{
                 ...outlinedStyle,
 
                 color: palette.primary.main,
                 borderRadius: borderRadius || '8px', // Adjust the border radius
                 size: 'small',
+                marginBottom: '6px'
             }}
             {...props}
         />
