@@ -24,10 +24,13 @@ export const Profile = (props) => {
 
     restaurantname: '',
     email: '',
-    restoAdd: '',
+    restoStreetAdd: '',
+    restoBarangay: '',
+    restocity: '',
+    country: '',
+    province: '',
     contactnum: '',
     restoPermit: '',
-    restocity: '',
     restocode: '',
     restodescrip: '',
     profileImage: '',
@@ -62,11 +65,14 @@ export const Profile = (props) => {
           setFormData({
             restaurantname: adminUserData.restaurantName,
             email: adminUserData.restaurantEmail,
-            restoAdd: adminUserData.restaurantAddress,
-            contactnum: adminUserData.contactNum,
-            restoPermit: adminUserData.restaurantPermit,
+            restoStreetAdd: adminUserData.restaurantStreetAddress,
+            restoBarangay: adminUserData.restaurantBarangay,
+            country: adminUserData.country,
             restocity: adminUserData.restaurantCity,
             restocode: adminUserData.zipCode,
+            province: adminUserData.province,
+            contactnum: adminUserData.contactNum,
+            restoPermit: adminUserData.restaurantPermit,
             restodescrip: adminUserData.restaurantDesc,
             profileImage: adminUserData.restaurantLogo,
           });
@@ -104,12 +110,15 @@ export const Profile = (props) => {
     setFormData({
       restaurantname: userData ? userData.restaurantName : '',
       email: userData ? userData.restaurantEmail : '',
-      restoAdd: userData ? userData.restaurantAddress : '',
+      restoStreetAdd: userData ? userData.restaurantStreetAddress : '',
+      restoBarangay: userData ? userData.restaurantBarangay : '',
+      restocity: userData ? userData.restaurantCity : '',
+      country: userData ? userData.country : '',
+      restocode: userData ? userData.zipCode : '',
+      province: userData ? userData.province : '',
       contactnum: userData ? userData.contactNum : '',
       restoPermit: userData ? userData.restaurantPermit : '',
-      restocity: userData ? userData.restaurantCity : '',
-      restocode: userData ? userData.zipCode : '',
-      restodescrip: userData ? userData.restaurantDesc : '', // Add other fields as needed
+      restodescrip: userData ? userData.restaurantDesc : '',
       profileImage: formData.selectedImage || userData.restaurantLogo
     });
 
@@ -153,6 +162,7 @@ export const Profile = (props) => {
           contactNum: formData.contactnum,
           restaurantPermit: formData.restoPermit,
           restaurantCity: formData.restocity,
+          province: formData.province,
           zipCode: formData.restocode,
           restaurantDesc: formData.restodescrip,
           restaurantLogo: formData.selectedImage
@@ -319,8 +329,8 @@ export const Profile = (props) => {
               <br />
               <input
                 type="text"
-                name="restoAdd"
-                value={formData.restoAdd}
+                name="restoStreetAdd"
+                value={formData.restoStreetAdd}
                 onChange={handleInputChange}
                 disabled={!isEditable} // Use !isEditable to conditionally disable the input
               />
