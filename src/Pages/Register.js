@@ -8,6 +8,9 @@ import {
   collection,
   setDoc,
   doc,
+  query,
+  where,
+  getDocs,
 } from 'firebase/firestore';
 import { Box, Grid, Button } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
@@ -56,15 +59,6 @@ export const Register = () => {
     });
   };
 
-  const [selectedImageName2, setSelectedImageName2] = useState('');
-  const [, setSelectedImage2] = useState(null);
-
-  const handleImageChange2 = (e) => {
-    const file = e.target.files[0];
-    setSelectedImage2(file);
-    setSelectedImageName2(file ? file.name : ''); // Update selected image name
-  }
-
   const validateInput = e => {
     let { name, value } = e.target;
     setError(prev => {
@@ -88,6 +82,8 @@ export const Register = () => {
         case 'restaurantPermitNumber':
           if (!value.trim()) {
             stateObj[name] = '* Required';
+          } else {
+            checkPermitNumber(value.trim(), stateObj); // Await the function call
           }
           break;
 
@@ -133,16 +129,7 @@ export const Register = () => {
             stateObj[name] = "* Required";
           }
           break;
-        // case 'longitude':
-        //   if (!value.trim()) {
-        //     stateObj[name] = '* Required';
-        //   }
-        //   break;
-        // case 'latitude':
-        //   if (!value.trim()) {
-        //     stateObj[name] = '* Required';
-        //   }
-        //   break;
+
         case "password":
           if (!value) {
             stateObj[name] = "* Required";
@@ -162,24 +149,24 @@ export const Register = () => {
           }
           break;
 
-        // case "longitude":
-        //   if (!value) {
-        //     stateObj[name] = "* Required";
-        //   }
-        //   break;
-
-        // case "Latitude":
-        //   if (!value) {
-        //     stateObj[name] = "* Required";
-        //   }
-        //   break;
-
         default:
           break;
       }
 
       return stateObj;
     });
+  }
+
+  const checkPermitNumber = async (permitNumber, stateObj) => {
+    const db = getFirestore();
+    const permitQuery = query(
+      collection(db, 'admin_users'),
+      where('restaurantPermit', '==', permitNumber)
+    );
+    const permitSnapshot = await getDocs(permitQuery);
+    if (!permitSnapshot.empty) {
+      stateObj.restaurantPermitNumber = 'Permit Already Taken!';
+    }
   }
 
   const isValidEmail = (email) => {

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Design/profiledesign.css';
 // import { Link } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Navbar2 from '../components/NavBar2';
-import { Box, Grid } from '@mui/material';
+import { Box, Button, Grid } from '@mui/material';
 import StyledTextField from '../components/atoms/TextField.js';
 import MultiLine from '../components/atoms/MultiLine.js';
 import {
@@ -14,11 +14,12 @@ import { auth, db } from '../config/firebase';
 import { useNavigate } from 'react-router-dom';
 import { getDoc, doc, setDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import PageTitle from './Design/pagetitle.js';
 
 
 
 export const Profile2 = () => {
+    const [elementSize, setElementSize] = useState({ width: 0, height: 0 });
+    const elementRef = useRef(null);
 
     const history = useNavigate()
     const [userData, setUserData] = useState(null);
@@ -121,7 +122,7 @@ export const Profile2 = () => {
             contactnum: userData ? userData.contactNum : '',
             restoPermit: userData ? userData.restaurantPermit : '',
             restodescrip: userData ? userData.restaurantDesc : '',
-            profileImage: formData.selectedImage || userData.restaurantLogo
+            profileImage: userData.restaurantLogo
         });
 
         // Exit edit mode
@@ -167,7 +168,7 @@ export const Profile2 = () => {
                     province: formData.province,
                     zipCode: formData.restocode,
                     restaurantDesc: formData.restodescrip,
-                    restaurantLogo: formData.selectedImage
+                    restaurantLogo: formData.selectedImage || userData.restaurantLogo || '' // Provide a default value when selectedImage is undefined
                 };
 
                 // Check if selectedImage is available, then include it in the updatedData
@@ -265,6 +266,25 @@ export const Profile2 = () => {
             return stateObj;
         });
     };
+
+    useEffect(() => {
+        const observer = new ResizeObserver(entries => {
+            for (let entry of entries) {
+                const { width, height } = entry.contentRect;
+                setElementSize({ width, height });
+            }
+        });
+
+        if (elementRef.current) {
+            observer.observe(elementRef.current);
+        }
+
+        return () => {
+            if (elementRef.current) {
+                observer.unobserve(elementRef.current);
+            }
+        };
+    }, []);
 
 
     return (
@@ -412,25 +432,110 @@ export const Profile2 = () => {
 
             <Box sx={{ padding: 1, width: '100%' }}>
                 <Box sx={{ p: 1, mb: 2, width: '100%' }}>
-                    <PageTitle title='Profile' />
-                    <Box sx={{ p: 1, mt: 2, display: 'flex' }}>
-                        <Box sx={{ width: '30%' }}>
-                            <img
-                                src={formData.profileImage}
+                    <Box sx={{ p: 1, mt: 2, display: 'flex', gap: 3 }}>
+                        <Box sx={{ width: '23%', ml: '4%' }}>
+                            <Box sx={{ p: 1, display: 'flex', justifyContent: 'center' }}>
+                                <img
+                                    src={formData.profileImage}
+                                    alt=""
+                                    onClick={isEditable ? handleSelectImageClick : undefined}
+                                    style={{
+                                        borderRadius: '50%',
+                                        backgroundColor: '#ccc',
+                                        width: '80%',
+                                        height: '180px',  /* Set height to auto for responsive scaling */
+                                        border: '2px solid black',
+                                        objectFit: 'cover'
+                                    }}
+                                />
 
-                                className="profile-image"
-                                onClick={isEditable ? handleSelectImageClick : undefined}
-                            />
 
-                            <input
-                                type="file"
-                                id="profileImage"
-                                accept="image/*"
-                                name="profileImage"
-                                onChange={handleImageUpload}
-                                disabled={!isEditable}
-                                style={{ display: 'none' }}
-                            />
+                                <input
+                                    type="file"
+                                    id="profileImage"
+                                    accept="image/*"
+                                    name="profileImage"
+                                    onChange={handleImageUpload}
+                                    disabled={!isEditable}
+                                    style={{ display: 'none' }}
+                                />
+                            </Box>
+
+                            <div
+                                style={{ color: 'white' }}
+                                ref={elementRef}>
+                                <p>Element Width: {elementSize.width}</p>
+                                <p>Element Height: {elementSize.height}</p>
+                            </div>
+
+                            {/* <Box sx={{ p: 10, display: 'flex', justifyContent: 'center', height: '100px' }}> */}
+                            {isEditable ? (
+                                <>
+                                    <div
+                                        style={{ color: 'white', fontSize: '1px' }}
+                                        ref={elementRef}>
+                                        <p>Element Width: {elementSize.width}</p>
+                                        <p>Element Height: {elementSize.height}</p>
+                                    </div>
+                                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                                        <Button
+                                            variant='contained'
+                                            color='success'
+                                            textDecoration='underline'
+                                            sx={{
+                                                borderColor: 'black',
+                                                border: '2px solid #57B961',
+                                                textDecoration: 'underline',
+                                                width: '140px',
+                                                height: '10%',
+                                                fontWeight: 'bold',
+                                                boxShadow: '-2px 4px 4px 3px rgba(0, 0, 0, 0.4)'
+                                            }}
+                                            onClick={handleSave}>Save</Button>
+                                        <Button
+                                            variant='contained'
+                                            color='error'
+                                            textDecoration='underline'
+                                            sx={{
+                                                borderColor: 'black',
+                                                border: '2px solid #B20D0D',
+                                                textDecoration: 'underline',
+                                                width: '140px',
+                                                fontWeight: 'bold',
+                                                boxShadow: '-2px 4px 4px 3px rgba(0, 0, 0, 0.4)',
+                                            }}
+                                            onClick={handleCancel}>Cancel</Button>
+                                    </Box>
+                                </>
+                            ) : (
+                                <>
+                                    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                                        {/* <button className="bttnedit" onClick={toggleEdit}>Edit Profile</button> */}
+                                        <Button
+                                            variant='contained'
+                                            color='success'
+                                            textDecoration='underline'
+                                            sx={{
+                                                borderColor: 'black',
+                                                border: '2px solid white',
+                                                textDecoration: 'underline',
+                                                width: '170px',
+                                                fontWeight: 'bold',
+                                                boxShadow: '-2px 4px 4px 3px rgba(0, 0, 0, 0.4)',
+                                                '&:hover': {
+                                                    borderColor: 'green',
+                                                    backgroundColor: '#57B961',
+                                                    color: 'black',
+                                                    textDecoration: 'underline',
+                                                    boxShadow: '-2px 4px 4px 3px rgba(0, 0, 0, 0.4)'
+                                                }
+                                            }}
+                                            onClick={toggleEdit}>Edit Profile</Button>
+                                        <button onClick={handleClick} className="Backs">LOG OUT</button>
+                                    </Box>
+                                </>
+                            )}
+                            {/* </Box> */}
                         </Box>
                         <Box sx={{ width: '70%' }}>
                             <Grid container spacing={2} sx={{ display: 'flex', pb: 5 }}>
@@ -447,11 +552,10 @@ export const Profile2 = () => {
                                 <Grid item xs={12} sm={6}>
                                     <StyledTextField
                                         label="Restaurant Permit No."
-                                        type="email"
                                         name="restoPermit"
                                         value={formData.restoPermit}
                                         onChange={onInputChange}
-                                        disabled={true}
+                                        disabled={!isEditable}
                                     />
                                 </Grid>
 
@@ -472,7 +576,7 @@ export const Profile2 = () => {
                                         name="contactnum"
                                         value={formData.contactnum}
                                         onChange={handleInputChange}
-                                        disabled={true}
+                                        disabled={!isEditable}
                                     />
                                 </Grid>
 
@@ -482,7 +586,7 @@ export const Profile2 = () => {
                                         name="restoStreetAdd"
                                         value={formData.restoStreetAdd}
                                         onChange={handleInputChange}
-                                        disabled={true}
+                                        disabled={!isEditable}
                                     />
                                 </Grid>
 
@@ -492,7 +596,7 @@ export const Profile2 = () => {
                                         name="restoBarangay"
                                         value={formData.restoBarangay}
                                         onChange={handleInputChange}
-                                        disabled={true}
+                                        disabled={!isEditable}
                                     />
                                 </Grid>
 
@@ -502,7 +606,7 @@ export const Profile2 = () => {
                                         name="restocity"
                                         value={formData.restocity}
                                         onChange={handleInputChange}
-                                        disabled={true}
+                                        disabled={!isEditable}
                                     />
                                 </Grid>
 
@@ -512,7 +616,7 @@ export const Profile2 = () => {
                                         name="province"
                                         value={formData.province}
                                         onChange={handleInputChange}
-                                        disabled={true}
+                                        disabled={!isEditable}
                                     />
                                 </Grid>
 
@@ -522,7 +626,7 @@ export const Profile2 = () => {
                                         name="country"
                                         value={formData.country}
                                         onChange={handleInputChange}
-                                        disabled={true}
+                                        disabled={!isEditable}
                                     />
                                 </Grid>
 
@@ -535,7 +639,7 @@ export const Profile2 = () => {
                                         placeholder="Update Restaurant Description"
                                         value={formData.restodescrip}
                                         onChange={handleInputChange}
-                                        disabled={true}
+                                        disabled={!isEditable}
                                     />
                                 </Grid>
 
