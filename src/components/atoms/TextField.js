@@ -17,7 +17,7 @@ const StyledTextField = ({ borderColor, borderWidth, borderRadius, paddingTop, l
             color: fontColor || 'black',
         },
         '& .MuiInputLabel-root': {
-            color: labelColor || 'rgba(0, 0, 0, 0.70)', // Setting label color to black, or use the provided color
+            color: labelColor || 'rgba(0, 0, 0, 0.99)', // Setting label color to black, or use the provided color
         },
         '& .Mui-disabled .MuiInputBase-input': {
             color: fontColor || 'black', // Ensure the font color remains black when disabled

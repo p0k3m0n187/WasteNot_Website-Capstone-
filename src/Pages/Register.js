@@ -30,8 +30,6 @@ export const Register = () => {
     restaurantCity: '',
     province: '',
     zipCode: '',
-    // longitude: '',
-    // latitude: '',
   });
 
   const [error, setError] = useState({
@@ -47,8 +45,6 @@ export const Register = () => {
     restaurantCity: '',
     province: '',
     zipCode: '',
-    // longitude: '',
-    // latitude: '',
   })
 
   const onInputChange = (name, value) => {
@@ -115,7 +111,6 @@ export const Register = () => {
           }
           break;
 
-          break;
         case 'country':
           if (!value.trim()) {
             stateObj[name] = '* Required';
@@ -157,17 +152,17 @@ export const Register = () => {
     });
   }
 
-  const checkPermitNumber = async (permitNumber, stateObj) => {
+  const checkPermitNumber = async (permitNumber) => {
     const db = getFirestore();
     const permitQuery = query(
       collection(db, 'admin_users'),
       where('restaurantPermit', '==', permitNumber)
     );
+
     const permitSnapshot = await getDocs(permitQuery);
-    if (!permitSnapshot.empty) {
-      stateObj.restaurantPermitNumber = 'Permit Already Taken!';
-    }
-  }
+
+    return !permitSnapshot.empty;
+  };
 
   const isValidEmail = (email) => {
     // Use a regular expression for basic email validation
@@ -189,12 +184,23 @@ export const Register = () => {
     }
 
     try {
+      // Check if the permit number already exists
+      const permitExists = await checkPermitNumber(input.restaurantPermitNumber);
+      if (permitExists) {
+        setError((prev) => ({
+          ...prev,
+          restaurantPermitNumber: 'Permit Already Taken!',
+        }));
+        return;
+      }
+
       // Create user in Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         input.email,
         input.password
       );
+
 
       const usersCollectionRef = collection(db, 'admin_users');
       console.log('before adding the firestore')

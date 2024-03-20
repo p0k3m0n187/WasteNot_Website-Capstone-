@@ -18,7 +18,7 @@ const MultiLine = ({ borderColor, borderWidth, borderRadius, paddingTop, labelCo
 
         },
         '& .MuiInputLabel-root': {
-            color: labelColor || 'rgba(0, 0, 0, 0.70)', // Setting label color to black, or use the provided color
+            color: labelColor || 'rgba(0, 0, 0, 0.99)', // Setting label color to black, or use the provided color
         }
     };
 
