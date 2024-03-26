@@ -8,7 +8,7 @@ const pxToRem = (val) => `${val / 16}rem`;
 const typography = {
     fontFamily: '"Noto Sans JP", sans-serif',
     h1: {
-        fontSize: pxToRem(48),
+        fontSize: pxToRem(30),
         fontWeight: 900,
         fontFamily: '"Changa One", sans-serif',
     },

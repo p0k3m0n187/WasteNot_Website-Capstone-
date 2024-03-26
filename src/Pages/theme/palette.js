@@ -11,8 +11,12 @@ const palette = {
         main: '#D14081',
         contrastText: '#fff',
     },
+    plain: {
+        main: '#FFFFFF',
+        contrastText: '#fff',
+    },
     success: {
-        main: '#70A37F',
+        main: '#00FF4C',
         contrastText: '#fff',
     },
     error: {

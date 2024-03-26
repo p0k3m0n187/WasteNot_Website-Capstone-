@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar2 from '../components/NavBar2';
 import { Link } from "react-router-dom";
 import { collection, addDoc } from 'firebase/firestore';
@@ -10,7 +10,7 @@ import Sidebar from '../components/Sidebar';
 
 export const AddStaff = () => {
     const history = useNavigate();
-    
+
     const [formData, setFormData] = useState({
         idNumber: '',
         firstName: '',
@@ -41,7 +41,7 @@ export const AddStaff = () => {
     const [adminId, setAdminId] = useState('');
     const genders = ['Male', 'Female'];
     const positions = ['Head Staff', 'Staff', 'Manager'];
-     const auth = getAuth();
+    const auth = getAuth();
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -124,18 +124,17 @@ export const AddStaff = () => {
                 window.alert('Please fill in all the required fields.');
                 return;
             }
-            
-    
+
             const auth = getAuth();
             const { email, password } = formData;
-            
+
             // Create the user in Firebase Authentication
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
-    
+
             // Access the user ID from the userCredential
             const userId = user.uid;
-    
+
             // Save additional user data in Firestore
             const usersCollection = collection(db, 'users');
             await addDoc(usersCollection, {
@@ -152,20 +151,21 @@ export const AddStaff = () => {
                 role: 'staff',
                 userId: userId, // Save the UID of the user in Firestore
             });
-    
+
             window.alert('Staff Added Successfully');
             console.log('Staff data saved to Firestore');
-    
+
             // Do not log in the user in the web app
-    
+
             history('/staff');
         } catch (error) {
             console.error("Error adding user: ", error.message);
             window.alert('Existing E-mail. Please use other E-mail!');
         }
     };
-    
-    
+
+
+
     return (
         <>
             <Navbar2 />

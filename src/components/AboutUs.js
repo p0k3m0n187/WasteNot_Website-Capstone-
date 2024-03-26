@@ -3,10 +3,12 @@ import '../Pages/Design/aboutdesign.css';
 import photo1 from '../images/deanprofile.jpg';
 import photo2 from '../images/graceprofile.jpg';
 import photo3 from '../images/lawrenceProfile.jpg';
+import Navbar from '../components/Navbar';
 
 export const AboutUs = () => {
     return (
         <>
+            <Navbar />
             <div className="about-container">
                 <div className="about-title">About Us</div>
                 <div className="member1">

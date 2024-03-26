@@ -3,7 +3,7 @@ import './Design/profiledesign.css';
 // import { Link } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Navbar2 from '../components/NavBar2';
-import { Box, Button, Grid } from '@mui/material';
+import { Box, Button, Grid, Snackbar, Alert } from '@mui/material';
 import StyledTextField from '../components/atoms/TextField.js';
 import MultiLine from '../components/atoms/MultiLine.js';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
@@ -17,6 +17,8 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 export const Profile = () => {
   const [elementSize, setElementSize] = useState({ width: 0, height: 0 });
   const elementRef = useRef(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const history = useNavigate()
   const [userData, setUserData] = useState(null);
@@ -79,8 +81,6 @@ export const Profile = () => {
         } else {
           console.log('Admin user not found');
         }
-      } else {
-        console.log('User not logged in');
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -175,14 +175,30 @@ export const Profile = () => {
         fetchUserData();
 
         // Exit edit mode
+        //       setIsEditable(false);
+        //       window.alert("Profile Updated")
+        //     } else {
+        //       console.log('User not logged in');
+        //     }
+        //   } catch (error) {
+        //     console.error('Error updating user data:', error);
+        //   }
+        // };
         setIsEditable(false);
-        window.alert("Profile Updated")
+        setSnackbarMessage('Profile Updated Successfully');
+        console.log('Profile Updated Successfully');
+        setSnackbarOpen(true);
       } else {
         console.log('User not logged in');
       }
     } catch (error) {
       console.error('Error updating user data:', error);
     }
+  };
+
+  // Snackbar close handler
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
   };
 
 
@@ -256,16 +272,18 @@ export const Profile = () => {
       }
     });
 
-    if (elementRef.current) {
-      observer.observe(elementRef.current);
-    }
+    const currentElementRef = elementRef.current;
 
-    return () => {
-      if (elementRef.current) {
-        observer.unobserve(elementRef.current);
-      }
-    };
-  }, []);
+    if (currentElementRef) {
+      observer.observe(currentElementRef);
+
+      return () => {
+        if (currentElementRef) {
+          observer.unobserve(currentElementRef);
+        }
+      };
+    }
+  }, [elementRef]);
 
 
   return (
@@ -315,12 +333,6 @@ export const Profile = () => {
               {/* <Box sx={{ p: 10, display: 'flex', justifyContent: 'center', height: '100px' }}> */}
               {isEditable ? (
                 <>
-                  <div
-                    style={{ color: 'white', fontSize: '1px' }}
-                    ref={elementRef}>
-                    <p>Element Width: {elementSize.width}</p>
-                    <p>Element Height: {elementSize.height}</p>
-                  </div>
                   <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
                     <Button
                       variant='contained'
@@ -354,7 +366,6 @@ export const Profile = () => {
               ) : (
                 <>
                   <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                    {/* <button className="bttnedit" onClick={toggleEdit}>Edit Profile</button> */}
                     <Button
                       variant='contained'
                       color='success'
@@ -512,6 +523,20 @@ export const Profile = () => {
           </Box>
         </Box>
       </Box >
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity="success"
+          vairant="filled"
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </>
   )
 }
