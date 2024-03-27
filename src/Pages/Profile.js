@@ -3,7 +3,7 @@ import './Design/profiledesign.css';
 // import { Link } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Navbar2 from '../components/NavBar2';
-import { Box, Button, Grid, Snackbar, Alert } from '@mui/material';
+import { Box, Button, Grid, Snackbar, Alert, Avatar } from '@mui/material';
 import StyledTextField from '../components/atoms/TextField.js';
 import MultiLine from '../components/atoms/MultiLine.js';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
@@ -159,7 +159,7 @@ export const Profile = () => {
           restaurantCity: formData.restocity,
           province: formData.province,
           zipCode: formData.restocode,
-          restaurantDesc: formData.restodescrip,
+          restaurantDesc: formData.restodescrip || '',
           restaurantLogo: formData.selectedImage || userData.restaurantLogo || '' // Provide a default value when selectedImage is undefined
         };
 
@@ -294,33 +294,61 @@ export const Profile = () => {
         <Box sx={{ p: 1, mb: 2, width: '100%' }}>
           <Box sx={{ p: 1, mt: 2, display: 'flex', gap: 3 }}>
             <Box sx={{ width: '23%', ml: '4%' }}>
-              <Box sx={{ p: 1, display: 'flex', justifyContent: 'center' }}>
-                <img
-                  src={formData.profileImage}
-                  alt=""
-                  onClick={isEditable ? handleSelectImageClick : undefined}
-                  style={{
-                    borderRadius: '50%',
-                    backgroundColor: '#ccc',
-                    width: '75%',
-                    maxHeight: '200px',
-                    minHeight: '100%',
-                    backgroundSize: 'cover',
-                    border: '2px solid black',
-                    objectFit: 'cover'
-                  }}
-                />
+              <Box sx={{ p: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                {isEditable ? (
+                  <>
+                    <input
+                      type="file"
+                      id="profileImage"
+                      accept="image/*"
+                      name="profileImage"
+                      onChange={handleImageUpload}
+                      style={{ display: 'none' }}
+                    />
 
-
-                <input
-                  type="file"
-                  id="profileImage"
-                  accept="image/*"
-                  name="profileImage"
-                  onChange={handleImageUpload}
-                  disabled={!isEditable}
-                  style={{ display: 'none' }}
-                />
+                    <label htmlFor="profileImage">
+                      {formData.profileImage ? (
+                        <img
+                          src={formData.profileImage}
+                          alt="Selected Image"
+                          style={{
+                            borderRadius: '50%',
+                            backgroundColor: '#ccc',
+                            height: 200,
+                            backgroundSize: 'cover',
+                            border: '1px solid black',
+                            objectFit: 'cover',
+                            boxShadow: '-2px 3px 0px 0px rgba(0,0,0,0.3)',
+                          }}
+                        />
+                      ) : (
+                        <Avatar
+                          alt="Remy Sharp"
+                          style={{
+                            border: '1px solid black',
+                            backgroundColor: '#ccc',
+                            border: '1px solid black',
+                            width: 200, // Adjust as needed
+                            height: 200, // Adjust as needed
+                            boxShadow: '-2px 3px 0px 0px rgba(0,0,0,0.3)',
+                          }}
+                        />
+                      )}
+                    </label>
+                  </>
+                ) : (
+                  <Avatar
+                    alt="Remy Sharp"
+                    src={formData.profileImage || undefined}
+                    style={{
+                      backgroundColor: '#ccc',
+                      border: '1px solid black',
+                      width: '70%', // Adjust as needed
+                      height: 200, // Adjust as needed
+                      boxShadow: '-2px 3px 0px 0px rgba(0,0,0,0.3)',
+                    }}
+                  />
+                )}
               </Box>
 
               <div
