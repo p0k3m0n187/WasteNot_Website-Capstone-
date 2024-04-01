@@ -29,8 +29,13 @@ const typography = {
         fontWeight: 700,
     },
     h6: {
-        fontSize: pxToRem(18),
+        fontSize: pxToRem(20),
         fontWeight: 700,
+    },
+    h7: {
+        fontSize: pxToRem(80),
+        fontWeight: 900,
+        fontFamily: '"Changa One", sans-serif',
     },
     subtitle1: {
         fontSize: pxToRem(14),

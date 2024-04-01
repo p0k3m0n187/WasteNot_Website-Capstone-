@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
-import PageTitle from './Design/pagetitle';
 import StyledTextField from '../components/atoms/TextField.js';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import {
@@ -242,7 +241,6 @@ export const Register = () => {
       <Navbar />
       <form onSubmit={registerUser}>
         <Box sx={{ p: 1, mb: 4, width: '100%' }}>
-          <PageTitle title="Registration" />
           <Box sx={{ p: 1, mt: 2 }}>
             <Box style={{ width: '50%', margin: '0 auto' }}>
               <Grid container spacing={2} sx={{ display: 'flex', pb: 5 }}>
