@@ -7,17 +7,17 @@ const BoxTotal = ({ title, icon, total }) => {
     return (
         <Box sx={{
             p: 0.5,
-            alignItems: 'center',
             width: '100%',  // Width set to 6 units
-            height: '6rem', // Height set to 9 units
+            height: '5.5rem', // Height set to 9 units
             border: '2px solid white',
             borderRadius: '5px',
             backgroundColor: '#57B961',
             boxShadow: '2px 2px 2px 2px rgba(0, 0, 0, 0.45)',
+            mr: 10
         }}>
             <Box>
                 <Box sx={{
-                    width: '100%',
+                    width: '9rem',
                     textAlign: 'center',
                 }}>
                     <Typography sx={{
@@ -30,20 +30,20 @@ const BoxTotal = ({ title, icon, total }) => {
                         {title}
                     </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-evenly', }}>
                     <Box sx={{
-                        fontSize: '3.4rem',
+                        fontSize: '2.5rem',
                         color: 'white',
-                        pl: 5
+                        mt: 0.5
                     }}>
                         {icon}
                     </Box>
                     <Box sx={{
                         color: 'white',
-                        pr: 7,
+                        mt: -0.6
                     }}>
                         <Typography sx={{
-                            fontSize: typography.h2.fontSize,
+                            fontSize: '2.5rem',
                             fontWeight: typography.h6.fontWeight,
                             fontFamily: typography.h1.fontFamily,
                             color: palette.plain.main,

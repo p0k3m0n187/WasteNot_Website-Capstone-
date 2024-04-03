@@ -12,13 +12,14 @@ const MultiLine = ({ borderColor, borderWidth, borderRadius, paddingTop, labelCo
             boxShadow: '0 5px 5px rgba(0, 0, 0, 0.6)',
         },
         '& .MuiInputBase-input': {
-            paddingTop: '20px', // Adjust the padding top as needed
+            // paddingTop: '10px', // Adjust the padding top as needed
             borderRadius: borderRadius || '8px', // Adjust the border radius as needed
             color: fontColor || 'black',
 
         },
         '& .MuiInputLabel-root': {
             color: labelColor || 'rgba(0, 0, 0, 0.99)', // Setting label color to black, or use the provided color
+            marginTop: '-0.4px',
         }
     };
 

@@ -33,7 +33,7 @@ const typography = {
         fontWeight: 700,
     },
     h7: {
-        fontSize: pxToRem(80),
+        fontSize: pxToRem(50),
         fontWeight: 900,
         fontFamily: '"Changa One", sans-serif',
     },

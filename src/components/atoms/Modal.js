@@ -8,8 +8,9 @@ import palette from '../../Pages/theme/palette';
 import TextField from '../atoms/TextField';
 import MultiLine from '../atoms/MultiLine';
 import { DropDown } from './Dropdown';
+// import { TextField } from '@mui/material';
 
-const CustomModal = ({ buttonText, title, content }) => {
+const CustomModal = () => {
     const [open, setOpen] = useState(false);
 
     const handleOpen = () => setOpen(true);
@@ -30,10 +31,10 @@ const CustomModal = ({ buttonText, title, content }) => {
 
     return (
         <div>
-            <Button onClick={handleOpen}>{buttonText}</Button>
+            <Button onClick={handleOpen}>Open Modal</Button>
             <Modal
                 open={open}
-                // onClose={handleClose}
+                onClose={handleClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
@@ -52,34 +53,17 @@ const CustomModal = ({ buttonText, title, content }) => {
                         </Typography>
                     </Box>
                     <Box>
-                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                            {content}
-                        </Typography>
-                        <TextField
-                        label="DishName"
-                        // value={dishName}
-                        />
-                        <MultiLine
-                        label="Dish Description"
-                        // value={dishName}
-                        />
-                        <DropDown/>
+                        <label>Dish Name</label>
+                        <TextField />
+                        <label>Dish Description</label>
+                        <MultiLine />
+                        <label>Category</label>
+                        <DropDown />
+                        <label>Array of Ingredients</label>
+                        <Box sx={{ display: 'flex' }}>
+                            <TextField /> <TextField />
+                        </Box>
                     </Box>
-                    <Box>
-                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                            {content}
-                        </Typography>
-                        <TextField
-                        label="DishName"
-                        // value={dishName}
-                        />
-                        <MultiLine
-                        label="Dish Description"
-                        // value={dishName}
-                        />
-                        <DropDown/>
-                    </Box>
-                    
                 </Box>
             </Modal>
         </div>

@@ -9,23 +9,14 @@ import { useState } from 'react';
 export function DropDown() {
     const [dishCategory, setDishCategory] = useState('');
 
-    const handleChange = (event) => {
-        setDishCategory(event.target.value);
-    };
 
     return (
-        <Box sx={{ width: '100%' }}>
-
+        <Box>
             <FormControl fullWidth>
-                {/* <InputLabel id="dishCategory">Dish Category</InputLabel> */}
                 <Select
-                    labelId="dishCategory"
-                    id="dishCategory"
                     value={dishCategory}
-                    label="Age"
                     onChange={(e) => setDishCategory(e.target.value)}
                 >
-                    <MenuItem value=''>Select Category</MenuItem>
                     <MenuItem value='meat'>Meat</MenuItem>
                     <MenuItem value='soup'>Soup</MenuItem>
                     <MenuItem value='appetizers'>Appetizers</MenuItem>

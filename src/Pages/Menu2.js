@@ -103,11 +103,7 @@ export function Menu2() {
                         </Typography>
                     </Box>
                     <Box>
-                        <CustomModal
-                            buttonText="Open custom modal"
-                            title="Custom Modal Title"
-                            content="This is a custom modal with custom styles."
-                        />
+                        <CustomModal />
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -155,8 +151,8 @@ export function Menu2() {
                                     cursor: 'pointer',
                                     boxShadow: '2px 2px 5px 2px rgba(0, 0, 0, 0.25)',
                                     borderRadius: '10px',
-                                    border: '3px solid white',
-                                    background: 'linear-gradient(0deg, #23ee48 0%, #bfffa1 30%)'
+                                    border: flippedCardId === menuItem.id ? '3px solid black' : '3px solid white',
+                                    background: flippedCardId === menuItem.id ? 'white' : 'linear-gradient(0deg, #23ee48 0%, #bfffa1 30%)'
                                 }}
                             >
                                 <CardContent sx={{

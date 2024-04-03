@@ -11,29 +11,27 @@ const StyledTextField = ({ borderColor, borderWidth, borderRadius, paddingTop, l
             borderRadius: borderRadius || '8px', // Adjust the border radius as needed
         },
         '& .MuiInputBase-input': {
-            paddingTop: '20px', // Adjust the padding top as needed
+            // paddingTop: '20px', // Adjust the padding top as needed
             borderRadius: borderRadius || '8px', // Adjust the border radius as needed
             boxShadow: '0 5px 5px rgba(0, 0, 0, 0.6)',
             color: fontColor || 'black',
         },
         '& .MuiInputLabel-root': {
             color: labelColor || 'rgba(0, 0, 0, 0.99)', // Setting label color to black, or use the provided color
+            marginTop: '-0.4px',
         },
-        '& .Mui-disabled .MuiInputBase-input': {
-            color: fontColor || 'black', // Ensure the font color remains black when disabled
-        }
     };
 
     return (
         <TextField
             variant='outlined'
             fullWidth={true}
-            size='small'
+            size='large'
             sx={{
                 ...outlinedStyle,
                 color: palette.primary.main,
                 borderRadius: borderRadius || '8px', // Adjust the border radius
-                size: 'small',
+                size: 'large',
                 marginBottom: '6px'
             }}
             {...props}
