@@ -174,16 +174,6 @@ export const Profile = () => {
         // Fetch updated user data to reflect changes in the UI
         fetchUserData();
 
-        // Exit edit mode
-        //       setIsEditable(false);
-        //       window.alert("Profile Updated")
-        //     } else {
-        //       console.log('User not logged in');
-        //     }
-        //   } catch (error) {
-        //     console.error('Error updating user data:', error);
-        //   }
-        // };
         setIsEditable(false);
         setSnackbarMessage('Profile Updated Successfully');
         console.log('Profile Updated Successfully');

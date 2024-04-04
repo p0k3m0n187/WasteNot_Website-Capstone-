@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from "react";
 import Navbar2 from '../components/NavBar2';
 import { Link } from "react-router-dom";
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, query, where, getDocs } from 'firebase/firestore'; // Import query and where for Firestore query
 import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
 import { db } from '../config/firebase';
 import { useNavigate } from 'react-router-dom';
 import './Design/addstaffdesign.css';
 import Sidebar from '../components/Sidebar';
+import { Alert, Snackbar } from "@mui/material";
+import MiniDrawer from "../components/Hakdog";
+
 
 export const AddStaff = () => {
     const history = useNavigate();
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
 
     const [formData, setFormData] = useState({
         idNumber: '',
@@ -39,6 +44,7 @@ export const AddStaff = () => {
         confirmPassword: ''
     });
     const [adminId, setAdminId] = useState('');
+    const [idNumberUnique, setIdNumberUnique] = useState(true); // State to store whether ID number is unique or not
     const genders = ['Male', 'Female'];
     const positions = ['Head Staff', 'Staff', 'Manager'];
     const auth = getAuth();
@@ -46,16 +52,13 @@ export const AddStaff = () => {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
-                // User is signed in.
-                // Access the UID of the currently authenticated admin user
                 const adminId = user.uid;
-                setAdminId(adminId); // Set adminId in state for later use
+                setAdminId(adminId);
             } else {
                 console.log("No user is signed in.");
             }
         });
 
-        // Clean up the subscription when the component unmounts
         return () => unsubscribe();
     }, [auth]);
 
@@ -64,11 +67,23 @@ export const AddStaff = () => {
         setErrors({ ...errors, [e.target.name]: '' });
     };
 
-    const validateForm = () => {
+    const validateForm = async () => {
         const newErrors = {};
 
         if (!formData.idNumber) {
             newErrors.idNumber = '*';
+        } else {
+            // Check if ID number already exists
+            const q = query(collection(db, "users"), where("idNumber", "==", formData.idNumber));
+            const querySnapshot = await getDocs(q);
+            if (!querySnapshot.empty) {
+                setSnackbarMessage('Staff ID number already exists');
+                setSnackbarOpen(true);
+                setIdNumberUnique(false);
+                return false;
+            } else {
+                setIdNumberUnique(true);
+            }
         }
 
         if (!formData.firstName) {
@@ -120,7 +135,9 @@ export const AddStaff = () => {
 
     const handleSubmit = async () => {
         try {
-            if (!validateForm()) {
+            const isValid = await validateForm(); // Check form validity
+
+            if (!isValid) {
                 window.alert('Please fill in all the required fields.');
                 return;
             }
@@ -128,14 +145,11 @@ export const AddStaff = () => {
             const auth = getAuth();
             const { email, password } = formData;
 
-            // Create the user in Firebase Authentication
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
-            // Access the user ID from the userCredential
             const userId = user.uid;
 
-            // Save additional user data in Firestore
             const usersCollection = collection(db, 'users');
             await addDoc(usersCollection, {
                 idNumber: formData.idNumber,
@@ -149,27 +163,32 @@ export const AddStaff = () => {
                 position: formData.position,
                 adminId: adminId,
                 role: 'staff',
-                userId: userId, // Save the UID of the user in Firestore
+                userId: userId,
             });
 
             window.alert('Staff Added Successfully');
             console.log('Staff data saved to Firestore');
-
-            // Do not log in the user in the web app
+            // setSnackbarOpen(true);
 
             history('/staff');
         } catch (error) {
             console.error("Error adding user: ", error.message);
-            window.alert('Existing E-mail. Please use other E-mail!');
+            // window.alert('Existing E-mail. Please use another E-mail!');
+            setSnackbarMessage('Existing E-mail. Please use another E-mail!');
+            setSnackbarOpen(true);
         }
     };
 
 
+    // Snackbar close handler
+    const handleSnackbarClose = () => {
+        setSnackbarOpen(false);
+    };
+
 
     return (
         <>
-            <Navbar2 />
-            <Sidebar />
+            <MiniDrawer />
             <div className="addstaff-container">
                 <div className='scrollable-addstaff'>
                     <div className='thead'>Information</div>
@@ -177,7 +196,8 @@ export const AddStaff = () => {
                         <div className='form1'>
                             <div className="input-container">
                                 <label htmlFor="idNumber">ID Number:</label>
-                                <input type="text" name="idNumber" value={formData.idNumber} onChange={handleChange} placeholder="Sample ID Number " />{errors.idNumber && <p className="error">{errors.idNumber}</p>}
+                                <input type="text" name="idNumber" value={formData.idNumber} onChange={handleChange} placeholder="Sample ID Number " />
+                                {errors.idNumber && <p className="error">{errors.idNumber}</p>}
                             </div>
 
                             <div className="input-container">
@@ -261,6 +281,20 @@ export const AddStaff = () => {
                     <Link to="/staff"><button className='bttn-cancel'>Cancel</button></Link>
                 </div>
             </div>
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={handleSnackbarClose}
+            >
+                <Alert
+                    onClose={handleSnackbarClose}
+                    severity="error"
+                    vairant="filled"
+                    sx={{ width: '100%' }}
+                >
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
         </>
     );
 };
