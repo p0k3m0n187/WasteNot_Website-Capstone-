@@ -3,10 +3,8 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import Navbar2 from '../components/NavBar2';
-import Sidebar from '../components/Sidebar';
 import { Link } from "react-router-dom";
-import { CardMedia, Grid } from '@mui/material';
+import { CardMedia, Grid, Tooltip } from '@mui/material';
 import { FaBookOpen, FaPlusCircle, FaTrash, FaPen } from 'react-icons/fa';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../config/firebase';
@@ -15,6 +13,8 @@ import palette from './theme/palette';
 import typography from './theme/typhography';
 import BoxTotal from '../components/atoms/boxtotal';
 import CustomModal from '../components/atoms/Modal';
+import MiniDrawer from '../components/Drawer';
+
 
 export function Menu2() {
     const [flippedCardId, setFlippedCardId] = useState(null); // Track which card is flipped
@@ -85,8 +85,7 @@ export function Menu2() {
 
     return (
         <>
-            <Navbar2 />
-            <Sidebar />
+            <MiniDrawer />
             <Box sx={{ ml: 12, p: 2 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', height: '7rem', mb: 2 }}>
                     <Box sx={{ display: 'flex', alignItems: 'start' }}>
@@ -108,25 +107,27 @@ export function Menu2() {
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <Link to="/addDish">
-                                <button
-                                    style={{
-                                        backgroundColor: 'transparent',
-                                        border: 'none',
-                                        cursor: 'pointer'
-                                    }}
-                                    onMouseEnter={() => setHover(true)}
-                                    onMouseLeave={() => setHover(false)}
-                                >
-                                    <FaPlusCircle
+                                <Tooltip title="Add Dish" arrow>
+                                    <button
                                         style={{
-                                            fontSize: '50px',
-                                            color: hover ? '#12841D' : '#23ee48',
-                                            boxShadow: '2px 8px 5px rgba(0, 0, 0, 0.52)',
-                                            border: hover ? '2px solid white' : '2px solid #12841D ',
-                                            borderRadius: '50%',
+                                            backgroundColor: 'transparent',
+                                            border: 'none',
+                                            cursor: 'pointer'
                                         }}
-                                    />
-                                </button>
+                                        onMouseEnter={() => setHover(true)}
+                                        onMouseLeave={() => setHover(false)}
+                                    >
+                                        <FaPlusCircle
+                                            style={{
+                                                fontSize: '50px',
+                                                color: hover ? '#12841D' : palette.primary.main,
+                                                boxShadow: '2px 8px 5px rgba(0, 0, 0, 0.52)',
+                                                border: hover ? '2px solid white' : '2px solid #12841D ',
+                                                borderRadius: '50%',
+                                            }}
+                                        />
+                                    </button>
+                                </Tooltip>
                             </Link>
                         </Box>
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>

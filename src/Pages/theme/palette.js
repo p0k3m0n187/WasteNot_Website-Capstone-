@@ -4,7 +4,7 @@
  */
 const palette = {
     primary: {
-        main: '#57B961',
+        main: '#03C04A',
         contrastText: '#fff',
     },
     secondary: {

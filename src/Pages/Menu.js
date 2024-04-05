@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import Sidebar from '../components/Sidebar';
-import Navbar2 from '../components/NavBar2';
 import './Design/menudesign.css';
 import { Link } from "react-router-dom";
 import { FaWarehouse, FaPlusCircle, FaTrash } from 'react-icons/fa';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { getAuth } from 'firebase/auth';
+import MiniDrawer from "../components/Drawer";
 
 export const Menu = (props) => {
     const [menuData, setMenuData] = useState([]);
@@ -15,7 +14,7 @@ export const Menu = (props) => {
 
     const handleDelete = async (docId) => {
         const confirmDelete = window.confirm("Are you sure you want to delete this dish?");
-        
+
         if (!confirmDelete) {
             return; // If the user clicks Cancel, do nothing
         }
@@ -57,8 +56,7 @@ export const Menu = (props) => {
 
     return (
         <>
-            <Navbar2 />
-            <Sidebar />
+            <MiniDrawer />
             <div className="menu-container">
                 <div className='menu-title'><h1>Menu</h1></div>
                 <div className='total-menu'>
@@ -111,7 +109,7 @@ export const Menu = (props) => {
                                                     <p>
                                                         {menuItem.ingredientsList.map((item, index) => (
                                                             <span key={index}>
-                                                                {`${item.ingredients}: ${item.grams} grams`} <br/>
+                                                                {`${item.ingredients}: ${item.grams} grams`} <br />
                                                                 {index < menuItem.ingredientsList.length - 1 && ''}
                                                             </span>
                                                         ))}

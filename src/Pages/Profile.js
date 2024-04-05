@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Design/profiledesign.css';
 // import { Link } from 'react-router-dom';
-import Sidebar from '../components/Sidebar';
-import Navbar2 from '../components/NavBar2';
 import { Box, Button, Grid, Snackbar, Alert, Avatar } from '@mui/material';
 import StyledTextField from '../components/atoms/TextField.js';
 import MultiLine from '../components/atoms/MultiLine.js';
@@ -11,6 +9,7 @@ import { auth, db } from '../config/firebase';
 import { useNavigate } from 'react-router-dom';
 import { getDoc, doc, setDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import MiniDrawer from '../components/Drawer.js';
 
 
 
@@ -278,8 +277,7 @@ export const Profile = () => {
 
   return (
     <>
-      <Navbar2 />
-      <Sidebar />
+      <MiniDrawer />
       <Box sx={{ padding: 1, width: '100%' }}>
         <Box sx={{ p: 1, mb: 2, width: '100%' }}>
           <Box sx={{ p: 1, mt: 2, display: 'flex', gap: 3 }}>

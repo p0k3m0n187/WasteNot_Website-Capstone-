@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Sidebar from '../components/Sidebar';
-import Navbar2 from '../components/NavBar2';
 import './Design/marketdesign.css';
 import image from "../images/steak_sample.png";
 import {
@@ -10,6 +8,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { getAuth } from 'firebase/auth';
 import market from "../images/Market.png";
+import MiniDrawer from "../components/Drawer";
 
 export const Market = (props) => {
     // const [marketRequests, setMarketRequests] = useState([]);
@@ -17,7 +16,7 @@ export const Market = (props) => {
     const auth = getAuth();
     const user = auth.currentUser;
 
-    useEffect(() => {   
+    useEffect(() => {
         const fetchSaleItems = async () => {
             try {
                 const saleItemsSnapshot = await getDocs(collection(db, 'sale_items'));
@@ -74,8 +73,7 @@ export const Market = (props) => {
 
     return (
         <>
-            <Navbar2 />
-            <Sidebar />
+            <MiniDrawer />
             <div className="mark-container">
                 <div className='mark-title'><h1>Market</h1></div>
                 <div><button class='bttn-request'><h4>Requests</h4><h5>2</h5></button></div>

@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "firebase/firestore";
-import Sidebar from '../components/Sidebar';
-import Navbar2 from '../components/NavBar2';
 import './Design/inventdesign.css';
 import { db } from '../config/firebase';
 import { collection, getDocs, query, where, addDoc, deleteDoc, doc } from 'firebase/firestore';
 import { FaWarehouse, FaArrowCircleDown } from 'react-icons/fa';
 import { getAuth } from 'firebase/auth';
 import ingredient from "../images/Ingredients.png";
+import MiniDrawer from "../components/Drawer";
 
 
 export const Inventory = (props) => {
@@ -112,8 +111,7 @@ export const Inventory = (props) => {
 
     return (
         <>
-            <Navbar2 />
-            <Sidebar />
+            <MiniDrawer />
             <div className="inventory-cont">
                 <div className='invent-title'>
                     <h1>Ingredients</h1>

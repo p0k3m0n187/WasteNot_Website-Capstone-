@@ -25,7 +25,7 @@ import typography from '../Pages/theme/typhography';
 import { Avatar } from '@mui/material';
 import Logo from '../images/dota2.png'
 
-export default function Navbar() {
+export default function Navbar({ children }) {
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static" sx={{ backgroundColor: palette.primary.main, borderBottom: '2px solid white', boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.50)' }}>
@@ -59,6 +59,9 @@ export default function Navbar() {
                     </Link>
                 </Toolbar>
             </AppBar>
+            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+                {children}
+            </Box>
         </Box>
     );
 }

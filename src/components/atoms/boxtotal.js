@@ -11,7 +11,7 @@ const BoxTotal = ({ title, icon, total }) => {
             height: '5.5rem', // Height set to 9 units
             border: '2px solid white',
             borderRadius: '5px',
-            backgroundColor: '#57B961',
+            backgroundColor: palette.primary.main,
             boxShadow: '2px 2px 2px 2px rgba(0, 0, 0, 0.45)',
             mr: 10
         }}>

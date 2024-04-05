@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Sidebar from '../components/Sidebar';
-import Navbar2 from '../components/NavBar2';
 import SalesChart from '../components/Sample/SalesChart';
 import MarketChart from '../components/Sample/MarketChart';
 import { SampleData } from '../components/Sample/SampleData';
@@ -21,6 +19,7 @@ import market from "../images/Market.png";
 import { collection, getDocs, where, query } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import MiniDrawer from '../components/Drawer';
 
 export const Homepage = (props) => {
     const [menuItems, setMenuData] = useState([]);
@@ -175,34 +174,33 @@ export const Homepage = (props) => {
             try {
                 // Assuming you have a 'sales_item' collection
                 const salesCollection = collection(db, 'sale_items');
-    
+
                 // Add a where clause to filter based on adminId and Restaurant_Id
                 const salesQuery = query(
                     salesCollection,
                     where('Restaurant_Id', '==', adminId),
                 );
-    
+
                 const salesSnapshot = await getDocs(salesQuery);
-    
+
                 const salesList = salesSnapshot.docs.map((doc) => ({
                     id: doc.id,
                     ...doc.data(),
                 }));
-    
+
                 setSalesData(salesList);
             } catch (error) {
                 console.error('Error fetching sales data: ', error);
             }
         };
-    
+
         fetchSalesData();
     }, [adminId, user?.uid]);
-    
+
 
     return (
         <>
-            <Navbar2 />
-            <Sidebar />
+            <MiniDrawer />
             <div className="container">
                 <div>
                     <Link to="/staff"><button class="icon-button">
@@ -382,7 +380,7 @@ export const Homepage = (props) => {
                     <p></p>
                 )}
 
-                    {salesData.length > 0 ? (
+                {salesData.length > 0 ? (
                     <>
                         <h1>Market</h1>
                         <Link to="/market"><button className='click'>See All</button></Link>

@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Sidebar from '../components/Sidebar';
-import Navbar2 from '../components/NavBar2';
 import './Design/staffdesign.css';
 import staff from '../images/Staff_sample.png';
 import { FaPlusCircle, FaWarehouse, FaSearch, FaTrash } from 'react-icons/fa';
@@ -9,6 +7,7 @@ import { collection, getDocs, where, query } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { getAuth, onAuthStateChanged, deleteUser } from 'firebase/auth';
 import { deleteDoc, doc } from 'firebase/firestore';
+import MiniDrawer from '../components/Drawer';
 
 
 export const Staff = (props) => {
@@ -61,29 +60,29 @@ export const Staff = (props) => {
 
   const handleDelete = async (staffId, userId) => {
     const confirmation = window.confirm('Confirm delete?');
-  
+
     if (!confirmation) {
       return;
     }
-  
+
     try {
       // Delete the staff member from Firestore
       const staffDocRef = doc(db, 'users', staffId);
       await deleteDoc(staffDocRef);
-  
+
       // Disable the authentication of the staff member
       const auth = getAuth();
-  
+
       // Only attempt to delete user if the current user is the one being deleted
       if (auth.currentUser && auth.currentUser.uid === userId) {
         await deleteUser(auth.currentUser);
       }
-  
+
       // Update the staffData state after deletion
       setStaffData((prevStaffData) =>
         prevStaffData.filter((staffMember) => staffMember.id !== staffId)
       );
-  
+
       alert('Staff member deleted successfully');
     } catch (error) {
       console.error('Error deleting staff member: ', error.message);
@@ -93,8 +92,7 @@ export const Staff = (props) => {
 
   return (
     <>
-      <Navbar2 />
-      <Sidebar />
+      <MiniDrawer />
       <div className="staff-container">
         <div class="staff-title">Staff</div>
         <div class="total-staff">

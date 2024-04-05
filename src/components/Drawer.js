@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -16,9 +16,11 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { FaBookOpen, FaHome, FaStore, FaUserCircle, FaUsers, FaWarehouse } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import palette from '../Pages/theme/palette';
+import typography from '../Pages/theme/typhography';
 
-const drawerWidth = 240;
+const drawerWidth = 260;
 
 const openedMixin = (theme) => ({
     width: drawerWidth,
@@ -88,6 +90,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 export default function MiniDrawer({ children }) {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
+    const location = useLocation(); // Get the current location
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -131,9 +134,9 @@ export default function MiniDrawer({ children }) {
     };
 
     return (
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex', mb: 10 }}>
             <CssBaseline />
-            <AppBar position="fixed" open={open}>
+            <AppBar position="fixed" open={open} sx={{ backgroundColor: palette.primary.main }}>
                 <Toolbar>
                     <IconButton
                         color="inherit"
@@ -147,7 +150,14 @@ export default function MiniDrawer({ children }) {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap component="div">
+                    <Typography variant="h6" noWrap component="div"
+                        sx={{
+                            flexGrow: 1,
+                            fontSize: typography.h5.fontSize,
+                            fontWeight: typography.h1.fontWeight,
+                            fontFamily: typography.h1.fontFamily,
+                            WebkitTextStroke: '1px #073A16',
+                        }}>
                         WASTENOT
                     </Typography>
                 </Toolbar>
@@ -160,7 +170,12 @@ export default function MiniDrawer({ children }) {
                 </DrawerHeader>
                 <List>
                     {sideItems.map((item) => (
-                        <ListItem key={item.name} disablePadding sx={{ display: 'block' }}>
+                        <ListItem
+                            key={item.name}
+                            disablePadding
+                            sx={{ display: 'block' }}
+                            selected={location.pathname === item.path} // Check if the item is selected
+                        >
                             <ListItemButton
                                 component={Link}
                                 to={item.path}
@@ -168,6 +183,7 @@ export default function MiniDrawer({ children }) {
                                     minHeight: 48,
                                     justifyContent: open ? 'initial' : 'center',
                                     px: 2.5,
+                                    bgcolor: location.pathname === item.path ? '#D0CBCB' : 'inherit', // Set background color if selected
                                 }}
                             >
                                 <ListItemIcon
@@ -175,6 +191,9 @@ export default function MiniDrawer({ children }) {
                                         minWidth: 0,
                                         mr: open ? 3 : 'auto',
                                         justifyContent: 'center',
+                                        fontSize: '1.58rem',
+                                        padding: '10px',
+                                        color: location.pathname === item.path ? 'white' : 'inherit',
                                     }}
                                 >
                                     {item.icon}
@@ -184,11 +203,7 @@ export default function MiniDrawer({ children }) {
                         </ListItem>
                     ))}
                 </List>
-
             </Drawer>
-            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-                {children}
-            </Box>
         </Box>
     );
 }

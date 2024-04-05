@@ -6,9 +6,8 @@ import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from 'fir
 import { db } from '../config/firebase';
 import { useNavigate } from 'react-router-dom';
 import './Design/addstaffdesign.css';
-import Sidebar from '../components/Sidebar';
 import { Alert, Snackbar } from "@mui/material";
-import MiniDrawer from "../components/Hakdog";
+import MiniDrawer from "../components/Drawer";
 
 
 export const AddStaff = () => {
