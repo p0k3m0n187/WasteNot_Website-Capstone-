@@ -1,51 +1,50 @@
-*{
+* {
     box-sizing: border-box;
 }
 
-.about-container{
+.about-container {
     margin: 0;
 }
 
-.about-title{
+.about-title {
     font-weight: 1000;
-    margin-top: 1%;
     color: #57B961;
-    font-size: 5vw;
+    font-size: 3vw;
     text-align: center;
 }
 
-h2{
+h2 {
     color: #57B961;
 }
 
-.member1{
+.member1 {
     text-align: center;
     position: absolute;
     margin-left: 5%;
-    margin-top: 25%;
+    margin-top: 22%;
 }
 
-p{
+p {
     text-align: center;
 }
 
-.member2{
+.member2 {
     text-align: center;
     position: absolute;
     margin-left: 39%;
-    margin-top: 25%;
+    margin-top: 22%;
 }
 
-.member3{
+.member3 {
     text-align: center;
     position: absolute;
     margin-left: 70%;
-    margin-top: 25%;
+    margin-top: 22%;
 }
 
-.back-button{
+.back-button {
     position: absolute;
-    margin-top: 35%;
+    margin-top: 30%;
     margin-left: 45%;
     background-color: #57B961;
     border-color: black;
@@ -60,18 +59,20 @@ p{
     font-weight: 900;
 }
 
-.back-button:hover{
+.back-button:hover {
     background-color: white;
     color: #57B961;
     border: 2px solid;
     border-color: #57B961;
 }
 
-.about-container img{
+.about-container img {
     width: 22vw;
     height: 22vw;
     margin-top: -20vw;
-    border-radius: 50%; /* Make the image round */
-    border: 2px solid #57B961; /* Add a border around the image */
+    border-radius: 50%;
+    /* Make the image round */
+    border: 2px solid #57B961;
+    /* Add a border around the image */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }

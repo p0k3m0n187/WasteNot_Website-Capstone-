@@ -59,7 +59,7 @@ export default function Navbar({ children }) {
                     </Link>
                 </Toolbar>
             </AppBar>
-            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+            <Box component="main" sx={{ flexGrow: 1, p: 1 }}>
                 {children}
             </Box>
         </Box>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Navbar2 from '../components/NavBar2';
+import MiniDrawer from '../components/Drawer';
 import { FaPlusCircle, FaMinusCircle } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { imageDB, db } from '../config/firebase';
@@ -134,7 +134,7 @@ export const AddDish = () => {
 
     return (
         <>
-            <Navbar2 />
+            <MiniDrawer />
             <div className='addDish-container'>
                 <div className='addDish-Title'>Add Dish</div>
                 <div className='form-addDish'>

@@ -278,7 +278,7 @@ export const Profile = () => {
   return (
     <>
       <MiniDrawer />
-      <Box sx={{ padding: 1, width: '100%' }}>
+      <Box sx={{ padding: 1, width: '100%', pt: '10vh' }}>
         <Box sx={{ p: 1, mb: 2, width: '100%' }}>
           <Box sx={{ p: 1, mt: 2, display: 'flex', gap: 3 }}>
             <Box sx={{ width: '23%', ml: '4%' }}>
