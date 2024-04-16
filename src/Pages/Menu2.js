@@ -15,7 +15,6 @@ import BoxTotal from '../components/atoms/boxtotal';
 import CustomModal from '../components/atoms/Modal';
 import MiniDrawer from '../components/Drawer';
 
-
 export function Menu2() {
     const [flippedCardId, setFlippedCardId] = useState(null); // Track which card is flipped
     const [menuData, setMenuData] = useState([]);
@@ -24,6 +23,21 @@ export function Menu2() {
     const [hoveredIcons, setHoveredIcons] = useState({}); // Track hovered state for each card
     const [hover, setHover] = useState(false);
     const [selectedIconType, setSelectedIconType] = useState(null); // Track selected icon type ('edit' or 'delete')
+    const [openModal, setOpenModal] = useState(false);
+    const [selectedDishId, setSelectedDishId] = useState(null);
+
+    const handleOpenModal = (id) => {
+        // Check if the card is already flipped, and if so, do not flip it back
+        if (flippedCardId === id) {
+            setOpenModal(true); // Open the modal directly
+        } else {
+            setSelectedDishId(id); // Set the selected dish ID
+            setOpenModal(true); // Open the modal
+            setFlippedCardId(null); // Ensure the card is not flipped when opening the modal
+        }
+    };
+
+    const handleCloseModal = () => setOpenModal(false);
 
     const handleCardClick = (id) => {
         setFlippedCardId(id === flippedCardId ? null : id); // Flip the card if it's not already flipped, otherwise unflip it
@@ -101,9 +115,6 @@ export function Menu2() {
                             Menu
                         </Typography>
                     </Box>
-                    <Box>
-                        <CustomModal />
-                    </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <Link to="/addDish">
@@ -162,10 +173,12 @@ export function Menu2() {
                                     {!flippedCardId || flippedCardId !== menuItem.id ? (
                                         <>
                                             <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mb: 0.5 }}>
+                                                <CustomModal open={openModal} onClose={handleCloseModal} selectedDishId={selectedDishId} />
+
                                                 <button
                                                     onClick={(event) => {
                                                         event.stopPropagation();
-                                                        handleDelete(menuItem.id);
+                                                        handleOpenModal(menuItem.id); // Call handleOpenModal to open the modal
                                                     }}
                                                     style={{
                                                         background: 'none',
