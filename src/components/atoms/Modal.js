@@ -1,20 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import typography from '../../Pages/theme/typhography';
-import palette from '../../Pages/theme/palette';
 import TextField from '../atoms/TextField';
 import MultiLine from '../atoms/MultiLine';
 import { DropDown } from './Dropdown';
-// import { TextField } from '@mui/material';
+import typography from '../../Pages/theme/typhography';
+import palette from '../../Pages/theme/palette';
 
-const CustomModal = ({ open, onClose, selectedDishId }) => {
+const CustomModal = ({ open, onClose, selectedDish }) => {
+    const [editedDishData, setEditedDishData] = useState({
+        name: '',
+        description: '',
+        category: '',
+        ingredients: [],
+    });
 
+    // Update edited data when selectedDish changes
+    useEffect(() => {
+        if (selectedDish) {
+            setEditedDishData({
+                name: selectedDish.dishName || '', // Provide default value ''
+                description: selectedDish.dishDescription || '', // Provide default value ''
+                category: selectedDish.dishCategory || '', // Provide default value ''
+                ingredients: selectedDish.ingredientsList ? [...selectedDish.ingredientsList] : [],
+            });
+        }
+    }, [selectedDish]);
 
-    const handleOpen = () => open(true);
-    const handleClose = () => onClose(true);
+    const handleSaveChanges = () => {
+        // Implement logic to save changes to the dish data
+        console.log('Edited changes:', editedDishData);
+        onClose(); // Close the modal after saving changes
+    };
 
     const customStyle = {
         position: 'absolute',
@@ -30,119 +49,64 @@ const CustomModal = ({ open, onClose, selectedDishId }) => {
     };
 
     return (
-        <div>
-            <Modal
-                open={open}
-                onClose={onClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <Box sx={customStyle}>
-                    <Box>
-                        <Typography sx={{
-                            fontSize: '1.5rem',
-                            fontWeight: typography.h1.fontWeight,
-                            fontFamily: typography.h1.fontFamily,
-                            color: palette.plain.main,
-                            WebkitTextStroke: '1.5px #12841D',
-                            textShadow: '2px 8px 5px rgba(106, 217, 117, 0.52)',
-                            textTransform: 'uppercase',
-                        }} gutterBottom>
-                            Edit Dish
-                        </Typography>
-                    </Box>
-                    <Box>
-                        <label style={{ fontSize: '1rem' }}>Dish Name</label>
-                        <TextField />
-                        <label style={{ fontSize: '1rem' }}>Dish Description</label>
-                        <MultiLine />
-                        <label style={{ fontSize: '1rem' }}>Category</label>
-                        <DropDown />
-                        <label style={{ fontSize: '1rem' }}>Array of Ingredients</label>
-                        <Box sx={{ display: 'flex' }}>
-                            <TextField /> <TextField />
-                        </Box>
-                    </Box>
+        <Modal
+            open={open}
+            onClose={onClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+        >
+            <Box sx={customStyle}>
+                <Typography
+                    sx={{
+                        fontSize: '1.5rem',
+                        fontWeight: typography.h1.fontWeight,
+                        fontFamily: typography.h1.fontFamily,
+                        color: palette.plain.main,
+                        WebkitTextStroke: '1.5px #12841D',
+                        textShadow: '2px 8px 5px rgba(106, 217, 117, 0.52)',
+                        textTransform: 'uppercase',
+                    }}
+                    gutterBottom
+                >
+                    Edit Dish
+                </Typography>
+                <Box>
+                    <label style={{ fontSize: '1rem' }}>Dish Name</label>
+                    <TextField
+                        value={editedDishData.name}
+                    // onChange={(e) => setEditedDishData({ ...editedDishData, name: e.target.value })}
+                    />
+                    <label style={{ fontSize: '1rem' }}>Dish Description</label>
+                    <MultiLine
+                        value={editedDishData.description}
+                    // onChange={(e) => setEditedDishData({ ...editedDishData, description: e.target.value })}
+                    />
+                    <label style={{ fontSize: '1rem' }}>Category</label>
+                    <DropDown
+                        value={editedDishData.category}
+                    // onChange={(e) => setEditedDishData({ ...editedDishData, category: e.target.value })}
+                    />
+                    {/* <label style={{ fontSize: '1rem' }}>Array of Ingredients</label>
+                    <Box sx={{ display: 'flex' }}>
+                        {editedDishData.ingredients.map((ingredient, index) => (
+                            <TextField
+                                key={index}
+                                value={ingredient}
+                                onChange={(e) =>
+                                    setEditedDishData((prevData) => {
+                                        const updatedIngredients = [...prevData.ingredients];
+                                        updatedIngredients[index] = e.target.value;
+                                        return { ...prevData, ingredients: updatedIngredients };
+                                    })
+                                }
+                            />
+                        ))}
+                    </Box> */}
                 </Box>
-            </Modal>
-        </div>
+                <Button onClick={handleSaveChanges}>Save Changes</Button>
+            </Box>
+        </Modal>
     );
-}
+};
 
 export default CustomModal;
-
-// import React, { useState, useEffect } from 'react';
-// import Box from '@mui/material/Box';
-// import Button from '@mui/material/Button';
-// import Typography from '@mui/material/Typography';
-// import Modal from '@mui/material/Modal';
-// import TextField from '../atoms/TextField';
-// import MultiLine from '../atoms/MultiLine';
-// import { DropDown } from './Dropdown';
-// import { db } from '../../config/firebase';
-// import { collection, getDocs } from 'firebase/firestore'; // Updated import
-
-// const CustomModal = () => {
-//     const [open, setOpen] = useState(false);
-//     const [menuDishes, setMenuDishes] = useState([]); // State to store fetched menu dishes
-
-//     useEffect(() => {
-//         const fetchMenuDishes = async () => {
-//             try {
-//                 const menuDishesSnapshot = await getDocs(collection(db, 'menu_dish')); // Use getDocs to fetch data
-//                 const dishesData = menuDishesSnapshot.docs.map(doc => doc.data()); // Map document data to an array
-//                 setMenuDishes(dishesData); // Update state with fetched data
-//             } catch (error) {
-//                 console.error('Error fetching menu dishes:', error);
-//             }
-//         };
-
-//         fetchMenuDishes();
-//     }, []);
-
-//     const handleOpen = () => setOpen(true);
-//     const handleClose = () => setOpen(false);
-
-//     const customStyle = {
-//         position: 'absolute',
-//         top: '50%',
-//         left: '50%',
-//         transform: 'translate(-50%, -50%)',
-//         width: '60%',
-//         bgcolor: 'white',
-//         border: '2px solid #000',
-//         borderRadius: '10px',
-//         boxShadow: 24,
-//         p: 1,
-//     };
-
-//     return (
-//         <div>
-//             <Button onClick={handleOpen}>Open Modal</Button>
-//             <Modal
-//                 open={open}
-//                 onClose={handleClose}
-//                 aria-labelledby="modal-modal-title"
-//                 aria-describedby="modal-modal-description"
-//             >
-//                 <Box sx={customStyle}>
-//                     {menuDishes.map((dish, index) => ( // Loop through fetched dishes and display them
-//                         <div key={index}>
-//                             <Typography variant="h4" gutterBottom>{dish.dishName}</Typography>
-//                             <Typography variant="body1" gutterBottom>{dish.dishCategory}</Typography>
-//                             <Typography variant="body1" gutterBottom>{dish.dishDescription}</Typography>
-//                             <ul>
-//                                 {dish.ingredientsList.map((ingredient, i) => (
-//                                     <li key={i}>{ingredient}</li>
-//                                 ))}
-//                             </ul>
-//                         </div>
-//                     ))}
-//                 </Box>
-//             </Modal>
-//         </div>
-//     );
-// }
-
-// export default CustomModal;
-

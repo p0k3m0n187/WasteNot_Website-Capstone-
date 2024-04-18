@@ -173,7 +173,7 @@ export function Menu2() {
                                     {!flippedCardId || flippedCardId !== menuItem.id ? (
                                         <>
                                             <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mb: 0.5 }}>
-                                                <CustomModal open={openModal} onClose={handleCloseModal} selectedDishId={selectedDishId} />
+                                                <CustomModal open={openModal} onClose={handleCloseModal} selectedDish={menuData.find(item => item.id === selectedDishId)} />
 
                                                 <button
                                                     onClick={(event) => {
