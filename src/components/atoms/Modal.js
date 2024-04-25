@@ -50,14 +50,14 @@ const CustomModal = ({ open, onClose, selectedDish }) => {
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: '60%',
+        width: '70%',
         bgcolor: 'white',
         border: '2px solid #000',
         borderRadius: '10px',
         boxShadow: 24,
         p: 1,
         overflowY: 'auto', // Enable vertical scrolling
-        maxHeight: '80vh', // Limit the maximum height to 80% of the viewport height
+        maxHeight: '90vh', // Limit the maximum height to 80% of the viewport height
     };
 
     return (

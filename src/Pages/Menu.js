@@ -247,10 +247,6 @@ export function Menu() {
                                             <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                                                 {menuItem.dishDescription}
                                             </Typography>
-
-                                            <Typography variant="body2" color="textSecondary">
-                                                Category: {menuItem.dishCategory}
-                                            </Typography>
                                         </>
                                     ) : (
                                         <>
@@ -263,9 +259,13 @@ export function Menu() {
                                                     WebkitTextStroke: '1px #073A16',
                                                     textShadow: '2px 2px 2px rgba(0, 0, 0, 0.52)',
                                                     textTransform: 'uppercase',
-                                                    mb: 2,
+                                                    mb: 1,
                                                 }} gutterBottom>
                                                     Ingredients
+                                                </Typography>
+
+                                                <Typography variant="body2" color="textSecondary">
+                                                    Category: {menuItem.dishCategory}
                                                 </Typography>
                                                 {Array.isArray(menuItem.ingredientsList) && menuItem.ingredientsList.length > 0 ? (
                                                     <ul>
