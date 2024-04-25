@@ -21,18 +21,28 @@ const CustomModal = ({ open, onClose, selectedDish }) => {
     useEffect(() => {
         if (selectedDish) {
             setEditedDishData({
-                name: selectedDish.dishName || '', // Provide default value ''
-                description: selectedDish.dishDescription || '', // Provide default value ''
-                category: selectedDish.dishCategory || '', // Provide default value ''
+                name: selectedDish.dishName || '',
+                description: selectedDish.dishDescription || '',
+                category: selectedDish.dishCategory || '',
                 ingredients: selectedDish.ingredientsList ? [...selectedDish.ingredientsList] : [],
             });
         }
     }, [selectedDish]);
 
     const handleSaveChanges = () => {
-        // Implement logic to save changes to the dish data
         console.log('Edited changes:', editedDishData);
         onClose(); // Close the modal after saving changes
+    };
+
+    const handleIngredientChange = (index, propName, value) => {
+        setEditedDishData((prevData) => {
+            const updatedIngredients = [...prevData.ingredients];
+            updatedIngredients[index] = {
+                ...updatedIngredients[index],
+                [propName]: value,
+            };
+            return { ...prevData, ingredients: updatedIngredients };
+        });
     };
 
     const customStyle = {
@@ -46,12 +56,13 @@ const CustomModal = ({ open, onClose, selectedDish }) => {
         borderRadius: '10px',
         boxShadow: 24,
         p: 1,
+        overflowY: 'auto', // Enable vertical scrolling
+        maxHeight: '80vh', // Limit the maximum height to 80% of the viewport height
     };
 
     return (
         <Modal
             open={open}
-            onClose={onClose}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
@@ -74,36 +85,53 @@ const CustomModal = ({ open, onClose, selectedDish }) => {
                     <label style={{ fontSize: '1rem' }}>Dish Name</label>
                     <TextField
                         value={editedDishData.name}
-                    // onChange={(e) => setEditedDishData({ ...editedDishData, name: e.target.value })}
+                        onChange={(e) => setEditedDishData({ ...editedDishData, name: e.target.value })}
                     />
                     <label style={{ fontSize: '1rem' }}>Dish Description</label>
                     <MultiLine
                         value={editedDishData.description}
-                    // onChange={(e) => setEditedDishData({ ...editedDishData, description: e.target.value })}
+                        onChange={(e) => setEditedDishData({ ...editedDishData, description: e.target.value })}
                     />
                     <label style={{ fontSize: '1rem' }}>Category</label>
                     <DropDown
                         value={editedDishData.category}
-                    // onChange={(e) => setEditedDishData({ ...editedDishData, category: e.target.value })}
+                        onChange={(e) => setEditedDishData({ ...editedDishData, category: e.target.value })}
                     />
-                    {/* <label style={{ fontSize: '1rem' }}>Array of Ingredients</label>
-                    <Box sx={{ display: 'flex' }}>
+                    {/* Display and edit category */}
+                    <label style={{ fontSize: '1rem' }}>Edited Category</label>
+                    <TextField
+                        value={editedDishData.category}
+                        onChange={(e) => setEditedDishData({ ...editedDishData, category: e.target.value })}
+                    />
+                    {/* End of category */}
+                    <label style={{ fontSize: '1rem' }}>Array of Ingredients</label>
+                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         {editedDishData.ingredients.map((ingredient, index) => (
-                            <TextField
-                                key={index}
-                                value={ingredient}
-                                onChange={(e) =>
-                                    setEditedDishData((prevData) => {
-                                        const updatedIngredients = [...prevData.ingredients];
-                                        updatedIngredients[index] = e.target.value;
-                                        return { ...prevData, ingredients: updatedIngredients };
-                                    })
-                                }
-                            />
+                            <div key={index} style={{ marginBottom: '10px' }}>
+                                <div style={{ display: 'flex', marginBottom: '5px' }}>
+                                    <TextField
+                                        label="Ingredient"
+                                        value={ingredient.ingredients}
+                                        onChange={(e) =>
+                                            handleIngredientChange(index, 'name', e.target.value)
+                                        }
+                                        style={{ marginRight: '10px', flex: 1 }}
+                                    />
+                                    <TextField
+                                        label="Grams"
+                                        value={ingredient.grams}
+                                        onChange={(e) =>
+                                            handleIngredientChange(index, 'grams', e.target.value)
+                                        }
+                                        style={{ flex: 1 }}
+                                    />
+                                </div>
+                            </div>
                         ))}
-                    </Box> */}
+                    </Box>
                 </Box>
                 <Button onClick={handleSaveChanges}>Save Changes</Button>
+                <Button onClick={onClose}>Cancel</Button>
             </Box>
         </Modal>
     );
