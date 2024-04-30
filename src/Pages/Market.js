@@ -1,18 +1,22 @@
-import React, { useEffect, useState } from "react";
-import './Design/marketdesign.css';
-import image from "../images/steak_sample.png";
-import {
-    FaWarehouse
-} from 'react-icons/fa';
+import * as React from 'react';
+import { DataGrid } from '@mui/x-data-grid';
+import { useEffect, useState } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { getAuth } from 'firebase/auth';
-import market from "../images/Market.png";
+import { FaWarehouse } from 'react-icons/fa';
 import MiniDrawer from "../components/Drawer";
+import BoxTotal from "../components/atoms/boxtotal";
+import { Avatar, Box, Typography } from "@mui/material";
+import typography from "./theme/typhography";
+import palette from "./theme/palette";
+import SampleImage from './../images/deanprofile.jpg'
+import { alignProperty } from '@mui/material/styles/cssUtils';
 
-export const Market = (props) => {
-    // const [marketRequests, setMarketRequests] = useState([]);
+export const Market = () => {
     const [saleItems, setSaleItems] = useState([]);
+    const [page, setPage] = useState(0);
+    const [pageSize, setPageSize] = useState(5); // Initial page size
     const auth = getAuth();
     const user = auth.currentUser;
 
@@ -33,124 +37,72 @@ export const Market = (props) => {
             }
         };
 
-        // fetchMarketRequests();
         fetchSaleItems();
     }, [user]);
 
+    const columns = [
+        {
+            width: 250,
+            headerAlign: 'center',
+            alignItems: 'right',
+            renderCell: () => (
+                <Avatar
+                    src={SampleImage}
+                    alt={SampleImage}
+                    style={{ width: '3rem', height: '3rem' }}
+                />
+            ),
+        },
+        { field: 'Item_name', headerName: 'Name', width: 300 },
+        { field: 'Price', headerName: 'Price', width: 300 },
+        { field: 'Quantity', headerName: 'Total Grams', width: 300 },
+    ];
 
-    useEffect(() => {
-        function openPopup() {
-            document.getElementById('myPopup').style.display = 'block';
-            document.querySelector('.backdrop').style.display = 'block';
-        }
+    const handlePageChange = (newPage) => {
+        setPage(newPage);
+    };
 
-        function closePopup() {
-            document.getElementById('myPopup').style.display = 'none';
-            document.querySelector('.backdrop').style.display = 'none';
-        }
-
-        const openPopupElement = document.querySelector('.bttn-request');
-        const closePopupElement = document.getElementById('close-popup');
-
-        if (openPopupElement) {
-            openPopupElement.addEventListener('click', openPopup);
-        }
-
-        if (closePopupElement) {
-            closePopupElement.addEventListener('click', closePopup);
-        }
-
-        return () => {
-            if (openPopupElement) {
-                openPopupElement.removeEventListener('click', openPopup);
-            }
-
-            if (closePopupElement) {
-                closePopupElement.removeEventListener('click', closePopup);
-            }
-        };
-    }, []);
+    const handlePageSizeChange = (newPageSize) => {
+        setPageSize(newPageSize);
+    };
 
     return (
         <>
             <MiniDrawer />
-            <div className="mark-container">
-                <div className='mark-title'><h1>Market</h1></div>
-                <div><button class='bttn-request'><h4>Requests</h4><h5>2</h5></button></div>
-                <div class='total-market'>
-                    <h2>Total Item</h2>
-                    <br />
-                    <FaWarehouse />
-                    <h1>{saleItems.length}</h1>
+            <Box sx={{ ml: 10, p: 2 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', height: '7rem', mb: 2 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'start' }}>
+                        <Typography sx={{
+                            fontSize: typography.h7.fontSize,
+                            fontWeight: typography.h1.fontWeight,
+                            fontFamily: typography.h1.fontFamily,
+                            color: palette.plain.main,
+                            WebkitTextStroke: '1.5px #12841D',
+                            textShadow: '2px 8px 5px rgba(106, 217, 117, 0.52)',
+                            textTransform: 'uppercase',
+                        }} gutterBottom>
+                            Market
+                        </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <BoxTotal title='Total Items'
+                            icon={<FaWarehouse />}
+                            total={saleItems.length} />
+                    </Box>
+                </Box>
+                <div style={{ height: 350, width: '100%' }}>
+                    <DataGrid
+                        rows={saleItems.slice(page * pageSize, page * pageSize + pageSize)}
+                        columns={columns}
+                        pagination
+                        pageSize={pageSize}
+                        rowCount={saleItems.length}
+                        onPageChange={handlePageChange}
+                        onPageSizeChange={handlePageSizeChange}
+                        pageSizeOptions={[5, 10, 25]} // Customize the page size options here
+                    />
                 </div>
-                <div className='scrollable-market'>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th className="name">Name</th>
-                                <th className="price">Price</th>
-                                <th>Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {saleItems.map(item => (
-                                <tr key={item.id}>
-                                    <td><img className='market-img' src={market} alt="ingredient" /><h2>{item.Item_name}</h2></td>
-                                    <td><h3>{isValidNumber(item.Price) ? `P${item.Price.toFixed(2)}` : 'N/A'}</h3></td>
-                                    <td><h1> {item.Quantity} grams</h1></td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-
-
-                <div className="backdrop" style={{ display: 'none' }}></div>
-                <div className="popup" id="myPopup">
-                    <div class="popup-content">
-                        <span class="close" id="close-popup">&times;</span>
-                        <div class='scrollable-request'>
-                            <table class='table-market'>
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Date Added</th>
-                                        <th>Expiration Date</th>
-                                        <th><div class='Total'>Total</div></th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><img className='request-img' src={image} alt="ingredient" /><h2>Item 1</h2></td>
-                                        <td><h3>2023-12-31</h3></td>
-                                        <td><h3>2024-01-15</h3></td>
-                                        <td><div className='Total'><h3>5kg</h3></div></td>
-                                        <td className='bttns'>
-                                            <button className='bttn-accpt'>ACCEPT</button>
-                                            <button className='bttn-dec'>DECLINE</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><img className='request-img' src={image} alt="ingredient" /><h2>Item 2</h2></td>
-                                        <td><h3>2023-12-15</h3></td>
-                                        <td><h3>2024-02-01</h3></td>
-                                        <td><div className='Total'><h3>8kg</h3></div></td>
-                                        <td className='bttns'>
-                                            <button className='bttn-accpt'>ACCEPT</button>
-                                            <button className='bttn-dec'>DECLINE</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </Box>
         </>
     );
 };
-
-function isValidNumber(value) {
-    return typeof value === 'number' && !isNaN(value);
-}
