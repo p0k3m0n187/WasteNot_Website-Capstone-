@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from "react";
 import "firebase/firestore";
-import './Design/inventdesign.css';
 import { db } from '../config/firebase';
 import { collection, getDocs, query, where, addDoc, deleteDoc, doc } from 'firebase/firestore';
 import { FaWarehouse, FaArrowCircleDown } from 'react-icons/fa';
 import { getAuth } from 'firebase/auth';
-import ingredient from "../images/Ingredients.png";
+// import ingredient from "../images/Ingredients.png";
 import MiniDrawer from "../components/Drawer";
+import { Box, Button, Typography } from "@mui/material";
+import typography from "./theme/typhography";
+import palette from "./theme/palette";
+import BoxTotal from "../components/atoms/boxtotal";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Collapse, IconButton, Typography as MuiTypography } from "@mui/material";
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
-
-export const Inventory = (props) => {
+export const Inventory = () => {
     const [ingredients, setIngredients] = useState([]);
     const [selectedItem, setSelectedItem] = useState(null);
     const [inventoryHistory, setInventoryHistory] = useState([]);
@@ -38,26 +43,33 @@ export const Inventory = (props) => {
         fetchInventoryData();
     }, [user]);
 
+
+
     useEffect(() => {
         const fetchInventoryHistory = async () => {
             if (selectedItem) {
+                console.log('Fetching history for ItemId:', selectedItem.id);
                 const historyQuery = query(
                     collection(db, 'ingredients_history'),
-                    where('ItemId', '==', selectedItem.ItemId)
+                    where('ItemId', '==', selectedItem.id)
                 );
-                const historySnapshot = await getDocs(historyQuery);
-                const historyList = historySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-                setInventoryHistory(historyList);
+                try {
+                    const historySnapshot = await getDocs(historyQuery);
+                    const historyList = historySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    console.log('History List:', historyList);
+                    setInventoryHistory(historyList);
+                } catch (error) {
+                    console.error('Error fetching inventory history: ', error);
+                }
             }
         };
 
         fetchInventoryHistory();
     }, [selectedItem]);
 
+
     const openPopup = (item) => {
         setSelectedItem(item);
-        // setShowConfirmation(true);
     };
 
     const closePopup = () => {
@@ -75,7 +87,6 @@ export const Inventory = (props) => {
                 return;
             }
 
-            // Ensure that selectedHistoryItem is defined
             if (!selectedItem || inventoryHistory.length === 0) {
                 console.error('Selected item or history is undefined');
                 return;
@@ -95,7 +106,6 @@ export const Inventory = (props) => {
 
             console.log('Sale item added with ID: ', saleItemDocRef.id);
 
-            // Delete the document from 'ingredients_history'
             await deleteDoc(doc(db, 'ingredients_history', selectedHistoryItem.id));
 
             console.log('Ingredients history item deleted successfully.');
@@ -107,94 +117,133 @@ export const Inventory = (props) => {
         }
     };
 
+    const CollapsibleTableRow = ({ item }) => {
+        const [open, setOpen] = useState(false);
+        const [itemHistory, setItemHistory] = useState([]);
+
+        const handleExpandClick = async () => {
+            setOpen(!open);
+
+            if (!open) {
+                try {
+                    const historyQuery = query(
+                        collection(db, 'ingredients_history'),
+                        where('ItemId', '==', item.ItemId)
+                    );
+                    const historySnapshot = await getDocs(historyQuery);
+                    const historyList = historySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    setItemHistory(historyList);
+                } catch (error) {
+                    console.error('Error fetching item history: ', error);
+                }
+            }
+        };
+
+        return (
+            <>
+                <TableRow key={item.id}>
+                    <TableCell>{item.Item_name}</TableCell>
+                    <TableCell>{item.quantity_left}/{item.total_quantity}</TableCell>
+                    <TableCell align="right">
+                        <IconButton
+                            aria-label="expand row"
+                            size="small"
+                            onClick={handleExpandClick}
+                        >
+                            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                        </IconButton>
+                    </TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={3}>
+                        <Collapse in={open} timeout="auto" unmountOnExit>
+                            <Box sx={{ margin: 1, backgroundColor: 'red' }}>
+                                <Typography variant="h6" gutterBottom component="div">
+                                    History
+                                </Typography>
+                                <Table size="small" aria-label="purchases">
+                                    <TableHead sx={{ backgroundColor: 'orange' }}>
+                                        <TableRow>
+                                            <TableCell>Date Added</TableCell>
+                                            <TableCell>Expiration Date</TableCell>
+                                            <TableCell>Quantity</TableCell>
+                                            <TableCell>Action</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {itemHistory.map((historyItem) => (
+                                            <TableRow key={historyItem.ItemId}>
+                                                <TableCell>{historyItem.Date_added}</TableCell>
+                                                <TableCell>{historyItem.Expiry_date}</TableCell>
+                                                <TableCell>{historyItem.item_quantity}</TableCell>
+                                                <TableCell>
+                                                    <Button>AddToMarket</Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </Box>
+                        </Collapse>
+                    </TableCell>
+                </TableRow>
+            </>
+        );
+    };
+
 
 
     return (
         <>
             <MiniDrawer />
-            <div className="inventory-cont">
-                <div className='invent-title'>
-                    <h1>Ingredients</h1>
-                </div>
-
-                <div className='total-invent'>
-                    <h2>Total Ingredient</h2>
-                    <br />
-                    <FaWarehouse />
-                    <h1>{ingredients.length}</h1>
-                </div>
-
-                <div className='stock-title'><h1>Stocks</h1></div>
-
-                <div className='scrollable-cont'>
-                    {ingredients.map((item) => (
-                        <div key={item.id} className='ingredient'>
-                            <img className='ingred-sample' src={ingredient} alt="ingredient" />
-                            <h2>{item.Item_name}</h2>
-                            <div className="percent-bar">
-                                <div
-                                    className='percent-bar-fill'
-                                    style={{ width: `${(item.quantity / MAX_QUANTITY) * 100}%` }}
-                                ></div>
-                            </div>
-                            <button className="open-popup" onClick={() => openPopup(item)}>
-                                <FaArrowCircleDown />
-                            </button>
-                        </div>
-                    ))}
-                </div>
-
-                {selectedItem && (
-                    <>
-                        <div className="backdrop" onClick={closePopup}></div>
-                        <div className="popup-inventory" id="myPopup">
-                            <span className="close" onClick={closePopup}>&times;</span>
-                            <div className='scrollable-approval'>
-                                <table className='table-market'>
-                                    <thead>
-                                        <tr>
-                                            <th>Date Added</th>
-                                            <th>Expiration Date</th>
-                                            <th><div className='Total'>Total</div></th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {inventoryHistory.map((historyItem) => (
-                                            <tr key={historyItem.id}>
-                                                <td><h3>{historyItem.Date_added}</h3></td>
-                                                <td><h3>{historyItem.Expiry_date}</h3></td>
-                                                <td><div className='Total'><h3>{historyItem.item_quantity}</h3></div></td>
-                                                <td className='bttns'>
-                                                    <button className='bttn-addtomarket' onClick={() => setShowConfirmation(true)}>
-                                                        Add to Market
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                                {selectedItem && showConfirmation && (
-                                    <div className="popup-confirmation">
-                                        <span className="close" onClick={closePopup}>&times;</span>
-                                        <div>
-                                            <label htmlFor="priceInput">Enter the price:</label>
-                                            <input
-                                                type="number"
-                                                id="priceInput"
-                                                value={priceInput}
-                                                onChange={(e) => setPriceInput(e.target.value)}
-                                            />
-                                            <button onClick={handleConfirm}>Confirm</button>
-                                            <button style={{ backgroundColor: '#f83535', color: '#ffffff', marginLeft: "1vw" }} onClick={closePopup}>Cancel</button>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </>
-                )}
-            </div>
+            <Box sx={{ ml: 10, p: 2 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', height: '7rem', mb: 2 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'start' }}>
+                        <Typography sx={{
+                            fontSize: typography.h7.fontSize,
+                            fontWeight: typography.h1.fontWeight,
+                            fontFamily: typography.h1.fontFamily,
+                            color: palette.plain.main,
+                            WebkitTextStroke: '1.5px #12841D',
+                            textShadow: '2px 8px 5px rgba(106, 217, 117, 0.52)',
+                            textTransform: 'uppercase',
+                        }} gutterBottom>
+                            Inventory
+                        </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <BoxTotal title='Total Items'
+                            icon={<FaWarehouse />}
+                            total={ingredients.length} />
+                    </Box>
+                </Box>
+                <TableContainer sx={{ width: '100%', height: 360, border: '1px solid black', borderRadius: 1 }}>
+                    <Table>
+                        <TableHead
+                            sx={{
+                                border: '2px solid white',
+                                backgroundColor: palette.primary.main,
+                            }}>
+                            <TableRow>
+                                <TableCell>Item Name</TableCell>
+                                <TableCell>Quantity / Total</TableCell>
+                                <TableCell />
+                            </TableRow>
+                        </TableHead>
+                        <TableBody
+                            sx={{ backgroundColor: '#CECECE' }}
+                        >
+                            {ingredients.map((item) => (
+                                <CollapsibleTableRow
+                                    key={item.id}
+                                    item={item}
+                                    inventoryHistory={inventoryHistory.filter(historyItem => historyItem.ItemId === item.id)}
+                                />
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Box>
         </>
     );
 };
