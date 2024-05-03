@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import './Design/staffdesign.css';
-import staff from '../images/Staff_sample.png';
-import { FaPlusCircle, FaWarehouse, FaSearch, FaTrash } from 'react-icons/fa';
+// import staff from '../images/Staff_sample.png';
+import { FaPlusCircle, FaSearch, FaTrash, FaUser } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { collection, getDocs, where, query } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { getAuth, onAuthStateChanged, deleteUser } from 'firebase/auth';
 import { deleteDoc, doc } from 'firebase/firestore';
 import MiniDrawer from '../components/Drawer';
+import { Box, Typography } from '@mui/material';
+import typography from './theme/typhography';
+import palette from './theme/palette';
+import BoxTotal from '../components/atoms/boxtotal';
 
 
 export const Staff = (props) => {
@@ -93,7 +97,32 @@ export const Staff = (props) => {
   return (
     <>
       <MiniDrawer />
-      <div className="staff-container">
+      <Box sx={{ ml: 10, p: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', height: '7rem', mb: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'start' }}>
+            <Typography
+              sx={{
+                fontSize: typography.h7.fontSize,
+                fontWeight: typography.h1.fontWeight,
+                fontFamily: typography.h1.fontFamily,
+                color: palette.plain.main,
+                WebkitTextStroke: '1.5px #12841D',
+                textShadow: '2px 8px 5px rgba(106, 217, 117, 0.52)',
+                textTransform: 'uppercase',
+              }} gutterBottom>
+              Inventory
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <BoxTotal
+              title='Total Items'
+              icon={<FaUser />}
+              total={staffData.length} />
+          </Box>
+        </Box>
+      </Box>
+
+      {/* <div className="staff-container">
         <div class="staff-title">Staff</div>
         <div class="total-staff">
           <h2>Total Staff</h2>
@@ -193,7 +222,7 @@ export const Staff = (props) => {
             </tbody>
           </table>
         </div>
-      </div>
+      </div> */}
     </>
   );
 };

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "firebase/firestore";
 import { db } from '../config/firebase';
 import { collection, getDocs, query, where, addDoc, deleteDoc, doc } from 'firebase/firestore';
-import { FaWarehouse, FaArrowCircleDown } from 'react-icons/fa';
+import { FaWarehouse } from 'react-icons/fa';
 import { getAuth } from 'firebase/auth';
 // import ingredient from "../images/Ingredients.png";
 import MiniDrawer from "../components/Drawer";
@@ -10,7 +10,7 @@ import { Box, Button, Typography } from "@mui/material";
 import typography from "./theme/typhography";
 import palette from "./theme/palette";
 import BoxTotal from "../components/atoms/boxtotal";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Collapse, IconButton, Typography as MuiTypography } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Collapse, IconButton, } from "@mui/material";
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
@@ -20,7 +20,6 @@ export const Inventory = () => {
     const [inventoryHistory, setInventoryHistory] = useState([]);
     const [priceInput, setPriceInput] = useState('');
     const [showConfirmation, setShowConfirmation] = useState(false);
-    const MAX_QUANTITY = 100; // Replace 100 with your actual maximum quantity
 
     const auth = getAuth();
     const user = auth.currentUser;
@@ -157,12 +156,12 @@ export const Inventory = () => {
                 <TableRow>
                     <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={3}>
                         <Collapse in={open} timeout="auto" unmountOnExit>
-                            <Box sx={{ margin: 1, backgroundColor: 'red' }}>
-                                <Typography variant="h6" gutterBottom component="div">
+                            <Box sx={{ margin: 1, }}>
+                                {/* <Typography variant="h6" gutterBottom component="div">
                                     History
-                                </Typography>
+                                </Typography> */}
                                 <Table size="small" aria-label="purchases">
-                                    <TableHead sx={{ backgroundColor: 'orange' }}>
+                                    <TableHead sx={{ backgroundColor: palette.primary.main, border: '1px solid white' }}>
                                         <TableRow>
                                             <TableCell>Date Added</TableCell>
                                             <TableCell>Expiration Date</TableCell>
@@ -170,14 +169,30 @@ export const Inventory = () => {
                                             <TableCell>Action</TableCell>
                                         </TableRow>
                                     </TableHead>
-                                    <TableBody>
+                                    <TableBody sx={{ backgroundColor: 'white' }}>
                                         {itemHistory.map((historyItem) => (
                                             <TableRow key={historyItem.ItemId}>
                                                 <TableCell>{historyItem.Date_added}</TableCell>
                                                 <TableCell>{historyItem.Expiry_date}</TableCell>
                                                 <TableCell>{historyItem.item_quantity}</TableCell>
                                                 <TableCell>
-                                                    <Button>AddToMarket</Button>
+                                                    <Button
+                                                        variant='contained'
+                                                        color='success'
+                                                        textDecoration='underline'
+                                                        sx={{
+                                                            height: '2rem',
+                                                            borderColor: 'black',
+                                                            border: '1px solid white',
+                                                            textDecoration: 'underline',
+                                                            fontWeight: 'bold',
+                                                            '&:hover': {
+                                                                borderColor: 'green',
+                                                                backgroundColor: '#57B961',
+                                                                color: 'black',
+                                                                textDecoration: 'underline',
+                                                            }
+                                                        }}>AddToMarket</Button>
                                                 </TableCell>
                                             </TableRow>
                                         ))}
@@ -190,8 +205,6 @@ export const Inventory = () => {
             </>
         );
     };
-
-
 
     return (
         <>
@@ -217,7 +230,7 @@ export const Inventory = () => {
                             total={ingredients.length} />
                     </Box>
                 </Box>
-                <TableContainer sx={{ width: '100%', height: 360, border: '1px solid black', borderRadius: 1 }}>
+                <TableContainer sx={{ width: '100%', height: 360, border: '1px solid green', borderRadius: 1 }}>
                     <Table>
                         <TableHead
                             sx={{
