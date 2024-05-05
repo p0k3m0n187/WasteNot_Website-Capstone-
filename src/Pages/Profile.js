@@ -159,11 +159,11 @@ export const Profile = () => {
           province: formData.province,
           zipCode: formData.restocode,
           restaurantDesc: formData.restodescrip || '',
-          restaurantLogo: formData.selectedImage || userData.restaurantLogo || '' // Provide a default value when selectedImage is undefined
+          restaurantLogo: formData.profileImage || userData.restaurantLogo || '' // Provide a default value when selectedImage is undefined
         };
 
         // Check if selectedImage is available, then include it in the updatedData
-        if (formData.selectedImage) {
+        if (formData.profileImage) {
           updatedData.restaurantLogo = formData.profileImage;
         }
 
@@ -209,7 +209,7 @@ export const Profile = () => {
       const downloadURL = await getDownloadURL(storageRef);
       setFormData((prev) => ({
         ...prev,
-        selectedImage: downloadURL, // Update selectedImage here
+        profileImage: downloadURL, // Update selectedImage here
       }));
     } catch (error) {
       console.error('Error uploading image:', error);

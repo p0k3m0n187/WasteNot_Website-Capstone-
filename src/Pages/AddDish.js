@@ -8,6 +8,7 @@ import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import './Design/addDishDesign.css';
+import { Snackbar, Alert } from '@mui/material';
 
 
 export const AddDish = () => {
@@ -16,6 +17,8 @@ export const AddDish = () => {
     const [dishCategory, setDishCategory] = useState('');
     const [ingredientsList, setIngredientsList] = useState([{ ingredients: '', grams: '' }]);
     const [selectedImage, setSelectedImage] = useState(null);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
 
     // Initialize authentication
     const auth = getAuth();
@@ -76,6 +79,10 @@ export const AddDish = () => {
         fileInput.click();
     };
 
+    const handleSnackbarClose = () => {
+        setSnackbarOpen(false);
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
 
@@ -83,9 +90,13 @@ export const AddDish = () => {
         if (
             !dishName.trim() ||
             !dishDescription.trim() ||
-            ingredientsList.every((ingredient) => !ingredient.ingredients.trim() && !ingredient.grams.trim())
+            ingredientsList.some(
+                (ingredient) => ingredient.ingredients.trim() === '' || ingredient.grams.trim() === ''
+            )
         ) {
-            alert('Please fill up the form');
+            alert('Please fill up the form and ensure all ingredients have names and grams.');
+            setSnackbarMessage('Please fill up the form and ensure all ingredients have names and grams.');
+            setSnackbarOpen(true);
             return;
         }
 
@@ -186,7 +197,16 @@ export const AddDish = () => {
                             <option value="">Select Category</option>
                             <option value="meat">Meat</option>
                             <option value="soup">Soup</option>
-                            {/* Add more options as needed */}
+                            <option value='appetizers'>Appetizers</option>
+                            <option value='salads'>Salads</option>
+                            <option value='main courses'>Main Courses</option>
+                            <option value='pasta'>Pasta</option>
+                            <option value='rice'>Rice Dishes</option>
+                            <option value='sandwiches'>Sandwiches</option>
+                            <option value='fries'>Fries</option>
+                            <option value='grilled'>Grilled</option>
+                            <option value='desserts'>Desserts</option>
+                            <option value='fish'>Fish</option>
                         </select>
 
 
@@ -228,6 +248,20 @@ export const AddDish = () => {
                     </form>
                 </div>
             </div>
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={handleSnackbarClose}
+            >
+                <Alert
+                    onClose={handleSnackbarClose}
+                    severity="error"
+                    vairant="filled"
+                    sx={{ width: '100%' }}
+                >
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
         </>
     );
 };

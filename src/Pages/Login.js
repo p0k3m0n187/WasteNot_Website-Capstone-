@@ -6,11 +6,20 @@ import { useNavigate } from 'react-router-dom';
 import { auth } from '../config/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { Link } from 'react-router-dom';
+import { IconButton } from '@mui/material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 export const Login = (props) => {
+  const [showPassword, setShowPassword] = useState(false);
   const [Email, setEmail] = useState('');
   const [Password, setPassword] = useState('');
   const history = useNavigate(); // Initialize useHistory
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
 
   const signIn = async (e) => {
     e.preventDefault();
@@ -58,18 +67,27 @@ export const Login = (props) => {
               <input
                 value={Password}
                 onChange={(e) => setPassword(e.target.value)}
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 placeholder="**********"
                 id="Password"
                 name="Password"
                 className="passwordInput"
               />
+              {Password && ( // Show the visibility toggle icons only if password is entered
+                <IconButton
+                  onClick={togglePasswordVisibility}
+                  edge="end"
+                  className="passwordToggleBtn"
+                >
+                  {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                </IconButton>
+              )}
               <button type="submit" className="LogIn">Log In</button>
             </form>
             <Link to="/register"><button className="Register">Register</button></Link>
           </div>
-        </div>
-      </div>
+        </div >
+      </div >
     </>
   );
 };

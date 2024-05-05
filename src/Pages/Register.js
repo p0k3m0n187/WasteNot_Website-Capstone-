@@ -14,8 +14,23 @@ import {
 import { Box, Grid, Button } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import './Design/registerdesign.css';
+import PageTitle from '../components/atoms/pagetitle.js';
+import { IconButton } from '@mui/material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 export const Register = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword((prev) => !prev);
+  };
+
   const [input, setInput] = useState({
     restaurantName: '',
     email: '',
@@ -137,7 +152,7 @@ export const Register = () => {
 
         case "confirmPassword":
           if (!value) {
-            stateObj[name] = "Please Confirm your Password.";
+            stateObj[name] = "Please match your Password.";
           } else if (input.password && value !== input.password) {
             stateObj[name] = "Password and Confirm Password does not match.";
           }
@@ -236,9 +251,15 @@ export const Register = () => {
     }
   };
 
+
   return (
     <>
       <Navbar />
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Box sx={{ textAlign: 'center' }}> {/* Added textAlign: 'center' */}
+          <PageTitle title={'Registration'} />
+        </Box>
+      </Box>
       <form onSubmit={registerUser}>
         <Box sx={{ p: 1, mb: 4, width: '100%' }}>
           <Box sx={{ p: 1, mt: 2 }}>
@@ -385,23 +406,37 @@ export const Register = () => {
                 <Grid item xs={12} sm={6}>
                   <StyledTextField
                     label="Password"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     color="success"
                     onChange={(e) => onInputChange('password', e.target.value)}
                     onBlur={validateInput}
                     error={!!error.password}
                     helperText={error.password}
+                    InputProps={{
+                      endAdornment: (
+                        <IconButton onClick={togglePasswordVisibility} edge="end">
+                          {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                        </IconButton>
+                      ),
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <StyledTextField
                     label="Confirm Password"
-                    type="password"
+                    type={showConfirmPassword ? 'text' : 'password'}
                     color="success"
                     onChange={(e) => onInputChange('confirmPassword', e.target.value)}
                     onBlur={validateInput}
                     error={!!error.confirmPassword}
                     helperText={error.confirmPassword}
+                    InputProps={{
+                      endAdornment: (
+                        <IconButton onClick={toggleConfirmPasswordVisibility} edge="end">
+                          {showConfirmPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                        </IconButton>
+                      ),
+                    }}
                   />
                 </Grid>
               </Grid>
