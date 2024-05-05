@@ -164,6 +164,18 @@ export default function MiniDrawer({ children }) {
             </AppBar>
             <Drawer variant="permanent" open={open}>
                 <DrawerHeader>
+                    <Typography
+                        variant="h1"
+                        component="div"
+                        sx={{
+                            flexGrow: 1,
+                            fontSize: typography.h1.fontSize,
+                            fontWeight: typography.h1.fontWeight,
+                            fontFamily: typography.h1.fontFamily,
+                            WebkitTextStroke: '1px #073A16',
+                        }}>
+                        WASTENOT
+                    </Typography>
                     <IconButton onClick={handleDrawerClose}>
                         {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
                     </IconButton>

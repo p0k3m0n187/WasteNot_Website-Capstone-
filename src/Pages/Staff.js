@@ -110,12 +110,12 @@ export const Staff = (props) => {
                 textShadow: '2px 8px 5px rgba(106, 217, 117, 0.52)',
                 textTransform: 'uppercase',
               }} gutterBottom>
-              Inventory
+              Staff
             </Typography>
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <BoxTotal
-              title='Total Items'
+              title='Personel'
               icon={<FaUser />}
               total={staffData.length} />
           </Box>
