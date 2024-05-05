@@ -164,7 +164,7 @@ export const Profile = () => {
 
         // Check if selectedImage is available, then include it in the updatedData
         if (formData.selectedImage) {
-          updatedData.restaurantLogo = formData.selectedImage;
+          updatedData.restaurantLogo = formData.profileImage;
         }
 
         // Update the document in the 'admin_users' collection

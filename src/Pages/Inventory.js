@@ -244,7 +244,7 @@ export const Inventory = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody
-                            sx={{ backgroundColor: '#CECECE' }}
+                            sx={{ backgroundColor: '#F7F7F7' }}
                         >
                             {ingredients.map((item) => (
                                 <CollapsibleTableRow
