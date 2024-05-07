@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './Design/staffdesign.css';
-// import staff from '../images/Staff_sample.png';
+import staff from '../images/Staff_sample.png';
 import { FaPlusCircle, FaSearch, FaTrash, FaUser } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { collection, getDocs, where, query } from 'firebase/firestore';
@@ -97,7 +97,7 @@ export const Staff = (props) => {
   return (
     <>
       <MiniDrawer />
-      <Box sx={{ ml: 10, p: 2 }}>
+      {/* <Box sx={{ ml: 10, p: 2 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', height: '7rem', mb: 2 }}>
           <Box sx={{ display: 'flex', alignItems: 'start' }}>
             <Typography
@@ -120,14 +120,14 @@ export const Staff = (props) => {
               total={staffData.length} />
           </Box>
         </Box>
-      </Box>
+      </Box> */}
 
-      {/* <div className="staff-container">
+      <div className="staff-container">
         <div class="staff-title">Staff</div>
         <div class="total-staff">
           <h2>Total Staff</h2>
           <br />
-          <FaWarehouse />
+          <FaUser />
           <h1>{staffData.length}</h1>
         </div>
         <div>
@@ -222,7 +222,7 @@ export const Staff = (props) => {
             </tbody>
           </table>
         </div>
-      </div> */}
+      </div>
     </>
   );
 };
