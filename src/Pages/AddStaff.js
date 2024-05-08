@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Navbar2 from '../components/NavBar2';
 import { Link } from "react-router-dom";
 import { collection, addDoc, query, where, getDocs } from 'firebase/firestore'; // Import query and where for Firestore query
 import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
@@ -43,7 +42,7 @@ export const AddStaff = () => {
         confirmPassword: ''
     });
     const [adminId, setAdminId] = useState('');
-    const [idNumberUnique, setIdNumberUnique] = useState(true); // State to store whether ID number is unique or not
+    const setIdNumberUnique = useState(true); // State to store whether ID number is unique or not
     const genders = ['Male', 'Female'];
     const positions = ['Head Staff', 'Staff', 'Manager'];
     const auth = getAuth();

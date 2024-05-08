@@ -16,7 +16,7 @@ import { alignProperty } from '@mui/material/styles/cssUtils';
 export const Market = () => {
     const [saleItems, setSaleItems] = useState([]);
     const [page, setPage] = useState(0);
-    const [pageSize, setPageSize] = useState(5); // Initial page size
+    const [pageSize, setPageSize] = useState(10); // Initial page size
     const auth = getAuth();
     const user = auth.currentUser;
 
@@ -99,7 +99,7 @@ export const Market = () => {
                         rowCount={saleItems.length}
                         onPageChange={handlePageChange}
                         onPageSizeChange={handlePageSizeChange}
-                        pageSizeOptions={[5, 10, 25]} // Customize the page size options here
+                        pageSizeOptions={[10, 25]}
                     />
                 </div>
             </Box>

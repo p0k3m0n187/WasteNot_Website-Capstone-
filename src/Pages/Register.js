@@ -11,13 +11,14 @@ import {
   where,
   getDocs,
 } from 'firebase/firestore';
-import { Box, Grid, Button } from '@mui/material';
+import { Box, Grid, Button, Typography } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import './Design/registerdesign.css';
-import PageTitle from '../components/atoms/pagetitle.js';
 import { IconButton } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import typography from './theme/typhography.js';
+import palette from './theme/palette.js';
 
 export const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -257,7 +258,18 @@ export const Register = () => {
       <Navbar />
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <Box sx={{ textAlign: 'center' }}> {/* Added textAlign: 'center' */}
-          <PageTitle title={'Registration'} />
+          <Typography sx={{
+            fontSize: typography.h1.fontSize,
+            fontWeight: typography.h1.fontWeight,
+            fontFamily: typography.h1.fontFamily,
+            // color: palette.plain.main,
+            // WebkitTextStroke: '1.5px #12841D',
+            color: palette.primary.main,
+            // textShadow: '2px 8px 5px rgba(106, 217, 117, 0.52)',
+            textTransform: 'uppercase',
+          }}>
+            Registration
+          </Typography>
         </Box>
       </Box>
       <form onSubmit={registerUser}>

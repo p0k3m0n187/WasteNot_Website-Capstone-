@@ -20,8 +20,9 @@ import { collection, getDocs, where, query } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import MiniDrawer from '../components/Drawer';
+import ConsumedPieChart from '../components/atoms/Charts/PieChart';
 
-export const Homepage = (props) => {
+export const Homepage = () => {
     const [menuItems, setMenuData] = useState([]);
     const [staffData, setStaffData] = useState([]);
     const [adminId, setAdminId] = useState('');
@@ -32,6 +33,12 @@ export const Homepage = (props) => {
     const [showBackdrop, setShowBackdrop] = useState(false);
     const [selectedYear, setSelectedYear] = useState(); // Default to the current year
     const [selectedMonth, setSelectedMonth] = useState();
+    const [open, setOpen] = useState(false);
+
+    const handleOpenModal = () => {
+        setOpen(true);
+    };
+
     const handlePopupToggle5 = () => {
         setShowPopup5(!showPopup5);
         setShowBackdrop(!showPopup5); // Show backdrop when popup is opened
@@ -280,39 +287,11 @@ export const Homepage = (props) => {
                         <FaChartPie />
                     </button>
 
-                    {showBackdrop && <div className="backdrop" onClick={handlePopupToggle5}></div>}
-
                     {showPopup5 && (
-                        <div className="popup-sales">
-                            <div className="sales-content">
-                                <span className="close-popup" onClick={handlePopupToggle5}>&times;</span>
-                                <h2>Consumed Sales</h2>
-                                <h2>Month of {selectedMonth}</h2>
-                                <select
-                                    id="monthSelect"
-                                    value={selectedMonth}
-                                    onChange={(e) => setSelectedMonth(e.target.value)}
-                                >
-                                    <option value={'January'}>January</option>
-                                    <option value={'February'}>February</option>
-                                    <option value={'March'}>March</option>
-                                    <option value={'April'}>April</option>
-                                    <option value={'May'}>May</option>
-                                    <option value={'June'}>June</option>
-                                    <option value={'July'}>July</option>
-                                    <option value={'August'}>August</option>
-                                    <option value={'September'}>September</option>
-                                    <option value={'October'}>October</option>
-                                    <option value={'November'}>November</option>
-                                    <option value={'December'}>December</option>
-                                </select>
-                                <div className='consumed-chart'>
-                                    <div style={{ width: 1700, height: 750 }}>
-                                        <MarketChart InventoryData={pieData} />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <ConsumedPieChart
+                            open={showPopup5}
+                            onClose={handlePopupToggle5}
+                        />
                     )}
                 </div>
             </div>
@@ -360,45 +339,45 @@ export const Homepage = (props) => {
                 </div>
                 <br />
 
-                {inventoryData.length > 0 ? (
-                    <>
-                        <h1>Inventory</h1>
-                        <Link to="/inventory"><button className='click'>See All</button></Link>
-                        <div className='invent-cont'>
-                            {inventoryData.slice(0, 5).map((item, index) => (
-                                <div key={index} className="item">
-                                    {/* Use the imageUrl to construct the image URL */}
-                                    <img className="sample" src={ingredient} alt={`inventory${index + 1}`} />
-                                    <h3>{item.Item_name}</h3>
-                                </div>
-                            ))}
+                {/* {inventoryData.length > 0 ? (
+                    <> */}
+                <h1>Inventory</h1>
+                <Link to="/inventory"><button className='click'>See All</button></Link>
+                <div className='invent-cont'>
+                    {inventoryData.slice(0, 5).map((item, index) => (
+                        <div key={index} className="item">
+                            {/* Use the imageUrl to construct the image URL */}
+                            <img className="sample" src={ingredient} alt={`inventory${index + 1}`} />
+                            <h3>{item.Item_name}</h3>
                         </div>
-                        <br />
-                    </>
+                    ))}
+                </div>
+                <br />
+                {/* </>
                 ) : (
                     // Render a message or component when there is no data
                     <p></p>
-                )}
+                )} */}
 
-                {salesData.length > 0 ? (
-                    <>
-                        <h1>Market</h1>
-                        <Link to="/market"><button className='click'>See All</button></Link>
-                        <div className='market-cont'>
-                            {salesData.slice(0, 5).map((item, index) => (
-                                <div key={index} className="item">
-                                    {/* Use the imageUrl to construct the image URL */}
-                                    <img className="sample" src={market} alt={`sale_items${index + 1}`} />
-                                    <h3>{item.Item_name}</h3>
-                                </div>
-                            ))}
+                {/* {salesData.length > 0 ? (
+                    <> */}
+                <h1>Market</h1>
+                <Link to="/market"><button className='click'>See All</button></Link>
+                <div className='market-cont'>
+                    {salesData.slice(0, 5).map((item, index) => (
+                        <div key={index} className="item">
+                            {/* Use the imageUrl to construct the image URL */}
+                            <img className="sample" src={market} alt={`sale_items${index + 1}`} />
+                            <h3>{item.Item_name}</h3>
                         </div>
-                        <br />
-                    </>
+                    ))}
+                </div>
+                <br />
+                {/* </>
                 ) : (
                     // Render a message or component when there is no data
                     <p></p>
-                )}
+                )} */}
 
             </div>
         </>

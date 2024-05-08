@@ -293,7 +293,6 @@ export const Profile = () => {
                       onChange={handleImageUpload}
                       style={{ display: 'none' }}
                     />
-
                     <label htmlFor="profileImage">
                       {formData.profileImage ? (
                         <img
@@ -302,7 +301,7 @@ export const Profile = () => {
                           style={{
                             borderRadius: '50%',
                             backgroundColor: '#ccc',
-                            height: 200,
+                            height: 250,
                             backgroundSize: 'cover',
                             border: '1px solid black',
                             objectFit: 'cover',
@@ -315,10 +314,9 @@ export const Profile = () => {
                           style={{
                             border: '1px solid black',
                             backgroundColor: '#ccc',
-                            border: '1px solid black',
-                            width: 200, // Adjust as needed
-                            height: 200, // Adjust as needed
                             boxShadow: '-2px 3px 0px 0px rgba(0,0,0,0.3)',
+                            width: '100px', // Adjust width as needed
+                            height: '250px', // Adjust height as needed
                           }}
                         />
                       )}
