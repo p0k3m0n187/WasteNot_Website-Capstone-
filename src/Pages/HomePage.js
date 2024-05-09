@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import SalesChart from '../components/Sample/SalesChart';
-import MarketChart from '../components/Sample/MarketChart';
 import { SampleData } from '../components/Sample/SampleData';
-import { InventorySampleData } from '../components/Sample/InventorySampleData';
+// import { InventorySampleData } from '../components/Sample/InventorySampleData';
 import './Design/homedesign.css';
 import {
     FaUsers,
@@ -21,6 +20,9 @@ import { db } from '../config/firebase';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import MiniDrawer from '../components/Drawer';
 import ConsumedPieChart from '../components/atoms/Charts/PieChart';
+import { Box, Button } from '@mui/material';
+import Close from '@mui/icons-material/Close';
+import palette from './theme/palette';
 
 export const Homepage = () => {
     const [menuItems, setMenuData] = useState([]);
@@ -32,12 +34,11 @@ export const Homepage = () => {
     const [showPopup5, setShowPopup5] = useState(false);
     const [showBackdrop, setShowBackdrop] = useState(false);
     const [selectedYear, setSelectedYear] = useState(); // Default to the current year
-    const [selectedMonth, setSelectedMonth] = useState();
-    const [open, setOpen] = useState(false);
+    // const [open, setOpen] = useState(false);
 
-    const handleOpenModal = () => {
-        setOpen(true);
-    };
+    // const handleOpenModal = () => {
+    //     setOpen(true);
+    // };
 
     const handlePopupToggle5 = () => {
         setShowPopup5(!showPopup5);
@@ -58,18 +59,18 @@ export const Homepage = () => {
         ]
     });
 
-    const [pieData] = useState({
-        labels: ["Consumed", "Remaining"],
-        datasets: [
-            {
-                label: "Consumed Ingredients",
-                data: [InventorySampleData[0].marketConsumed, InventorySampleData[0].marketRemaining],
-                backgroundColor: ["#57B961", "Red"],
-                borderWidth: 5,
-                borderColor: 'White',
-            }
-        ]
-    });
+    // const [pieData] = useState({
+    //     labels: ["Consumed", "Remaining"],
+    //     datasets: [
+    //         {
+    //             label: "Consumed Ingredients",
+    //             data: [InventorySampleData[0].marketConsumed, InventorySampleData[0].marketRemaining],
+    //             backgroundColor: ["#57B961", "Red"],
+    //             borderWidth: 5,
+    //             borderColor: 'White',
+    //         }
+    //     ]
+    // });
 
     const handlePopupToggle = () => {
         setShowPopup(!showPopup);
@@ -210,21 +211,21 @@ export const Homepage = () => {
             <MiniDrawer />
             <div className="container">
                 <div>
-                    <Link to="/staff"><button class="icon-button">
+                    <Link to="/staff"><button className="icon-button">
                         <div className="title"><h4>Total Staff</h4></div>
                         <br />
                         <FaUsers />
                         {staffData.length}
                     </button>
                     </Link>
-                    <Link to="/menu"><button class="icon-button2">
+                    <Link to="/menu"><button className="icon-button2">
                         <div className="title2"><h4>Total Dishes</h4></div>
                         <br />
                         <FaBookOpen />
                         {menuItems.length}
                     </button>
                     </Link>
-                    <Link to="/inventory"><button class="icon-button3">
+                    <Link to="/inventory"><button className="icon-button3">
                         <div className="title3"><h4>Total Ingredients</h4></div>
                         <br />
                         <FaWarehouse />
@@ -232,7 +233,7 @@ export const Homepage = () => {
                     </button>
                     </Link>
 
-                    <Link to="/market"><button class="icon-button3">
+                    <Link to="/market"><button className="icon-button3">
                         <div className="title-market"><h4>Market</h4></div>
                         <br />
                         <FaWarehouse />
@@ -253,24 +254,41 @@ export const Homepage = () => {
                     {showPopup && (
                         <div className="popup-sales">
                             <div className="sales-content">
-                                <span className="close-popup" onClick={handlePopupToggle}>&times;</span>
-                                <h2>Market Sales</h2>
-                                <select
-                                    id="yearSelect"
-                                    value={selectedYear}
-                                    onChange={(e) => setSelectedYear(parseInt(e.target.value, 10))}
-                                >
-                                    <option value={2029}>2029</option>
-                                    <option value={2028}>2028</option>
-                                    <option value={2027}>2027</option>
-                                    <option value={2026}>2026</option>
-                                    <option value={2025}>2025</option>
-                                    <option value={2024}>2024</option>
-                                    <option value={2023}>2023</option>
-                                </select>
-
+                                <Box sx={{ display: 'flex', gap: 3 }}>
+                                    <h2>Market Sales</h2>
+                                    <select
+                                        id="yearSelect"
+                                        value={selectedYear}
+                                        onChange={(e) => setSelectedYear(parseInt(e.target.value, 10))}
+                                    >
+                                        <option value={2029}>2029</option>
+                                        <option value={2028}>2028</option>
+                                        <option value={2027}>2027</option>
+                                        <option value={2026}>2026</option>
+                                        <option value={2025}>2025</option>
+                                        <option value={2024}>2024</option>
+                                        <option value={2023}>2023</option>
+                                    </select>
+                                    <Box sx={{ flex: 1 }} />
+                                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                        <Button
+                                            onClick={handlePopupToggle}
+                                            size='large'
+                                            sx={{
+                                                color: 'white',
+                                            }}
+                                        >
+                                            <Box sx={{ display: 'flex', alignItems: 'center', border: '2px solid green', borderRadius: '100%', backgroundColor: palette.primary.main, padding: 0 }}>
+                                                <Close />
+                                            </Box>
+                                        </Button>
+                                    </Box>
+                                    {/* <span className="close-popup" onClick={handlePopupToggle}>&times;</span> */}
+                                </Box>
                                 <div className='sales-chart'>
-                                    <div style={{ width: 1800, height: 750 }}>
+                                    <div style={{
+                                        width: '100%'
+                                    }}>
                                         <SalesChart salesData={chartData} />
                                     </div>
                                 </div>
@@ -294,16 +312,16 @@ export const Homepage = () => {
                         />
                     )}
                 </div>
-            </div>
+            </div >
 
             <div className="notify">
                 <h1>Notifications</h1>
-                <div class="notify-container">
-                    <div class="notify1"><img class='sample' src={staff} alt="staff1" /><h3>New Staff Have Been Added!</h3></div>
-                    <div class="notify1"><img class='sample' src={image} alt="staff1" /><h3>New Dish has been Added!</h3></div>
-                    <div class="notify1"><img class='sample' src={staff} alt="staff1" /><h3>New Staff Have Been Added!</h3></div>
-                    <div class="notify1"><img class='sample' src={ingredient} alt="staff1" /><h3>Beef has been Added to Market!</h3></div>
-                    <div class="notify1"><img class='sample' src={market} alt="staff1" /><h3>New Ingredient has been Added to Inventory!</h3></div>
+                <div className="notify-container">
+                    <div className="notify1"><img className='sample' src={staff} alt="staff1" /><h3>New Staff Have Been Added!</h3></div>
+                    <div className="notify1"><img className='sample' src={image} alt="staff1" /><h3>New Dish has been Added!</h3></div>
+                    <div className="notify1"><img className='sample' src={staff} alt="staff1" /><h3>New Staff Have Been Added!</h3></div>
+                    <div className="notify1"><img className='sample' src={ingredient} alt="staff1" /><h3>Beef has been Added to Market!</h3></div>
+                    <div className="notify1"><img className='sample' src={market} alt="staff1" /><h3>New Ingredient has been Added to Inventory!</h3></div>
                 </div>
             </div>
 

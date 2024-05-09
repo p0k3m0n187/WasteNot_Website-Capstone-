@@ -74,8 +74,8 @@
     overflow-y: auto;
     position: absolute;
     width: 23%;
-    height: 80%;
-    top: 18%;
+    height: 76%;
+    top: 22%;
     left: 76%;
     border-radius: 0.5vw;
     background-color: #ccc;
@@ -86,7 +86,7 @@
 .scrollable-container {
     margin-top: 2%;
     margin-left: 7%;
-    height: 32vw;
+    height: 57vh;
     width: 68%;
     overflow-y: auto;
     border: 2px solid #13d82a;
@@ -198,9 +198,9 @@
 
 .container .popup-sales {
     position: fixed;
-    height: 95%;
-    width: 95%;
-    top: 50%;
+    height: 80%;
+    width: 80%;
+    top: 55%;
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: #ffffff;
@@ -231,7 +231,7 @@
     color: #13d82a;
     width: 2.5vw;
     height: 2.5vw;
-    right: 0.2vw;
+    right: 0;
     font-size: 2vw;
     cursor: pointer;
     background-color: #ffffff;
