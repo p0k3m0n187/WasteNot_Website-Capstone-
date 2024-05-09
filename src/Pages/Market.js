@@ -91,16 +91,24 @@ export const Market = () => {
                     </Box>
                 </Box>
                 <div style={{ height: 350, width: '100%' }}>
-                    <DataGrid
-                        rows={saleItems.slice(page * pageSize, page * pageSize + pageSize)}
-                        columns={columns}
-                        pagination
-                        pageSize={pageSize}
-                        rowCount={saleItems.length}
-                        onPageChange={handlePageChange}
-                        onPageSizeChange={handlePageSizeChange}
-                        pageSizeOptions={[10, 25]}
-                    />
+                    {saleItems.length === 0 ? (
+                        <Typography variant="h6" align="center" color="textSecondary">
+                            Seems like the Market is empty
+                        </Typography>
+                    ) : (
+                        <div style={{ height: 350, width: '100%' }}>
+                            <DataGrid
+                                rows={saleItems.slice(page * pageSize, page * pageSize + pageSize)}
+                                columns={columns}
+                                pagination
+                                pageSize={pageSize}
+                                rowCount={saleItems.length}
+                                onPageChange={handlePageChange}
+                                onPageSizeChange={handlePageSizeChange}
+                                pageSizeOptions={[10, 25]}
+                            />
+                        </div>
+                    )}
                 </div>
             </Box>
         </>

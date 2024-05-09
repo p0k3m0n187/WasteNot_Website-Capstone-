@@ -8,10 +8,10 @@ import { db } from '../config/firebase';
 import { getAuth, onAuthStateChanged, deleteUser } from 'firebase/auth';
 import { deleteDoc, doc } from 'firebase/firestore';
 import MiniDrawer from '../components/Drawer';
-import { Box, Typography } from '@mui/material';
-import typography from './theme/typhography';
-import palette from './theme/palette';
-import BoxTotal from '../components/atoms/boxtotal';
+// import { Box, Typography } from '@mui/material';
+// import typography from './theme/typhography';
+// import palette from './theme/palette';
+// import BoxTotal from '../components/atoms/boxtotal';
 
 
 export const Staff = (props) => {

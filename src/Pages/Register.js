@@ -426,7 +426,10 @@ export const Register = () => {
                     helperText={error.password}
                     InputProps={{
                       endAdornment: (
-                        <IconButton onClick={togglePasswordVisibility} edge="end">
+                        <IconButton
+                          onClick={togglePasswordVisibility}
+                          sx={{ position: 'absolute', right: 0 }}
+                        >
                           {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
                         </IconButton>
                       ),
@@ -442,9 +445,13 @@ export const Register = () => {
                     onBlur={validateInput}
                     error={!!error.confirmPassword}
                     helperText={error.confirmPassword}
+                    fullWidth={true}
                     InputProps={{
                       endAdornment: (
-                        <IconButton onClick={toggleConfirmPasswordVisibility} edge="end">
+                        <IconButton
+                          sx={{ position: 'absolute', right: 0 }}
+                          onClick={toggleConfirmPasswordVisibility}
+                        >
                           {showConfirmPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
                         </IconButton>
                       ),

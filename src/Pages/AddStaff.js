@@ -42,7 +42,7 @@ export const AddStaff = () => {
         confirmPassword: ''
     });
     const [adminId, setAdminId] = useState('');
-    const setIdNumberUnique = useState(true); // State to store whether ID number is unique or not
+    const [isIdNumberUnique, setIsIdNumberUnique] = useState(true); // State to store whether ID number is unique or not
     const genders = ['Male', 'Female'];
     const positions = ['Head Staff', 'Staff', 'Manager'];
     const auth = getAuth();
@@ -77,10 +77,10 @@ export const AddStaff = () => {
             if (!querySnapshot.empty) {
                 setSnackbarMessage('Staff ID number already exists');
                 setSnackbarOpen(true);
-                setIdNumberUnique(false);
+                setIsIdNumberUnique(false);
                 return false;
             } else {
-                setIdNumberUnique(true);
+                setIsIdNumberUnique(true);
             }
         }
 
@@ -136,7 +136,7 @@ export const AddStaff = () => {
             const isValid = await validateForm(); // Check form validity
 
             if (!isValid) {
-                window.alert('Please fill in all the required fields.');
+                console.error('Please fill in all the required fields.');
                 return;
             }
 
@@ -171,7 +171,6 @@ export const AddStaff = () => {
             history('/staff');
         } catch (error) {
             console.error("Error adding user: ", error.message);
-            // window.alert('Existing E-mail. Please use another E-mail!');
             setSnackbarMessage('Existing E-mail. Please use another E-mail!');
             setSnackbarOpen(true);
         }
@@ -281,7 +280,7 @@ export const AddStaff = () => {
             </div>
             <Snackbar
                 open={snackbarOpen}
-                autoHideDuration={6000}
+                autoHideDuration={5000}
                 onClose={handleSnackbarClose}
             >
                 <Alert

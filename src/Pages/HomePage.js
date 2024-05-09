@@ -317,9 +317,10 @@ export const Homepage = () => {
             <div className="notify">
                 <h1>Notifications</h1>
                 <div className="notify-container">
-                    <div className="notify1"><img className='sample' src={staff} alt="staff1" /><h3>New Staff Have Been Added!</h3></div>
                     <div className="notify1"><img className='sample' src={image} alt="staff1" /><h3>New Dish has been Added!</h3></div>
-                    <div className="notify1"><img className='sample' src={staff} alt="staff1" /><h3>New Staff Have Been Added!</h3></div>
+                    <div className="notify1"><img className='sample' src={ingredient} alt="staff1" /><h3>Beef has been Added to Market!</h3></div>
+                    <div className="notify1"><img className='sample' src={market} alt="staff1" /><h3>New Ingredient has been Added to Inventory!</h3></div>
+                    <div className="notify1"><img className='sample' src={image} alt="staff1" /><h3>New Dish has been Added!</h3></div>
                     <div className="notify1"><img className='sample' src={ingredient} alt="staff1" /><h3>Beef has been Added to Market!</h3></div>
                     <div className="notify1"><img className='sample' src={market} alt="staff1" /><h3>New Ingredient has been Added to Inventory!</h3></div>
                 </div>

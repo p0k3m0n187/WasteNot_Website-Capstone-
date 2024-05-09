@@ -18,7 +18,8 @@ export const AddDish = () => {
     const [ingredientsList, setIngredientsList] = useState([{ ingredients: '', grams: '' }]);
     const [selectedImage, setSelectedImage] = useState(null);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [snackbarMessageError, setSnackbarMessageError] = useState('');
+    const [snackbarMessageSuccess, setSnackbarMessageSuccess] = useState('');
 
     // Initialize authentication
     const auth = getAuth();
@@ -32,7 +33,9 @@ export const AddDish = () => {
         if (!hasEmptyFields) {
             setIngredientsList([...ingredientsList, { ingredients: '', grams: '' }]);
         } else {
-            alert('Please fill in all Ingredients and Grams fields before adding another line.');
+            // alert('Please fill in all Ingredients and Grams fields before adding another line.');
+            setSnackbarMessageError('Please fill in all Ingredients and Grams fields before adding another line.');
+            setSnackbarOpen(true);
         }
     };
 
@@ -86,6 +89,13 @@ export const AddDish = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
+        if (!dishCategory || dishCategory.trim() === '') {
+            // alert('Please select a category.');
+            setSnackbarMessageError('Please Select A Category');
+            setSnackbarOpen(true);
+            return; // Prevent further execution of the form submission
+        }
+
         // Check if required fields are empty
         if (
             !dishName.trim() ||
@@ -94,8 +104,8 @@ export const AddDish = () => {
                 (ingredient) => ingredient.ingredients.trim() === '' || ingredient.grams.trim() === ''
             )
         ) {
-            alert('Please fill up the form and ensure all ingredients have names and grams.');
-            setSnackbarMessage('Please fill up the form and ensure all ingredients have names and grams.');
+            // alert('Please fill up the form and ensure all ingredients have names and grams.');
+            setSnackbarMessageError('Please fill up the form and ensure all ingredients have names and grams.');
             setSnackbarOpen(true);
             return;
         }
@@ -130,13 +140,17 @@ export const AddDish = () => {
                     userId: user.uid,
                 });
 
-                window.alert('Dish Added Successfully');
+                // window.alert('Dish Added Successfully');
+                setSnackbarMessageSuccess('Dish Added Successfully');
+                setSnackbarOpen(true);
                 console.log('Document written with ID: ', docRef.id);
 
                 // Navigate to the "menu" route
                 history('/menu');
             } else {
-                alert('Dish Already Existed');
+                // alert('Dish Already Existed');
+                setSnackbarMessageError('Dish Already Existed');
+                setSnackbarOpen(true);
             }
         } catch (error) {
             console.error('Error adding document: ', error);
@@ -194,7 +208,7 @@ export const AddDish = () => {
                             value={dishCategory}
                             onChange={(e) => setDishCategory(e.target.value)}
                         >
-                            <option value="">Select Category</option>
+                            <option value="" disabled selected>Select Category</option>
                             <option value="meat">Meat</option>
                             <option value="soup">Soup</option>
                             <option value='appetizers'>Appetizers</option>
@@ -250,7 +264,7 @@ export const AddDish = () => {
             </div>
             <Snackbar
                 open={snackbarOpen}
-                autoHideDuration={6000}
+                autoHideDuration={5000}
                 onClose={handleSnackbarClose}
             >
                 <Alert
@@ -259,7 +273,21 @@ export const AddDish = () => {
                     vairant="filled"
                     sx={{ width: '100%' }}
                 >
-                    {snackbarMessage}
+                    {snackbarMessageError}
+                </Alert>
+            </Snackbar>
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={5000}
+                onClose={handleSnackbarClose}
+            >
+                <Alert
+                    onClose={handleSnackbarClose}
+                    severity="success"
+                    vairant="filled"
+                    sx={{ width: '100%' }}
+                >
+                    {snackbarMessageSuccess}
                 </Alert>
             </Snackbar>
         </>

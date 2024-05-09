@@ -218,10 +218,9 @@ export const Profile = () => {
 
 
 
-  const handleSelectImageClick = () => {
-    // Trigger the file input when the "Select Image" button is clicked
-    document.getElementById('profileImage').click();
-  };
+  // const handleSelectImageClick = () => {
+  //   document.getElementById('profileImage').click();
+  // };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

@@ -236,26 +236,36 @@ export const Inventory = () => {
                             sx={{
                                 border: '2px solid white',
                                 backgroundColor: palette.primary.main,
-                            }}>
+                            }}
+                        >
                             <TableRow>
                                 <TableCell>Item Name</TableCell>
                                 <TableCell>Quantity / Total</TableCell>
                                 <TableCell />
                             </TableRow>
                         </TableHead>
-                        <TableBody
-                            sx={{ backgroundColor: '#F7F7F7' }}
-                        >
-                            {ingredients.map((item) => (
-                                <CollapsibleTableRow
-                                    key={item.id}
-                                    item={item}
-                                    inventoryHistory={inventoryHistory.filter(historyItem => historyItem.ItemId === item.id)}
-                                />
-                            ))}
+                        <TableBody sx={{ backgroundColor: 'white' }}>
+                            {ingredients.length === 0 ? (
+                                <TableRow>
+                                    <TableCell colSpan={3}>
+                                        <Typography variant="body1" align="center" color="textSecondary">
+                                            Seems like the Inventory list is empty
+                                        </Typography>
+                                    </TableCell>
+                                </TableRow>
+                            ) : (
+                                ingredients.map((item) => (
+                                    <CollapsibleTableRow
+                                        key={item.id}
+                                        item={item}
+                                        inventoryHistory={inventoryHistory.filter(historyItem => historyItem.ItemId === item.id)}
+                                    />
+                                ))
+                            )}
                         </TableBody>
                     </Table>
                 </TableContainer>
+
             </Box>
         </>
     );
