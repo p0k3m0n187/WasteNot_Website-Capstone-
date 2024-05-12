@@ -296,7 +296,7 @@ export const Profile = () => {
                       {formData.profileImage ? (
                         <img
                           src={formData.profileImage}
-                          alt="Selected Image"
+                          alt=""
                           style={{
                             borderRadius: '50%',
                             backgroundColor: '#ccc',

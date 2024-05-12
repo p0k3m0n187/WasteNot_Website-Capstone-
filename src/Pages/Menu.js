@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { Alert, CardMedia, Grid, Snackbar, Tooltip } from '@mui/material';
 import { FaBookOpen, FaPlusCircle, FaTrash, FaPen } from 'react-icons/fa';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
@@ -12,8 +12,9 @@ import { getAuth } from 'firebase/auth';
 import palette from './theme/palette';
 import typography from './theme/typhography';
 import BoxTotal from '../components/atoms/boxtotal';
-import CustomModal from '../components/atoms/Modal';
+// import CustomModal from '../components/atoms/Modal';
 import MiniDrawer from '../components/Drawer';
+import { AddEditDishModal } from '../components/atoms/AddEditDishModal';
 
 export function Menu() {
     const [flippedCardId, setFlippedCardId] = useState(null); // Track which card is flipped
@@ -45,9 +46,17 @@ export function Menu() {
 
     const handleCloseModal = () => setOpenModal(false);
 
-    const handleCardClick = (id) => {
+    const handleCardClick = (id, event) => {
+        event.stopPropagation(); // Stop event propagation
+
         setFlippedCardId(id === flippedCardId ? null : id); // Flip the card if it's not already flipped, otherwise unflip it
     };
+
+    const handleAddDishModal = () => {
+        setSelectedDishId(null); // Reset selected dish ID to null to indicate adding a new dish
+        setOpenModal(true); // Open the modal for adding a new dish
+    };
+
 
     useEffect(() => {
         const fetchMenuData = async () => {
@@ -125,29 +134,30 @@ export function Menu() {
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <Link to="/addDish">
-                                <Tooltip title="Add Dish" arrow>
-                                    <button
+                            {/* <Link to="/addDish"> */}
+                            <Tooltip title="Add Dish" arrow>
+                                <button
+                                    onClick={handleAddDishModal}
+                                    style={{
+                                        backgroundColor: 'transparent',
+                                        border: 'none',
+                                        cursor: 'pointer'
+                                    }}
+                                    onMouseEnter={() => setHover(true)}
+                                    onMouseLeave={() => setHover(false)}
+                                >
+                                    <FaPlusCircle
                                         style={{
-                                            backgroundColor: 'transparent',
-                                            border: 'none',
-                                            cursor: 'pointer'
+                                            fontSize: '50px',
+                                            color: hover ? '#12841D' : palette.primary.main,
+                                            boxShadow: '2px 8px 5px rgba(0, 0, 0, 0.52)',
+                                            border: hover ? '2px solid white' : '2px solid #12841D ',
+                                            borderRadius: '50%',
                                         }}
-                                        onMouseEnter={() => setHover(true)}
-                                        onMouseLeave={() => setHover(false)}
-                                    >
-                                        <FaPlusCircle
-                                            style={{
-                                                fontSize: '50px',
-                                                color: hover ? '#12841D' : palette.primary.main,
-                                                boxShadow: '2px 8px 5px rgba(0, 0, 0, 0.52)',
-                                                border: hover ? '2px solid white' : '2px solid #12841D ',
-                                                borderRadius: '50%',
-                                            }}
-                                        />
-                                    </button>
-                                </Tooltip>
-                            </Link>
+                                    />
+                                </button>
+                            </Tooltip>
+                            {/* </Link> */}
                         </Box>
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
                             <BoxTotal title='Total Dishes'
@@ -156,6 +166,12 @@ export function Menu() {
                         </Box>
                     </Box>
                 </Box>
+                <AddEditDishModal
+                    open={openModal}
+                    handleClose={handleCloseModal}
+                    editMode={selectedDishId !== null}  // Set editMode based on whether a dish is selected
+                    dishToEdit={menuData.find(item => item.id === selectedDishId)}  // Pass the dish data to edit
+                />
 
                 <Grid container spacing={2} sx={{ display: 'flex', pb: 2, pl: 5, pr: 10 }}>
                     {menuData.length === 0 ? (
@@ -166,7 +182,7 @@ export function Menu() {
                         menuData.map((menuItem) => (
                             <Grid item key={menuItem.id} xs={12} sm={6} md={4} lg={4}>
                                 <Card
-                                    onClick={() => handleCardClick(menuItem.id)}
+                                    onClick={(event) => handleCardClick(menuItem.id, event)}
                                     sx={{
                                         transformStyle: 'preserve-3d',
                                         transition: 'transform 0.6s',
@@ -176,7 +192,7 @@ export function Menu() {
                                         boxShadow: '2px 2px 5px 2px rgba(0, 0, 0, 0.25)',
                                         borderRadius: '10px',
                                         border: flippedCardId === menuItem.id ? '3px solid black' : '3px solid white',
-                                        background: flippedCardId === menuItem.id ? 'white' : 'linear-gradient(0deg, #23ee48 0%, #bfffa1 30%)'
+                                        background: flippedCardId === menuItem.id ? 'white' : 'linear-gradient(0deg, #03C04A 0%, #7CF072 30%)'
                                     }}
                                 >
                                     <CardContent sx={{
@@ -185,8 +201,6 @@ export function Menu() {
                                         {!flippedCardId || flippedCardId !== menuItem.id ? (
                                             <>
                                                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mb: 0.5 }}>
-                                                    <CustomModal open={openModal} onClose={handleCloseModal} selectedDish={menuData.find(item => item.id === selectedDishId)} />
-
                                                     <button
                                                         onClick={(event) => {
                                                             event.stopPropagation();
@@ -204,7 +218,7 @@ export function Menu() {
                                                     >
                                                         <FaPen
                                                             style={{
-                                                                color: hoveredIcons[menuItem.id] && selectedIconType === 'edit' ? '#12841D' : '#23ee48',
+                                                                color: hoveredIcons[menuItem.id] && selectedIconType === 'edit' ? '#034D0B' : '#047719',
                                                                 border: 'none',
                                                                 background: 'none',
                                                             }}

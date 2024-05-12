@@ -11,7 +11,7 @@ import { Avatar, Box, Typography } from "@mui/material";
 import typography from "./theme/typhography";
 import palette from "./theme/palette";
 import SampleImage from './../images/deanprofile.jpg'
-import { alignProperty } from '@mui/material/styles/cssUtils';
+// import { alignProperty } from '@mui/material/styles/cssUtils';
 
 export const Market = () => {
     const [saleItems, setSaleItems] = useState([]);
