@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "firebase/firestore";
 import { db } from '../config/firebase';
-import { collection, getDocs, query, where, addDoc, deleteDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import { FaWarehouse } from 'react-icons/fa';
 import { getAuth } from 'firebase/auth';
-// import ingredient from "../images/Ingredients.png";
 import MiniDrawer from "../components/Drawer";
 import { Box, Button, Typography } from "@mui/material";
 import typography from "./theme/typhography";
@@ -13,6 +12,7 @@ import BoxTotal from "../components/atoms/boxtotal";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Collapse, IconButton, } from "@mui/material";
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import ConfirmationModal from "../components/atoms/ConfirmationModal";
 
 export const Inventory = () => {
     const [ingredients, setIngredients] = useState([]);
@@ -20,6 +20,8 @@ export const Inventory = () => {
     const [inventoryHistory, setInventoryHistory] = useState([]);
     const [priceInput, setPriceInput] = useState('');
     const [showConfirmation, setShowConfirmation] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false); // state for modal
+    const [selectedHistoryItem, setSelectedHistoryItem] = useState(null);
 
     const auth = getAuth();
     const user = auth.currentUser;
@@ -42,8 +44,6 @@ export const Inventory = () => {
         fetchInventoryData();
     }, [user]);
 
-
-
     useEffect(() => {
         const fetchInventoryHistory = async () => {
             if (selectedItem) {
@@ -57,6 +57,11 @@ export const Inventory = () => {
                     const historyList = historySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     console.log('History List:', historyList);
                     setInventoryHistory(historyList);
+
+                    // Assuming you want to select the first history item in the list
+                    if (historyList.length > 0) {
+                        setSelectedHistoryItem(historyList[0]);
+                    }
                 } catch (error) {
                     console.error('Error fetching inventory history: ', error);
                 }
@@ -66,55 +71,72 @@ export const Inventory = () => {
         fetchInventoryHistory();
     }, [selectedItem]);
 
-
-    const openPopup = (item) => {
+    const openPopup = async (item) => {
         setSelectedItem(item);
+        setModalOpen(true); // open modal
+
+        try {
+            const historyQuery = query(
+                collection(db, 'ingredients_history'),
+                where('ItemId', '==', item.id)
+            );
+            const historySnapshot = await getDocs(historyQuery);
+            const historyList = historySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            console.log('Item History List:', historyList);
+
+            if (historyList.length > 0) {
+                setSelectedHistoryItem(historyList[0]); // Select the first history item
+            }
+        } catch (error) {
+            console.error('Error fetching item history: ', error);
+        }
     };
 
     const closePopup = () => {
         setSelectedItem(null);
         setPriceInput('');
         setShowConfirmation(false);
+        setModalOpen(false); // close modal
     };
 
-    const handleConfirm = async () => {
-        try {
-            const quantityValue = parseInt(priceInput, 10);
+    // const handleConfirm = async () => {
+    //     try {
+    //         const quantityValue = parseInt(priceInput, 10);
 
-            if (isNaN(quantityValue) || quantityValue <= 0) {
-                console.error('Invalid Quantity value');
-                return;
-            }
+    //         if (isNaN(quantityValue) || quantityValue <= 0) {
+    //             console.error('Invalid Quantity value');
+    //             return;
+    //         }
 
-            if (!selectedItem || inventoryHistory.length === 0) {
-                console.error('Selected item or history is undefined');
-                return;
-            }
+    //         if (!selectedItem || inventoryHistory.length === 0) {
+    //             console.error('Selected item or history is undefined');
+    //             return;
+    //         }
 
-            const selectedHistoryItem = inventoryHistory[0];
+    //         const selectedHistoryItem = inventoryHistory[0];
 
-            const saleItemData = {
-                Item_name: selectedItem.Item_name,
-                Price: quantityValue,
-                Quantity: selectedHistoryItem.item_quantity,
-                ItemId: selectedItem.ItemId,
-                Restaurant_Id: user?.uid,
-            };
+    //         const saleItemData = {
+    //             Item_name: selectedItem.Item_name,
+    //             Price: quantityValue,
+    //             Quantity: selectedHistoryItem.item_quantity,
+    //             ItemId: selectedItem.ItemId,
+    //             Restaurant_Id: user?.uid,
+    //         };
 
-            const saleItemDocRef = await addDoc(collection(db, 'sale_items'), saleItemData);
+    //         const saleItemDocRef = await addDoc(collection(db, 'sale_items'), saleItemData);
 
-            console.log('Sale item added with ID: ', saleItemDocRef.id);
+    //         console.log('Sale item added with ID: ', saleItemDocRef.id);
 
-            await deleteDoc(doc(db, 'ingredients_history', selectedHistoryItem.id));
+    //         await deleteDoc(doc(db, 'ingredients_history', selectedHistoryItem.id));
 
-            console.log('Ingredients history item deleted successfully.');
-            window.alert("Inventory Item added to the Market Successfully");
+    //         console.log('Ingredients history item deleted successfully.');
+    //         window.alert("Inventory Item added to the Market Successfully");
 
-            closePopup();
-        } catch (error) {
-            console.error('Error handling confirmation: ', error);
-        }
-    };
+    //         closePopup();
+    //     } catch (error) {
+    //         console.error('Error handling confirmation: ', error);
+    //     }
+    // };
 
     const CollapsibleTableRow = ({ item }) => {
         const [open, setOpen] = useState(false);
@@ -157,9 +179,6 @@ export const Inventory = () => {
                     <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={3}>
                         <Collapse in={open} timeout="auto" unmountOnExit>
                             <Box sx={{ margin: 1, }}>
-                                {/* <Typography variant="h6" gutterBottom component="div">
-                                    History
-                                </Typography> */}
                                 <Table size="small" aria-label="purchases">
                                     <TableHead sx={{ backgroundColor: palette.primary.main, border: '1px solid white' }}>
                                         <TableRow>
@@ -171,10 +190,10 @@ export const Inventory = () => {
                                     </TableHead>
                                     <TableBody sx={{ backgroundColor: 'white' }}>
                                         {itemHistory.map((historyItem) => (
-                                            <TableRow key={historyItem.ItemId}>
+                                            <TableRow key={historyItem.id}>
                                                 <TableCell>{historyItem.Date_added}</TableCell>
                                                 <TableCell>{historyItem.Expiry_date}</TableCell>
-                                                <TableCell>{historyItem.item_quantity}</TableCell>
+                                                <TableCell>{historyItem.item_quantity}</TableCell> {/* Display item_quantity */}
                                                 <TableCell>
                                                     <Button
                                                         variant='contained'
@@ -192,11 +211,16 @@ export const Inventory = () => {
                                                                 color: 'black',
                                                                 textDecoration: 'underline',
                                                             }
-                                                        }}>AddToMarket</Button>
+                                                        }}
+                                                        onClick={() => openPopup(item)} // open popup on button click
+                                                    >
+                                                        AddToMarket
+                                                    </Button>
                                                 </TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>
+
                                 </Table>
                             </Box>
                         </Collapse>
@@ -265,8 +289,12 @@ export const Inventory = () => {
                         </TableBody>
                     </Table>
                 </TableContainer>
-
             </Box>
+            <ConfirmationModal
+                open={modalOpen}
+                onClose={closePopup}
+                selectedHistoryItem={selectedHistoryItem} // Pass selectedHistoryItem as a prop
+            />
         </>
     );
 };
