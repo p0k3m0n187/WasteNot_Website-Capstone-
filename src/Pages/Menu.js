@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-// import { Link } from "react-router-dom";
 import { Alert, CardMedia, Grid, Snackbar, Tooltip } from '@mui/material';
 import { FaBookOpen, FaPlusCircle, FaTrash, FaPen } from 'react-icons/fa';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
@@ -12,7 +11,6 @@ import { getAuth } from 'firebase/auth';
 import palette from './theme/palette';
 import typography from './theme/typhography';
 import BoxTotal from '../components/atoms/boxtotal';
-// import CustomModal from '../components/atoms/Modal';
 import MiniDrawer from '../components/Drawer';
 import { AddEditDishModal } from '../components/atoms/AddEditDishModal';
 
@@ -34,67 +32,54 @@ export function Menu() {
     };
 
     const handleOpenModal = (id) => {
-        // Check if the card is already flipped, and if so, do not flip it back
         if (flippedCardId === id) {
-            setOpenModal(true); // Open the modal directly
+            setOpenModal(true);
         } else {
-            setSelectedDishId(id); // Set the selected dish ID
-            setOpenModal(true); // Open the modal
-            setFlippedCardId(null); // Ensure the card is not flipped when opening the modal
+            setSelectedDishId(id);
+            setOpenModal(true);
+            setFlippedCardId(null);
         }
     };
 
     const handleCloseModal = () => setOpenModal(false);
 
     const handleCardClick = (id, event) => {
-        event.stopPropagation(); // Stop event propagation
-
-        setFlippedCardId(id === flippedCardId ? null : id); // Flip the card if it's not already flipped, otherwise unflip it
+        event.stopPropagation();
+        setFlippedCardId(id === flippedCardId ? null : id);
     };
 
     const handleAddDishModal = () => {
-        setSelectedDishId(null); // Reset selected dish ID to null to indicate adding a new dish
-        setOpenModal(true); // Open the modal for adding a new dish
+        setSelectedDishId(null);
+        setOpenModal(true);
     };
 
+    const fetchMenuData = useCallback(async () => {
+        try {
+            const menuCollection = collection(db, 'menu_dish');
+            const menuSnapshot = await getDocs(menuCollection);
+            const menuList = [];
+            menuSnapshot.forEach((doc) => {
+                const menuData = doc.data();
+                if (user && menuData.userId === user.uid) {
+                    menuList.push({ id: doc.id, ...menuData });
+                }
+            });
+            setMenuData(menuList);
+        } catch (error) {
+            console.error('Error fetching menu data: ', error);
+        }
+    }, [user]);
 
     useEffect(() => {
-        const fetchMenuData = async () => {
-            try {
-                const menuCollection = collection(db, 'menu_dish');
-                const menuSnapshot = await getDocs(menuCollection);
-                const menuList = [];
-
-                menuSnapshot.forEach((doc) => {
-                    const menuData = doc.data();
-
-                    if (user && menuData.userId === user.uid) {
-                        menuList.push({ id: doc.id, ...menuData });
-                    }
-                });
-
-                setMenuData(menuList);
-            } catch (error) {
-                console.error('Error fetching menu data: ', error);
-            }
-        };
-
         fetchMenuData();
-    }, [user]);
+    }, [fetchMenuData]);
 
     const handleDelete = async (docId) => {
         const confirmDelete = window.confirm("Are you sure you want to delete this dish?");
-
-        if (!confirmDelete) {
-            return; // If the user clicks Cancel, do nothing
-        }
-
+        if (!confirmDelete) return;
         try {
             await deleteDoc(doc(db, 'menu_dish', docId));
-            setMenuData((prevMenuData) =>
-                prevMenuData.filter((item) => item.id !== docId)
-            );
-            // window.alert("Dish Deleted Successfully")
+            setMenuData((prevMenuData) => prevMenuData.filter((item) => item.id !== docId));
             setSnackbarMessageSuccess("Dish Deleted Successfully");
             setSnackbarOpen(true);
         } catch (error) {
@@ -103,15 +88,9 @@ export function Menu() {
     };
 
     const handleIconHoverEdit = (id, isHovered, iconType) => {
-        setHoveredIcons(prevState => ({
-            ...prevState,
-            [id]: isHovered,
-        }));
-        if (isHovered) {
-            setSelectedIconType(iconType);
-        } else {
-            setSelectedIconType(null);
-        }
+        setHoveredIcons(prevState => ({ ...prevState, [id]: isHovered }));
+        if (isHovered) setSelectedIconType(iconType);
+        else setSelectedIconType(null);
     };
 
     return (
@@ -134,7 +113,6 @@ export function Menu() {
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            {/* <Link to="/addDish"> */}
                             <Tooltip title="Add Dish" arrow>
                                 <button
                                     onClick={handleAddDishModal}
@@ -157,22 +135,19 @@ export function Menu() {
                                     />
                                 </button>
                             </Tooltip>
-                            {/* </Link> */}
                         </Box>
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
-                            <BoxTotal title='Total Dishes'
-                                icon={<FaBookOpen />}
-                                total={menuData.length} />
+                            <BoxTotal title='Total Dishes' icon={<FaBookOpen />} total={menuData.length} />
                         </Box>
                     </Box>
                 </Box>
                 <AddEditDishModal
                     open={openModal}
                     handleClose={handleCloseModal}
-                    editMode={selectedDishId !== null}  // Set editMode based on whether a dish is selected
-                    dishToEdit={menuData.find(item => item.id === selectedDishId)}  // Pass the dish data to edit
+                    editMode={selectedDishId !== null}
+                    dishToEdit={menuData.find(item => item.id === selectedDishId)}
+                    fetchMenu={fetchMenuData}
                 />
-
                 <Grid container spacing={2} sx={{ display: 'flex', pb: 2, pl: 5, pr: 10 }}>
                     {menuData.length === 0 ? (
                         <Typography variant="h6" alignItems="center" align='center' color="textSecondary">
@@ -187,7 +162,7 @@ export function Menu() {
                                         transformStyle: 'preserve-3d',
                                         transition: 'transform 0.6s',
                                         height: 345,
-                                        transform: flippedCardId === menuItem.id ? 'rotateY(180deg)' : 'rotateY(0deg)', // Apply rotation based on flippedCardId
+                                        transform: flippedCardId === menuItem.id ? 'rotateY(180deg)' : 'rotateY(0deg)',
                                         cursor: 'pointer',
                                         boxShadow: '2px 2px 5px 2px rgba(0, 0, 0, 0.25)',
                                         borderRadius: '10px',
@@ -196,7 +171,7 @@ export function Menu() {
                                     }}
                                 >
                                     <CardContent sx={{
-                                        transform: flippedCardId === menuItem.id ? 'rotateY(180deg)' : 'rotateY(0deg)', // Apply rotation based on flippedCardId
+                                        transform: flippedCardId === menuItem.id ? 'rotateY(180deg)' : 'rotateY(0deg)',
                                     }}>
                                         {!flippedCardId || flippedCardId !== menuItem.id ? (
                                             <>
@@ -204,7 +179,7 @@ export function Menu() {
                                                     <button
                                                         onClick={(event) => {
                                                             event.stopPropagation();
-                                                            handleOpenModal(menuItem.id); // Call handleOpenModal to open the modal
+                                                            handleOpenModal(menuItem.id);
                                                         }}
                                                         style={{
                                                             background: 'none',
@@ -226,7 +201,7 @@ export function Menu() {
                                                     </button>
                                                     <button
                                                         onClick={(event) => {
-                                                            event.stopPropagation(); // Stop propagation to parent card
+                                                            event.stopPropagation();
                                                             handleDelete(menuItem.id);
                                                         }}
                                                         style={{
@@ -289,7 +264,6 @@ export function Menu() {
                                                     }} gutterBottom>
                                                         Ingredients
                                                     </Typography>
-
                                                     <Typography variant="body2" color="textSecondary">
                                                         Category: {menuItem.dishCategory}
                                                     </Typography>
@@ -320,7 +294,7 @@ export function Menu() {
                 <Alert
                     onClose={handleSnackbarClose}
                     severity="success"
-                    vairant="filled"
+                    variant="filled"
                     sx={{ width: '100%' }}
                 >
                     {snackbarMessageSuccess}

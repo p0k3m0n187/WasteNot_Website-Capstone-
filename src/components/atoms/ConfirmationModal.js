@@ -32,7 +32,7 @@ const ConfirmationModal = ({ open, onClose, selectedHistoryItem }) => {
         <Modal open={open} onClose={onClose}>
             <Box sx={customStyle}>
                 <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-                    <Typography variant="h3" component="h2">
+                    <Typography variant="h4" component="h2">
                         Confirm Add to Market
                     </Typography>
                 </Box>

@@ -3,17 +3,16 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import typography from '../../Pages/theme/typhography';
-import palette from '../../Pages/theme/palette';
-import StyledTextField from './TextField';
 import { FaPlusCircle, FaMinusCircle } from 'react-icons/fa';
 import { storage, db } from '../../config/firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';  // Updated imports for Firestore
+import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-// import { useNavigate } from 'react-router-dom';
 import { Snackbar, Alert } from '@mui/material';
+import StyledTextField from './TextField';
 import MultiLine from './MultiLine';
+import typography from '../../Pages/theme/typhography';
+import palette from '../../Pages/theme/palette';
 
 const style = {
     position: 'absolute',
@@ -27,11 +26,11 @@ const style = {
     borderRadius: '10px',
     boxShadow: 24,
     p: 5,
-    overflowY: 'auto', // Enable vertical scrolling
-    maxHeight: '90vh', // Limit the maximum height to 80% of the viewport height
+    overflowY: 'auto',
+    maxHeight: '90vh',
 };
 
-export const AddEditDishModal = ({ open, handleClose, editMode, dishToEdit }) => {
+export const AddEditDishModal = ({ open, handleClose, editMode, dishToEdit, fetchMenu }) => {
     const [dishName, setDishName] = useState('');
     const [dishDescription, setDishDescription] = useState('');
     const [dishCategory, setDishCategory] = useState('');
@@ -40,7 +39,6 @@ export const AddEditDishModal = ({ open, handleClose, editMode, dishToEdit }) =>
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessageError, setSnackbarMessageError] = useState('');
     const [snackbarMessageSuccess, setSnackbarMessageSuccess] = useState('');
-    // const history = useNavigate();
 
     const auth = getAuth();
     const [userId, setUserId] = useState(null);
@@ -49,7 +47,7 @@ export const AddEditDishModal = ({ open, handleClose, editMode, dishToEdit }) =>
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
-                setUserId(user.uid); // Assuming user.uid is the user ID
+                setUserId(user.uid);
             } else {
                 setUserId(null);
             }
@@ -94,14 +92,9 @@ export const AddEditDishModal = ({ open, handleClose, editMode, dishToEdit }) =>
     const handleImageUpload = async (event) => {
         const file = event.target.files[0];
         if (file) {
-            // Upload the file to Firebase Storage
             const storageRef = ref(storage, `images/${file.name}`);
             await uploadBytes(storageRef, file);
-
-            // Get the download URL for the uploaded file
             const downloadURL = await getDownloadURL(storageRef);
-
-            // Set the selectedImage state with the download URL
             setSelectedImage(downloadURL);
         }
     };
@@ -121,8 +114,32 @@ export const AddEditDishModal = ({ open, handleClose, editMode, dishToEdit }) =>
         setIngredientsList(updatedIngredientsList);
     };
 
+    const validateForm = () => {
+        if (!dishName.trim() || !dishDescription.trim() || !dishCategory.trim() || !selectedImage) {
+            setSnackbarMessageError('Please fill in all required fields.');
+            setSnackbarOpen(true);
+            return false;
+        }
+        const hasEmptyFields = ingredientsList.some(
+            (ingredient) => ingredient.ingredients.trim() === '' || ingredient.grams.trim() === ''
+        );
+        if (hasEmptyFields) {
+            setSnackbarMessageError('Please fill in all Ingredients and Grams fields.');
+            setSnackbarOpen(true);
+            return false;
+        }
+        return true;
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setSnackbarMessageError('');
+        setSnackbarMessageSuccess('');
+
+        if (!validateForm()) {
+            return;
+        }
+
         try {
             if (userId) {
                 const dishData = {
@@ -135,27 +152,34 @@ export const AddEditDishModal = ({ open, handleClose, editMode, dishToEdit }) =>
                 };
                 if (editMode && dishToEdit) {
                     const dishRef = doc(db, `menu_dish/${dishToEdit.id}`);
-                    console.log('Updating dishRef:', dishRef.path);
                     await updateDoc(dishRef, dishData);
                     setSnackbarMessageSuccess('Dish Updated Successfully');
                 } else {
-                    console.log('Adding new dishData:', dishData);
                     const newDishRef = await addDoc(collection(db, 'menu_dish'), dishData);
                     setSnackbarMessageSuccess('Dish Added Successfully with ID: ' + newDishRef.id);
                 }
                 setSnackbarOpen(true);
                 handleClose();
+                fetchMenu(); // Fetch the updated menu
             } else {
                 setSnackbarMessageError('User not authenticated');
                 setSnackbarOpen(true);
             }
         } catch (error) {
             console.error('Error adding/updating document: ', error);
-            setSnackbarMessageError('Error processing dish: ' + error.message); // Display specific error message
+            setSnackbarMessageError('Error processing dish: ' + error.message);
             setSnackbarOpen(true);
         }
     };
 
+    const handleCancel = () => {
+        setDishName('');
+        setDishDescription('');
+        setDishCategory('');
+        setIngredientsList([{ ingredients: '', grams: '' }]);
+        setSelectedImage(null);
+        handleClose();
+    };
 
     return (
         <div>
@@ -279,7 +303,7 @@ export const AddEditDishModal = ({ open, handleClose, editMode, dishToEdit }) =>
                                                     onChange={(e) => handleIngredientChange(index, 'grams', e.target.value)}
                                                 />
                                                 {index > 0 && (
-                                                    <button className="remove_ingred" onClick={handleRemoveIngredient}>
+                                                    <button className="remove_ingred" onClick={() => handleRemoveIngredient(index)}>
                                                         <FaMinusCircle />
                                                     </button>
                                                 )}
@@ -293,7 +317,7 @@ export const AddEditDishModal = ({ open, handleClose, editMode, dishToEdit }) =>
                                     </div>
                                 </Box>
                                 <Button type="submit">{editMode ? 'Update' : 'Add'}</Button>
-                                <Button onClick={handleClose}>Cancel</Button>
+                                <Button onClick={handleCancel}>Cancel</Button>
                             </form>
                         </Box>
                     </Box>

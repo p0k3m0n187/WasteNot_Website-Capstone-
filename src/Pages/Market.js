@@ -7,10 +7,10 @@ import { getAuth } from 'firebase/auth';
 import { FaWarehouse } from 'react-icons/fa';
 import MiniDrawer from "../components/Drawer";
 import BoxTotal from "../components/atoms/boxtotal";
-import { Avatar, Box, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import typography from "./theme/typhography";
 import palette from "./theme/palette";
-import SampleImage from './../images/deanprofile.jpg'
+// import SampleImage from './../images/deanprofile.jpg'
 // import { alignProperty } from '@mui/material/styles/cssUtils';
 
 export const Market = () => {
@@ -41,18 +41,18 @@ export const Market = () => {
     }, [user]);
 
     const columns = [
-        {
-            width: 250,
-            headerAlign: 'center',
-            alignItems: 'right',
-            renderCell: () => (
-                <Avatar
-                    src={SampleImage}
-                    alt={SampleImage}
-                    style={{ width: '3rem', height: '3rem' }}
-                />
-            ),
-        },
+        // {
+        //     width: 250,
+        //     headerAlign: 'center',
+        //     alignItems: 'right',
+        //     renderCell: () => (
+        //         <Avatar
+        //             src={SampleImage}
+        //             alt={SampleImage}
+        //             style={{ width: '3rem', height: '3rem' }}
+        //         />
+        //     ),
+        // },
         { field: 'Item_name', headerName: 'Name', width: 300 },
         { field: 'Price', headerName: 'Price', width: 300 },
         { field: 'Quantity', headerName: 'Total Grams', width: 300 },
@@ -96,7 +96,7 @@ export const Market = () => {
                             Seems like the Market is empty
                         </Typography>
                     ) : (
-                        <div style={{ height: 350, width: '100%' }}>
+                        <div style={{ height: 500, width: '100%' }}>
                             <DataGrid
                                 rows={saleItems.slice(page * pageSize, page * pageSize + pageSize)}
                                 columns={columns}

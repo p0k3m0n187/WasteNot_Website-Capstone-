@@ -18,8 +18,8 @@ export const Inventory = () => {
     const [ingredients, setIngredients] = useState([]);
     const [selectedItem, setSelectedItem] = useState(null);
     const [inventoryHistory, setInventoryHistory] = useState([]);
-    const [priceInput, setPriceInput] = useState('');
-    const [showConfirmation, setShowConfirmation] = useState(false);
+    // const [priceInput, setPriceInput] = useState('');
+    // const [showConfirmation, setShowConfirmation] = useState(false);
     const [modalOpen, setModalOpen] = useState(false); // state for modal
     const [selectedHistoryItem, setSelectedHistoryItem] = useState(null);
 
@@ -94,8 +94,8 @@ export const Inventory = () => {
 
     const closePopup = () => {
         setSelectedItem(null);
-        setPriceInput('');
-        setShowConfirmation(false);
+        // setPriceInput('');
+        // setShowConfirmation(false);
         setModalOpen(false); // close modal
     };
 
@@ -254,7 +254,7 @@ export const Inventory = () => {
                             total={ingredients.length} />
                     </Box>
                 </Box>
-                <TableContainer sx={{ width: '100%', height: 360, border: '1px solid green', borderRadius: 1 }}>
+                <TableContainer sx={{ width: '100%', height: 500, border: '1px solid green', borderRadius: 1 }}>
                     <Table>
                         <TableHead
                             sx={{
@@ -264,7 +264,7 @@ export const Inventory = () => {
                         >
                             <TableRow>
                                 <TableCell>Item Name</TableCell>
-                                <TableCell>Quantity / Total</TableCell>
+                                <TableCell>Quantity Left / Total</TableCell>
                                 <TableCell />
                             </TableRow>
                         </TableHead>

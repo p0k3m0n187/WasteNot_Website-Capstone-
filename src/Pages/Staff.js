@@ -97,31 +97,6 @@ export const Staff = (props) => {
   return (
     <>
       <MiniDrawer />
-      {/* <Box sx={{ ml: 10, p: 2 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', height: '7rem', mb: 2 }}>
-          <Box sx={{ display: 'flex', alignItems: 'start' }}>
-            <Typography
-              sx={{
-                fontSize: typography.h7.fontSize,
-                fontWeight: typography.h1.fontWeight,
-                fontFamily: typography.h1.fontFamily,
-                color: palette.plain.main,
-                WebkitTextStroke: '1.5px #12841D',
-                textShadow: '2px 8px 5px rgba(106, 217, 117, 0.52)',
-                textTransform: 'uppercase',
-              }} gutterBottom>
-              Staff
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <BoxTotal
-              title='Personel'
-              icon={<FaUser />}
-              total={staffData.length} />
-          </Box>
-        </Box>
-      </Box> */}
-
       <div className="staff-container">
         <div class="staff-title">Staff</div>
         <div class="total-staff">
@@ -144,7 +119,6 @@ export const Staff = (props) => {
           </button>
         </div>
         <div class="staff-scrollable">
-
           <table>
             <thead>
               <tr>
