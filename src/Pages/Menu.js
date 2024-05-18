@@ -265,7 +265,7 @@ export function Menu() {
                                                         Ingredients
                                                     </Typography>
                                                     <Typography variant="body2" color="textSecondary">
-                                                        Category: {menuItem.dishCategory}
+                                                        Category: {menuItem.dishCategory.toUpperCase()}
                                                     </Typography>
                                                     {Array.isArray(menuItem.ingredientsList) && menuItem.ingredientsList.length > 0 ? (
                                                         <ul>

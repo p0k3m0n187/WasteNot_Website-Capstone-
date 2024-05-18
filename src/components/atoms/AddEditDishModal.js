@@ -8,7 +8,7 @@ import { storage, db } from '../../config/firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { Snackbar, Alert } from '@mui/material';
+import { Snackbar, Alert, Select, MenuItem, FormControl } from '@mui/material';
 import StyledTextField from './TextField';
 import MultiLine from './MultiLine';
 import typography from '../../Pages/theme/typhography';
@@ -25,7 +25,7 @@ const style = {
     border: '2px solid #000',
     borderRadius: '10px',
     boxShadow: 24,
-    p: 5,
+    p: 2,
     overflowY: 'auto',
     maxHeight: '90vh',
 };
@@ -34,11 +34,12 @@ export const AddEditDishModal = ({ open, handleClose, editMode, dishToEdit, fetc
     const [dishName, setDishName] = useState('');
     const [dishDescription, setDishDescription] = useState('');
     const [dishCategory, setDishCategory] = useState('');
-    const [ingredientsList, setIngredientsList] = useState([{ ingredients: '', grams: '' }]);
+    const [ingredientsList, setIngredientsList] = useState([{ ingredients: '', grams: '', classification: '' }]);
     const [selectedImage, setSelectedImage] = useState(null);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessageError, setSnackbarMessageError] = useState('');
     const [snackbarMessageSuccess, setSnackbarMessageSuccess] = useState('');
+    const [isHovered, setIsHovered] = useState(false);
 
     const auth = getAuth();
     const [userId, setUserId] = useState(null);
@@ -60,25 +61,29 @@ export const AddEditDishModal = ({ open, handleClose, editMode, dishToEdit, fetc
             setDishName(dishToEdit.dishName || '');
             setDishDescription(dishToEdit.dishDescription || '');
             setDishCategory(dishToEdit.dishCategory || '');
-            setIngredientsList(dishToEdit.ingredientsList || [{ ingredients: '', grams: '' }]);
+            setIngredientsList(dishToEdit.ingredientsList.map(ingredient => ({
+                ingredients: ingredient.ingredients || '',
+                grams: ingredient.grams || '',
+                classification: ingredient.classification || ''
+            })));
             setSelectedImage(dishToEdit.imageUrl || null);
         } else {
             setDishName('');
             setDishDescription('');
             setDishCategory('');
-            setIngredientsList([{ ingredients: '', grams: '' }]);
+            setIngredientsList([{ ingredients: '', grams: '', classification: '' }]);
             setSelectedImage(null);
         }
     }, [editMode, dishToEdit]);
 
     const handleAddIngredient = () => {
         const hasEmptyFields = ingredientsList.some(
-            (ingredient) => ingredient.ingredients.trim() === '' || ingredient.grams.trim() === ''
+            (ingredient) => !ingredient.ingredients?.trim() || !ingredient.grams?.trim() || !ingredient.classification?.trim()
         );
         if (!hasEmptyFields) {
-            setIngredientsList([...ingredientsList, { ingredients: '', grams: '' }]);
+            setIngredientsList([...ingredientsList, { ingredients: '', grams: '', classification: '' }]);
         } else {
-            setSnackbarMessageError('Please fill in all Ingredients and Grams fields before adding another line.');
+            setSnackbarMessageError('Please fill in all Ingredients, Grams, and Classification fields before adding another line.');
             setSnackbarOpen(true);
         }
     };
@@ -109,9 +114,11 @@ export const AddEditDishModal = ({ open, handleClose, editMode, dishToEdit, fetc
     };
 
     const handleRemoveIngredient = (index) => {
-        const updatedIngredientsList = [...ingredientsList];
-        updatedIngredientsList.splice(index, 1);
-        setIngredientsList(updatedIngredientsList);
+        setIngredientsList(prevIngredientsList => {
+            const updatedIngredientsList = [...prevIngredientsList];
+            updatedIngredientsList.splice(index, 1);
+            return updatedIngredientsList;
+        });
     };
 
     const validateForm = () => {
@@ -121,10 +128,10 @@ export const AddEditDishModal = ({ open, handleClose, editMode, dishToEdit, fetc
             return false;
         }
         const hasEmptyFields = ingredientsList.some(
-            (ingredient) => ingredient.ingredients.trim() === '' || ingredient.grams.trim() === ''
+            (ingredient) => !ingredient.ingredients?.trim() || !ingredient.grams?.trim() || !ingredient.classification?.trim()
         );
         if (hasEmptyFields) {
-            setSnackbarMessageError('Please fill in all Ingredients and Grams fields.');
+            setSnackbarMessageError('Please fill in all Ingredients, Grams, and Classification fields.');
             setSnackbarOpen(true);
             return false;
         }
@@ -172,13 +179,33 @@ export const AddEditDishModal = ({ open, handleClose, editMode, dishToEdit, fetc
         }
     };
 
-    const handleCancel = () => {
+    const resetForm = () => {
         setDishName('');
         setDishDescription('');
         setDishCategory('');
-        setIngredientsList([{ ingredients: '', grams: '' }]);
+        setIngredientsList([{ ingredients: '', grams: '', classification: '' }]);
         setSelectedImage(null);
+    };
+
+    const handleCancel = () => {
+        resetForm();
         handleClose();
+    };
+
+    const styles = {
+        backgroundColor: isHovered ? 'white' : 'white',
+        color: isHovered ? 'green' : '#03C04A',
+        borderRadius: 100,
+        fontSize: 50,
+        cursor: 'pointer' // Optional: to indicate it's clickable
+    };
+
+    const handleMouseEnter = () => {
+        setIsHovered(true);
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovered(false);
     };
 
     return (
@@ -234,39 +261,48 @@ export const AddEditDishModal = ({ open, handleClose, editMode, dishToEdit, fetc
                                         </Box>
                                     )}
                                 </Box>
-                                <input
-                                    type="file"
-                                    id="dishImage"
-                                    accept="image/*"
-                                    name="dishImage"
-                                    onChange={handleImageUpload}
-                                    style={{ display: 'none' }}
-                                />
-                                <button
-                                    type="button"
-                                    onClick={handleSelectImageClick}
+                                <Box
+                                    sx={{ position: 'absolute', right: '60.2%', top: '76%' }}
                                 >
-                                    <FaPlusCircle />
-                                </button>
+                                    <input
+                                        type="file"
+                                        id="dishImage"
+                                        accept="image/*"
+                                        name="dishImage"
+                                        onChange={handleImageUpload}
+                                        style={{ display: 'none' }}
+                                    />
+                                    <FaPlusCircle
+                                        type="button"
+                                        style={styles}
+                                        onClick={handleSelectImageClick}
+                                        onMouseEnter={handleMouseEnter}
+                                        onMouseLeave={handleMouseLeave}
+                                    />
+                                </Box>
                             </Box>
                         </Box>
                         <Box sx={{ width: '60%', height: '50%' }}>
                             <form onSubmit={handleSubmit}>
-                                <Box sx={{ overflowY: 'auto', maxHeight: '470px', p: 2 }}>
-                                    <StyledTextField
-                                        label="Dish Name"
-                                        name='dishname'
-                                        value={dishName}
-                                        onChange={(e) => setDishName(e.target.value)}
-                                    />
-                                    <MultiLine
-                                        label="Dish Description"
-                                        name='dishname'
-                                        value={dishDescription}
-                                        onChange={(e) => setDishDescription(e.target.value)}
-                                    />
+                                <Box sx={{ overflowY: 'auto', height: '470px', p: 1, mb: 2 }}>
+                                    <Box sx={{ mb: 2 }}>
+                                        <StyledTextField
+                                            label="Dish Name"
+                                            name='dishname'
+                                            value={dishName}
+                                            onChange={(e) => setDishName(e.target.value)}
+                                        />
+                                    </Box>
+                                    <Box sx={{ mb: 2 }}>
+                                        <MultiLine
+                                            label="Dish Description"
+                                            name='dishname'
+                                            value={dishDescription}
+                                            onChange={(e) => setDishDescription(e.target.value)}
+                                        />
+                                    </Box>
                                     <select
-                                        style={{ mb: 2 }}
+                                        style={{ mb: 2, border: '1px solid #03C04A' }}
                                         id="dishCategory"
                                         name="dishCategory"
                                         value={dishCategory}
@@ -291,24 +327,50 @@ export const AddEditDishModal = ({ open, handleClose, editMode, dishToEdit, fetc
                                         {ingredientsList.map((ingredient, index) => (
                                             <div key={index}>
                                                 <input
+                                                    style={{ mb: 2, border: '1px solid #03C04A', width: 200 }}
                                                     type="text"
                                                     placeholder="Ingredients"
                                                     value={ingredient.ingredients}
                                                     onChange={(e) => handleIngredientChange(index, 'ingredients', e.target.value)}
                                                 />
                                                 <input
+                                                    style={{ mb: 2, border: '1px solid #03C04A', width: 200 }}
                                                     type="number"
                                                     placeholder="Grams"
                                                     value={ingredient.grams}
                                                     onChange={(e) => handleIngredientChange(index, 'grams', e.target.value)}
                                                 />
+                                                <FormControl
+                                                    style={{ mb: 2, width: 200 }}>
+                                                    <Select
+                                                        sx={{ border: '1px solid #03C04A', height: 50, ml: 2 }}
+                                                        labelId={`select-label-${index}`}
+                                                        label="Select Category"
+                                                        value={ingredient.classification}
+                                                        onChange={(e) => handleIngredientChange(index, 'classification', e.target.value)}
+                                                    >
+                                                        <MenuItem value="" disabled>Select Category</MenuItem>
+                                                        <MenuItem value="Main Ingredient">Main Ingredient</MenuItem>
+                                                        <MenuItem value="Base Ingredient">Base Ingredient</MenuItem>
+                                                        <MenuItem value='Secondary Ingredient'>Secondary Ingredient</MenuItem>
+                                                        <MenuItem value='Seasonings'>Seasonings</MenuItem>
+                                                        <MenuItem value='Accompaniments'>Accompaniments</MenuItem>
+                                                        <MenuItem value='Binding Agents'>Binding Agents</MenuItem>
+                                                        <MenuItem value='Aromatics'>Aromatics</MenuItem>
+                                                        <MenuItem value='Fats'>Fats</MenuItem>
+                                                    </Select>
+                                                </FormControl>
                                                 {index > 0 && (
-                                                    <button className="remove_ingred" onClick={() => handleRemoveIngredient(index)}>
+                                                    <button type="button" className="remove_ingred" onClick={() => handleRemoveIngredient(index)}>
                                                         <FaMinusCircle />
                                                     </button>
                                                 )}
                                                 {index === ingredientsList.length - 1 && (
-                                                    <button className="add_ingred" onClick={handleAddIngredient}>
+                                                    <button
+                                                        type="button"
+                                                        className="add_ingred"
+                                                        onClick={handleAddIngredient}
+                                                    >
                                                         <FaPlusCircle />
                                                     </button>
                                                 )}
@@ -316,8 +378,41 @@ export const AddEditDishModal = ({ open, handleClose, editMode, dishToEdit, fetc
                                         ))}
                                     </div>
                                 </Box>
-                                <Button type="submit">{editMode ? 'Update' : 'Add'}</Button>
-                                <Button onClick={handleCancel}>Cancel</Button>
+                                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                    <Button
+                                        sx={{
+                                            mr: 2,
+                                            width: 100,
+                                            bgcolor: palette.primary.main,
+                                            border: `1px solid #03A140`,
+                                            '&:hover': {
+                                                color: palette.primary.main,
+                                                bgcolor: 'white',
+                                                border: `1px solid ${palette.primary.main}`,
+                                            },
+                                        }}
+                                        variant="contained"
+                                        type="submit"
+                                    >
+                                        {editMode ? 'Update' : 'Add'}
+                                    </Button>
+                                    <Button
+                                        sx={{
+                                            width: 100,
+                                            bgcolor: palette.error.main,
+                                            border: `1px solid red`,
+                                            '&:hover': {
+                                                color: 'red',
+                                                bgcolor: 'white',
+                                                border: `1px solid red`,
+                                            },
+                                        }}
+                                        variant="contained"
+                                        onClick={handleCancel}
+                                    >
+                                        Cancel
+                                    </Button>
+                                </Box>
                             </form>
                         </Box>
                     </Box>
