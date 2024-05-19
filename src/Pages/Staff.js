@@ -12,7 +12,7 @@ import AddStaffModal from '../components/atoms/AddStaffModal';
 export const Staff = (props) => {
   const [staffData, setStaffData] = useState([]);
   const [adminId, setAdminId] = useState('');
-  const [isAddStaffModalOpen, setIsAddStaffModalOpen] = useState(false);
+  const [isAddStaffModalOpen, setIsAddStaffModalOpen] = useState(false); // State to control the modal
 
   useEffect(() => {
     const auth = getAuth();
@@ -101,6 +101,7 @@ export const Staff = (props) => {
           <h1>{staffData.length}</h1>
         </div>
         <div>
+          {/* Open the modal by setting isAddStaffModalOpen to true */}
           <button className="bttn-addstaff" onClick={() => setIsAddStaffModalOpen(true)}>
             <FaPlusCircle />
           </button>
@@ -180,8 +181,9 @@ export const Staff = (props) => {
           </table>
         </div>
       </div>
+      {/* Pass the state variable and a handler to toggle it as props */}
       <AddStaffModal
-        isOpen={isAddStaffModalOpen}
+        open={isAddStaffModalOpen}
         onClose={() => setIsAddStaffModalOpen(false)}
       />
     </>

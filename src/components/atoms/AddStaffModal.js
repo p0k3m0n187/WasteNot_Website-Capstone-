@@ -25,8 +25,7 @@ const style = {
     maxHeight: '90vh',
 };
 
-const AddStaffModal = ({ isOpen }) => {
-    const [open, setOpen] = useState(false);
+const AddStaffModal = ({ open, onClose }) => {
     const [adminId, setAdminId] = useState('');
     const [isIdNumberUnique, setIsIdNumberUnique] = useState(true);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -35,7 +34,6 @@ const AddStaffModal = ({ isOpen }) => {
     const auth = getAuth();
 
     const handleClose = () => {
-        setOpen(false);
         setFormData({
             idNumber: '',
             firstName: '',
@@ -56,6 +54,8 @@ const AddStaffModal = ({ isOpen }) => {
             password: '',
             confirmPassword: ''
         });
+
+        onClose();
     };
 
     const [formData, setFormData] = useState({
@@ -79,12 +79,6 @@ const AddStaffModal = ({ isOpen }) => {
         password: '',
         confirmPassword: ''
     });
-
-
-    useEffect(() => {
-        setOpen(isOpen);
-    }, [isOpen]);
-
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -199,7 +193,7 @@ const AddStaffModal = ({ isOpen }) => {
         } catch (error) {
             console.error("Error adding user: ", error.message);
             setSnackbarMessage('Existing E-mail. Please use another E-mail!');
-            setSnackbarOpen(true); // Open Snackbar only on error
+            setSnackbarOpen(true);
         }
     };
 
