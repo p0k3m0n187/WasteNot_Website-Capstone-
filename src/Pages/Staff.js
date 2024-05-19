@@ -2,21 +2,17 @@ import React, { useEffect, useState } from 'react';
 import './Design/staffdesign.css';
 import staff from '../images/Staff_sample.png';
 import { FaPlusCircle, FaSearch, FaTrash, FaUser } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
 import { collection, getDocs, where, query } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { getAuth, onAuthStateChanged, deleteUser } from 'firebase/auth';
 import { deleteDoc, doc } from 'firebase/firestore';
 import MiniDrawer from '../components/Drawer';
-// import { Box, Typography } from '@mui/material';
-// import typography from './theme/typhography';
-// import palette from './theme/palette';
-// import BoxTotal from '../components/atoms/boxtotal';
-
+import AddStaffModal from '../components/atoms/AddStaffModal';
 
 export const Staff = (props) => {
   const [staffData, setStaffData] = useState([]);
   const [adminId, setAdminId] = useState('');
+  const [isAddStaffModalOpen, setIsAddStaffModalOpen] = useState(false);
 
   useEffect(() => {
     const auth = getAuth();
@@ -93,7 +89,6 @@ export const Staff = (props) => {
     }
   };
 
-
   return (
     <>
       <MiniDrawer />
@@ -106,11 +101,9 @@ export const Staff = (props) => {
           <h1>{staffData.length}</h1>
         </div>
         <div>
-          <Link to="/addstaff">
-            <button class="bttn-addstaff">
-              <FaPlusCircle />
-            </button>
-          </Link>
+          <button className="bttn-addstaff" onClick={() => setIsAddStaffModalOpen(true)}>
+            <FaPlusCircle />
+          </button>
         </div>
         <div className="search-bar">
           <input type="text" placeholder="Search..." />
@@ -163,16 +156,6 @@ export const Staff = (props) => {
                         disabled
                       />
 
-                      <label htmlFor="address">Address:</label>
-                      <input
-                        type="text"
-                        id="address"
-                        name="address"
-                        value={`${staffMember.strAddress}, ${staffMember.cityAddress} ${staffMember.zipCode}`}
-                        placeholder="Combined Address"
-                        disabled
-                      />
-
                       <label htmlFor="email">Email:</label>
                       <input
                         type="email"
@@ -197,6 +180,10 @@ export const Staff = (props) => {
           </table>
         </div>
       </div>
+      <AddStaffModal
+        isOpen={isAddStaffModalOpen}
+        onClose={() => setIsAddStaffModalOpen(false)}
+      />
     </>
   );
 };

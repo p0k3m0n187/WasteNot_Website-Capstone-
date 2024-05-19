@@ -188,7 +188,7 @@ export const AddStaff = () => {
             <MiniDrawer />
             <div className="addstaff-container">
                 <div className='scrollable-addstaff'>
-                    <div className='thead'>Information</div>
+                    <div className='thead'>Add Staff</div>
                     <form className='addstaff-info'>
                         <div className='form1'>
                             <div className="input-container">

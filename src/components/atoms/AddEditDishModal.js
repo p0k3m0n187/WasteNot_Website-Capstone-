@@ -422,6 +422,7 @@ export const AddEditDishModal = ({ open, handleClose, editMode, dishToEdit, fetc
                 open={snackbarOpen}
                 autoHideDuration={5000}
                 onClose={handleSnackbarClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }} // Position at the top center
             >
                 <Alert
                     onClose={handleSnackbarClose}
