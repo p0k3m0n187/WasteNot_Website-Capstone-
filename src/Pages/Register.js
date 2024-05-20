@@ -232,16 +232,15 @@ export const Register = () => {
         restaurantPermit: input.restaurantPermitNumber,
         zipCode: input.zipCode,
         province: input.province,
-        // longitude: input.longitude,
-        // latitude: input.latitude,
         role: 'admin',
+        approved: 'No',
       });
 
       console.log('User registered successfully:', userCredential.user.uid);
 
       window.alert('Registered successfully!');
 
-      history('/profile');
+      history('/login');
 
     } catch (error) {
       if (error.code === 'auth/email-already-in-use') {
@@ -473,7 +472,7 @@ export const Register = () => {
                     boxShadow: '-2px 4px 4px 3px rgba(0, 0, 0, 0.4)'
                   }}>Cancel</Button></Link>
 
-                <Link to="/profile"><Button
+                <Button
                   onClick={registerUser}
                   type="submit"
                   variant='contained'
@@ -487,7 +486,7 @@ export const Register = () => {
                     fontWeight: 'bold',
                     boxShadow: '-2px 4px 4px 3px rgba(0, 0, 0, 0.4)'
                   }}
-                >Register</Button></Link>
+                >Register</Button>
               </Box>
             </Box>
           </Box>
