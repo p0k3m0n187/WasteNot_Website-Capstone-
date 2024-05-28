@@ -11,52 +11,46 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import logo from '../images/logo.png';
 import './Design/logindesign.css';
 
-export const Login = (props) => {
+export const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [Email, setEmail] = useState('');
   const [Password, setPassword] = useState('');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessageError, setSnackbarMessageError] = useState('');
-  const history = useNavigate(); // Initialize useHistory
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
-
 
   const signIn = async (e) => {
     e.preventDefault();
     try {
       const userCredential = await signInWithEmailAndPassword(auth, Email, Password);
 
-
       // Fetch user profile from Firestore
       const userDoc = await getDoc(doc(db, 'admin_users', userCredential.user.uid));
       if (userDoc.exists()) {
         const userData = userDoc.data();
-        if (userData.approved === 'Yes') {
+        if (userData.role === 'admin' && userData.approved === 'Yes') {
           // Redirect to the homepage after successful login
-          history('/homepage');
+          navigate('/homepage');
           console.log('Logged in:', userCredential.user);
-        } else {
-          // window.alert('Waiting for Approval.');
-          setSnackbarMessageError('Waiting for Approval.');
+        } else if (userData.role !== 'admin') {
+          setSnackbarMessageError('Access denied: Admins only.');
           setSnackbarOpen(true);
-          console.log('User Info:', userCredential.user);
+        } else {
+          setSnackbarMessageError('Waiting for approval.');
+          setSnackbarOpen(true);
         }
       } else {
-        // Show an alert message when the user profile does not exist
-        // window.alert('User profile not found.');
         setSnackbarMessageError('User profile not found.');
         setSnackbarOpen(true);
       }
     } catch (error) {
       console.log('Error logging in:', error.message);
-
-      // Show an alert message when login fails
-      // window.alert('Invalid email or password. Please try again.');
       setSnackbarMessageError('Invalid email or password. Please try again.');
-        setSnackbarOpen(true);
+      setSnackbarOpen(true);
     }
   };
 
@@ -100,7 +94,7 @@ export const Login = (props) => {
                 name="Password"
                 className="passwordInput"
               />
-              {Password && ( // Show the visibility toggle icons only if password is entered
+              {Password && (
                 <IconButton
                   onClick={togglePasswordVisibility}
                   edge="end"
@@ -113,13 +107,13 @@ export const Login = (props) => {
             </form>
             <Link to="/register"><button className="Register">Register</button></Link>
           </div>
-        </div >
-      </div >
+        </div>
+      </div>
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={5000}
         onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }} // Position at the top center
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert
           onClose={handleSnackbarClose}

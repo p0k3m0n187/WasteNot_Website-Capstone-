@@ -1,59 +1,44 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Login } from './Pages/Login.js';
-import { Register } from './Pages/Register.js';
-import { Profile } from './Pages/Profile.js';
-import { Homepage } from './Pages/HomePage.js';
-import { Staff } from './Pages/Staff.js';
-import { Menu } from './Pages/Menu.js';
-import { Inventory } from './Pages/Inventory.js';
-import { Market } from './Pages/Market.js';
-import { AddStaff } from './Pages/AddStaff.js';
-import { AddDish } from './Pages/AddDish.js';
-import { AboutUs } from './components/AboutUs.js';
-import { Homepage2 } from './Pages/HomePage2.js';
+import { Login } from './Pages/Login';
+import { Register } from './Pages/Register';
+import { Profile } from './Pages/Profile';
+import { Homepage } from './Pages/HomePage';
+import { Staff } from './Pages/Staff';
+import { Menu } from './Pages/Menu';
+import { Inventory } from './Pages/Inventory';
+import { Market } from './Pages/Market';
+import { AddStaff } from './Pages/AddStaff';
+import { AddDish } from './Pages/AddDish';
+import { AboutUs } from './components/AboutUs';
+import { Homepage2 } from './Pages/HomePage2';
+import { AuthProvider } from './components/Auth/AuthContext';
+import ProtectedRoute from './components/Auth/ProtectedRoute';
 
 const App = () => {
-  const storedForm = localStorage.getItem('currentForm');
-  const [currentForm, setCurrentForm] = useState(storedForm || 'Login');
-
-  const toggleForm = (formName) => {
-    setCurrentForm(formName);
-    localStorage.setItem('currentForm', formName);
-  }
-
-  useEffect(() => {
-    localStorage.setItem('currentForm', currentForm);
-  }, [currentForm]);
-
-  useEffect(() => {
-    if (!['Login', 'Register', 'Profile'].includes(storedForm)) {
-      localStorage.setItem('currentForm', 'Login');
-      setCurrentForm('Login');
-    }
-  }, [storedForm]);
-
   return (
-    <>
+    <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Login onFormSwitch={toggleForm} />} />
-          <Route path='/login' element={<Login onFormSwitch={toggleForm} />} />
-          <Route path='/register' element={<Register onFormSwitch={toggleForm} />} />
-          <Route path='/homepage' element={<Homepage onFormSwitch={toggleForm} />} />
-          <Route path='/staff' element={<Staff onFormSwitch={toggleForm} />} />
-          <Route path='/menu' element={<Menu onFormSwitch={toggleForm} />} />
-          <Route path='/market' element={<Market onFormSwitch={toggleForm} />} />
-          <Route path='/inventory' element={<Inventory onFormSwitch={toggleForm} />} />
-          <Route path='/profile' element={<Profile onFormSwitch={toggleForm} />} />
-          <Route path='/addstaff' element={<AddStaff onFormSwitch={toggleForm} />} />
-          <Route path='/addDish' element={<AddDish onFormSwitch={toggleForm} />} />
-          <Route path='/aboutus' element={<AboutUs onFormSwitch={toggleForm} />} />
-          <Route path='/homepage2' element={<Homepage2 onFormSwitch={toggleForm} />} />
+          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/homepage" element={<Homepage />} />
+            <Route path="/staff" element={<Staff />} />
+            <Route path="/menu" element={<Menu />} />
+            <Route path="/market" element={<Market />} />
+            <Route path="/inventory" element={<Inventory />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/addstaff" element={<AddStaff />} />
+            <Route path="/addDish" element={<AddDish />} />
+            <Route path="/aboutus" element={<AboutUs />} />
+            <Route path="/homepage2" element={<Homepage2 />} />
+          </Route>
         </Routes>
       </BrowserRouter>
-    </>
-  )
-}
+    </AuthProvider>
+  );
+};
 
 export default App;
