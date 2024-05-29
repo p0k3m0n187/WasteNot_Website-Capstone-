@@ -34,7 +34,7 @@ export const AddEditDishModal = ({ open, handleClose, editMode, dishToEdit, fetc
     const [dishName, setDishName] = useState('');
     const [dishDescription, setDishDescription] = useState('');
     const [dishCategory, setDishCategory] = useState('');
-    const [ingredientsList, setIngredientsList] = useState([{ ingredients: '', grams: '', classification: '' }]);
+    const [ingredientsList, setIngredientsList] = useState([{ ingredients: '', grams: '' }]);
     const [selectedImage, setSelectedImage] = useState(null);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessageError, setSnackbarMessageError] = useState('');
@@ -64,24 +64,23 @@ export const AddEditDishModal = ({ open, handleClose, editMode, dishToEdit, fetc
             setIngredientsList(dishToEdit.ingredientsList.map(ingredient => ({
                 ingredients: ingredient.ingredients || '',
                 grams: ingredient.grams || '',
-                classification: ingredient.classification || ''
             })));
             setSelectedImage(dishToEdit.imageUrl || null);
         } else {
             setDishName('');
             setDishDescription('');
             setDishCategory('');
-            setIngredientsList([{ ingredients: '', grams: '', classification: '' }]);
+            setIngredientsList([{ ingredients: '', grams: '' }]);
             setSelectedImage(null);
         }
     }, [editMode, dishToEdit]);
 
     const handleAddIngredient = () => {
         const hasEmptyFields = ingredientsList.some(
-            (ingredient) => !ingredient.ingredients?.trim() || !ingredient.grams?.trim() || !ingredient.classification?.trim()
+            (ingredient) => !ingredient.ingredients?.trim() || !ingredient.grams?.trim()
         );
         if (!hasEmptyFields) {
-            setIngredientsList([...ingredientsList, { ingredients: '', grams: '', classification: '' }]);
+            setIngredientsList([...ingredientsList, { ingredients: '', grams: '', }]);
         } else {
             setSnackbarMessageError('Please fill in all Ingredients, Grams, and Classification fields before adding another line.');
             setSnackbarOpen(true);
@@ -128,7 +127,7 @@ export const AddEditDishModal = ({ open, handleClose, editMode, dishToEdit, fetc
             return false;
         }
         const hasEmptyFields = ingredientsList.some(
-            (ingredient) => !ingredient.ingredients?.trim() || !ingredient.grams?.trim() || !ingredient.classification?.trim()
+            (ingredient) => !ingredient.ingredients?.trim() || !ingredient.grams?.trim()
         );
         if (hasEmptyFields) {
             setSnackbarMessageError('Please fill in all Ingredients, Grams, and Classification fields.');
@@ -183,7 +182,7 @@ export const AddEditDishModal = ({ open, handleClose, editMode, dishToEdit, fetc
         setDishName('');
         setDishDescription('');
         setDishCategory('');
-        setIngredientsList([{ ingredients: '', grams: '', classification: '' }]);
+        setIngredientsList([{ ingredients: '', grams: '' }]);
         setSelectedImage(null);
     };
 
@@ -334,32 +333,12 @@ export const AddEditDishModal = ({ open, handleClose, editMode, dishToEdit, fetc
                                                     onChange={(e) => handleIngredientChange(index, 'ingredients', e.target.value)}
                                                 />
                                                 <input
-                                                    style={{ mb: 2, border: '1px solid #03C04A', width: 200 }}
+                                                    style={{ mb: 2, border: '1px solid #03C04A', width: 200, }}
                                                     type="number"
                                                     placeholder="Grams"
                                                     value={ingredient.grams}
                                                     onChange={(e) => handleIngredientChange(index, 'grams', e.target.value)}
                                                 />
-                                                <FormControl
-                                                    style={{ mb: 2, width: 200 }}>
-                                                    <Select
-                                                        sx={{ border: '1px solid #03C04A', height: 50, ml: 2 }}
-                                                        labelId={`select-label-${index}`}
-                                                        label="Select Category"
-                                                        value={ingredient.classification}
-                                                        onChange={(e) => handleIngredientChange(index, 'classification', e.target.value)}
-                                                    >
-                                                        <MenuItem value="" disabled>Select Category</MenuItem>
-                                                        <MenuItem value="Main Ingredient">Main Ingredient</MenuItem>
-                                                        <MenuItem value="Base Ingredient">Base Ingredient</MenuItem>
-                                                        <MenuItem value='Secondary Ingredient'>Secondary Ingredient</MenuItem>
-                                                        <MenuItem value='Seasonings'>Seasonings</MenuItem>
-                                                        <MenuItem value='Accompaniments'>Accompaniments</MenuItem>
-                                                        <MenuItem value='Binding Agents'>Binding Agents</MenuItem>
-                                                        <MenuItem value='Aromatics'>Aromatics</MenuItem>
-                                                        <MenuItem value='Fats'>Fats</MenuItem>
-                                                    </Select>
-                                                </FormControl>
                                                 {index > 0 && (
                                                     <button type="button" className="remove_ingred" onClick={() => handleRemoveIngredient(index)}>
                                                         <FaMinusCircle />
