@@ -11,18 +11,22 @@ import {
   where,
   getDocs,
 } from 'firebase/firestore';
-import { Box, Grid, Button, Typography } from '@mui/material';
+import { Box, Grid, Button, Typography, Paper } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import './Design/registerdesign.css';
 import { IconButton } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import CheckIcon from '@mui/icons-material/Check';
+import ClearIcon from '@mui/icons-material/Clear';
 import typography from './theme/typhography.js';
 import palette from './theme/palette.js';
+import ConfirmButton from '../components/atoms/confirmButton.js';
 
 export const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState(null);
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -234,6 +238,7 @@ export const Register = () => {
         province: input.province,
         role: 'admin',
         approved: 'No',
+        package: selectedPackage, // Add selectedPackage to the data sent to Firebase
       });
 
       console.log('User registered successfully:', userCredential.user.uid);
@@ -261,10 +266,7 @@ export const Register = () => {
             fontSize: typography.h1.fontSize,
             fontWeight: typography.h1.fontWeight,
             fontFamily: typography.h1.fontFamily,
-            // color: palette.plain.main,
-            // WebkitTextStroke: '1.5px #12841D',
             color: palette.primary.main,
-            // textShadow: '2px 8px 5px rgba(106, 217, 117, 0.52)',
             textTransform: 'uppercase',
           }}>
             Registration
@@ -392,28 +394,6 @@ export const Register = () => {
                     helperText={error.contactNumber}
                   />
                 </Grid>
-                {/* <Grid item xs={12} sm={6}>
-                  <StyledTextField
-                    label="Longitude"
-                    color="success"
-                    type="number"
-                    onChange={(e) => onInputChange('longitude', e.target.value)}
-                    onBlur={validateInput}
-                    error={!!error.longitude}
-                    helperText={error.longitude}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <StyledTextField
-                    label="Latitude"
-                    color="success"
-                    type="number"
-                    onChange={(e) => onInputChange('latitude', e.target.value)}
-                    onBlur={validateInput}
-                    error={!!error.latitude}
-                    helperText={error.latitude}
-                  />
-                </Grid> */}
                 <Grid item xs={12} sm={6}>
                   <StyledTextField
                     label="Password"
@@ -458,6 +438,166 @@ export const Register = () => {
                   />
                 </Grid>
               </Grid>
+              <Box sx={{ width: '100%', height: 500, mb: 2, p: 2, }}>
+                <Box sx={{ display: 'flex', justifyContent: 'center', }}>
+                  <Typography sx={{
+                    fontSize: typography.h5.fontSize,
+                    fontWeight: typography.h1.fontWeight,
+                    fontFamily: typography.h1.fontFamily,
+                    mb: 3
+                  }}>Subscription</Typography>
+                </Box>
+
+                <Box sx={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+                  <Box
+                    sx={{
+                      width: 250,
+                      height: 400,
+                      p: 2,
+                      bgcolor: selectedPackage === 'Starter Pack' ? '#C3E8FF' : 'white',
+                      boxShadow: '0px 0px 10px 0px rgba(0,0,0.01)',
+                    }}
+                  >
+                    <Paper
+                      sx={{
+                        position: 'absolute',
+                        bgcolor: palette.info.main,
+                        height: 320,
+                        width: 300,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        zIndex: -1,
+                        mt: 2.5,
+                        ml: -5
+                      }}
+                      variant="outlined"
+                      elevation={24} />
+                    <Box gutterBottom>
+                      <Typography sx={{
+                        fontSize: typography.h1.fontSize,
+                        fontWeight: typography.h1.fontWeight,
+                        fontFamily: typography.h1.fontFamily,
+                        color: palette.info.main,
+                        textTransform: 'uppercase',
+                      }}>
+                        Starter
+                      </Typography>
+                      <Typography gutterBottom>Package</Typography>
+                      <Box sx={{
+                        borderBottom: '1px solid grey',
+                        ml: 5,
+                        mr: 5,
+                        mb: 2,
+                      }} />
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                        <CheckIcon sx={{ fontSize: 40, color: 'green' }} />
+                        <Typography variant='h7'>Full Access</Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                        <ClearIcon sx={{ fontSize: 40, color: 'red' }} />
+                        <Typography variant='h7'>Documentation</Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 4 }}>
+                        <ClearIcon sx={{ fontSize: 40, color: 'red' }} />
+                        <Typography variant='h7'>Free Updates</Typography>
+                      </Box>
+                    </Box>
+                    <Box sx={{
+                      borderBottom: '1px solid grey',
+                      ml: 5,
+                      mr: 5,
+                      mb: 2,
+                    }} />
+                    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                      <Button
+                        variant="contained"
+                        onClick={() => setSelectedPackage('Starter Pack')}
+                        sx={{
+                          bgcolor: palette.info.main,
+                          border: `1px solid #023B5E`,
+                          '&:hover': {
+                            color: palette.info.main,
+                            bgcolor: 'white',
+                            border: `1px solid ${palette.info.main}`,
+                          },
+                        }}
+                      >
+                        {selectedPackage === 'Starter Pack' ? 'Selected' : 'Select'}
+                      </Button>
+                    </Box>
+                  </Box>
+                  <Box>
+                    <Box
+                      sx={{
+                        width: 250,
+                        height: 400,
+                        p: 2,
+                        bgcolor: selectedPackage === 'Premium Pack' ? '#CAFFD9' : 'white',
+                        boxShadow: '0px 0px 10px 0px rgba(0,0,0.01)',
+                      }}
+                    >
+                      <Paper
+                        sx={{
+                          position: 'absolute',
+                          bgcolor: palette.primary.main,
+                          height: 320,
+                          width: 300,
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          zIndex: -1,
+                          mt: 2.5,
+                          ml: -5
+                        }}
+                        variant="outlined"
+                        elevation={24} />
+                      <Box gutterBottom>
+                        <Typography sx={{
+                          fontSize: typography.h1.fontSize,
+                          fontWeight: typography.h1.fontWeight,
+                          fontFamily: typography.h1.fontFamily,
+                          color: palette.primary.main,
+                          textTransform: 'uppercase',
+                        }}>
+                          Premium
+                        </Typography>
+                        <Typography gutterBottom>Package</Typography>
+                        <Box sx={{
+                          borderBottom: '1px solid grey',
+                          ml: 5,
+                          mr: 5,
+                          mb: 2,
+                        }} />
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                          <CheckIcon sx={{ fontSize: 40, color: 'green' }} />
+                          <Typography variant='h7'>Full Access</Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                          <CheckIcon sx={{ fontSize: 40, color: 'green' }} />
+                          <Typography variant='h7'>Documentation</Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 4 }}>
+                          <CheckIcon sx={{ fontSize: 40, color: 'green' }} />
+                          <Typography variant='h7'>Free Updates</Typography>
+                        </Box>
+                      </Box>
+                      <Box sx={{
+                        borderBottom: '1px solid grey',
+                        ml: 5,
+                        mr: 5,
+                        mb: 2,
+                      }} />
+                      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <ConfirmButton
+                          label={selectedPackage === 'Premium Pack' ? 'Selected' : 'Select'}
+                          onClick={() => setSelectedPackage('Premium Pack')}
+                        />
+                      </Box>
+                    </Box>
+                  </Box>
+                </Box>
+              </Box>
               <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
                 <Link to="/login"><Button
                   variant='contained'

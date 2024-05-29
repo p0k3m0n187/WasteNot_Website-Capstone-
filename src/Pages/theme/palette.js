@@ -28,7 +28,7 @@ const palette = {
         contrastText: '#fff',
     },
     info: {
-        main: '#9DD1F1',
+        main: '#0D6DA8',
         contrastText: '#fff',
     },
     transparent: {
