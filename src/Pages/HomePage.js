@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import SalesChart from '../components/Sample/SalesChart';
 import { SampleData } from '../components/Sample/SampleData';
-// import { InventorySampleData } from '../components/Sample/InventorySampleData';
 import './Design/homedesign.css';
 import {
     FaUsers,
@@ -11,8 +10,8 @@ import {
     FaChartPie
 } from 'react-icons/fa';
 import { Link } from "react-router-dom";
-import image from "../images/Ingredients.png";
-import ingredient from "../images/Ingredients.png";
+import defaultImage from '../images/Ingredients.png';
+// import ingredient from "../images/Ingredients.png";
 import staff from "../images/Staff_sample.png";
 import market from "../images/Market.png";
 import { collection, getDocs, where, query } from 'firebase/firestore';
@@ -33,18 +32,13 @@ export const Homepage = () => {
     const [showPopup, setShowPopup] = useState(false);
     const [showPopup5, setShowPopup5] = useState(false);
     const [showBackdrop, setShowBackdrop] = useState(false);
-    const [selectedYear, setSelectedYear] = useState(); // Default to the current year
-    // const [open, setOpen] = useState(false);
-
-    // const handleOpenModal = () => {
-    //     setOpen(true);
-    // };
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Default to the current year
+    const [latestNotifications, setLatestNotifications] = useState([]);
 
     const handlePopupToggle5 = () => {
         setShowPopup5(!showPopup5);
         setShowBackdrop(!showPopup5); // Show backdrop when popup is opened
     };
-
 
     const [chartData] = useState({
         labels: SampleData.map((data) => data.month),
@@ -59,19 +53,6 @@ export const Homepage = () => {
         ]
     });
 
-    // const [pieData] = useState({
-    //     labels: ["Consumed", "Remaining"],
-    //     datasets: [
-    //         {
-    //             label: "Consumed Ingredients",
-    //             data: [InventorySampleData[0].marketConsumed, InventorySampleData[0].marketRemaining],
-    //             backgroundColor: ["#57B961", "Red"],
-    //             borderWidth: 5,
-    //             borderColor: 'White',
-    //         }
-    //     ]
-    // });
-
     const handlePopupToggle = () => {
         setShowPopup(!showPopup);
         setShowBackdrop(!showPopup); // Show backdrop when popup is opened
@@ -79,8 +60,6 @@ export const Homepage = () => {
 
     const auth = getAuth();
     const user = auth.currentUser;
-
-
 
     useEffect(() => {
         const fetchMenuData = async () => {
@@ -166,8 +145,6 @@ export const Homepage = () => {
                     id: doc.id,
                     ...doc.data(),
                 }));
-                // Initialize selectedYear inside this useEffect
-                setSelectedYear(new Date().getFullYear()); // Set default to the current year
 
                 setStaffData(staffData);
             } catch (error) {
@@ -177,6 +154,7 @@ export const Homepage = () => {
 
         fetchData();
     }, [adminId]);
+
     useEffect(() => {
         const fetchSalesData = async () => {
             try {
@@ -204,6 +182,29 @@ export const Homepage = () => {
 
         fetchSalesData();
     }, [adminId, user?.uid]);
+
+    // Fetch latest notifications
+    useEffect(() => {
+        const latestDishes = menuItems.slice(-3).map(item => ({
+            message: `New dish "${item.dishName}" has been added!`,
+            imageUrl: item.imageUrl || defaultImage
+        }));
+
+        const latestStaff = staffData.slice(-3).map(member => ({
+            message: `New staff member "${member.firstName}" has joined!`,
+            imageUrl: member.imageUrl || defaultImage
+        }));
+
+        const latestInventory = inventoryData.slice(-3).map(item => ({
+            message: `New ingredient "${item.Item_name}" has been added to inventory!`,
+            imageUrl: item.imageUrl || defaultImage
+        }));
+
+        const latestNotifications = [...latestDishes, ...latestStaff, ...latestInventory].reverse();
+
+        setLatestNotifications(latestNotifications);
+    }, [menuItems, staffData, inventoryData]);
+
 
 
     return (
@@ -283,7 +284,6 @@ export const Homepage = () => {
                                             </Box>
                                         </Button>
                                     </Box>
-                                    {/* <span className="close-popup" onClick={handlePopupToggle}>&times;</span> */}
                                 </Box>
                                 <div className='sales-chart'>
                                     <div style={{
@@ -295,7 +295,6 @@ export const Homepage = () => {
                             </div>
                         </div>
                     )}
-
 
                     <button className="icon-button5" onClick={handlePopupToggle5}>
                         <div className="title4">
@@ -317,17 +316,16 @@ export const Homepage = () => {
             <div className="notify">
                 <h1>Notifications</h1>
                 <div className="notify-container">
-                    <div className="notify1"><img className='sample' src={image} alt="staff1" /><h3>New Dish has been Added!</h3></div>
-                    <div className="notify1"><img className='sample' src={ingredient} alt="staff1" /><h3>Beef has been Added to Market!</h3></div>
-                    <div className="notify1"><img className='sample' src={market} alt="staff1" /><h3>New Ingredient has been Added to Inventory!</h3></div>
-                    <div className="notify1"><img className='sample' src={image} alt="staff1" /><h3>New Dish has been Added!</h3></div>
-                    <div className="notify1"><img className='sample' src={ingredient} alt="staff1" /><h3>Beef has been Added to Market!</h3></div>
-                    <div className="notify1"><img className='sample' src={market} alt="staff1" /><h3>New Ingredient has been Added to Inventory!</h3></div>
+                    {latestNotifications.map((notification, index) => (
+                        <div key={index} className="notify1">
+                            <img className='sample' src={notification.imageUrl} alt={`notification${index + 1}`} />
+                            <h3>{notification.message}</h3>
+                        </div>
+                    ))}
                 </div>
             </div>
 
             <div className="scrollable-container">
-                {/* Menu section */}
                 <h1>Menu</h1>
                 <Link to="/menu">
                     <button className="click">See All</button>
@@ -335,10 +333,8 @@ export const Homepage = () => {
                 <div className="menu-cont">
                     {menuItems.slice(0, 5).map((item, index) => (
                         <div key={index} className="item">
-                            {/* Use the imageUrl to construct the image URL */}
                             <img className="sample" src={item.imageUrl} alt={`menuItems${index + 1}`} />
                             <h3>{item.dishName}</h3>
-                            {/* <h4>₱{item.price}</h4> */}
                         </div>
                     ))}
                 </div>
@@ -350,54 +346,34 @@ export const Homepage = () => {
                 <div className='staff-cont'>
                     {staffData.slice(0, 5).map((member, index) => (
                         <div key={index} className="item">
-                            {/* Use your sample staff image */}
                             <img className="sample" src={staff} alt={`staff${index + 1}`} />
                             <h3>{`${member.firstName}`}</h3>
                         </div>
                     ))}
                 </div>
                 <br />
-
-                {/* {inventoryData.length > 0 ? (
-                    <> */}
                 <h1>Inventory</h1>
                 <Link to="/inventory"><button className='click'>See All</button></Link>
                 <div className='invent-cont'>
                     {inventoryData.slice(0, 5).map((item, index) => (
                         <div key={index} className="item">
-                            {/* Use the imageUrl to construct the image URL */}
                             <img className="sample" src={item.image} alt={`inventory${index + 1}`} />
                             <h3>{item.Item_name}</h3>
                         </div>
                     ))}
                 </div>
                 <br />
-                {/* </>
-                ) : (
-                    // Render a message or component when there is no data
-                    <p></p>
-                )} */}
-
-                {/* {salesData.length > 0 ? (
-                    <> */}
                 <h1>Market</h1>
                 <Link to="/market"><button className='click'>See All</button></Link>
                 <div className='market-cont'>
                     {salesData.slice(0, 5).map((item, index) => (
                         <div key={index} className="item">
-                            {/* Use the imageUrl to construct the image URL */}
                             <img className="sample" src={market} alt={`sale_items${index + 1}`} />
                             <h3>{item.Item_name}</h3>
                         </div>
                     ))}
                 </div>
                 <br />
-                {/* </>
-                ) : (
-                    // Render a message or component when there is no data
-                    <p></p>
-                )} */}
-
             </div>
         </>
     );
