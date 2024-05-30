@@ -352,7 +352,7 @@ export const Homepage = () => {
                         <div key={index} className="item">
                             {/* Use your sample staff image */}
                             <img className="sample" src={staff} alt={`staff${index + 1}`} />
-                            <h3>{`${member.firstName} ${member.lastName}`}</h3>
+                            <h3>{`${member.firstName}`}</h3>
                         </div>
                     ))}
                 </div>
@@ -366,7 +366,7 @@ export const Homepage = () => {
                     {inventoryData.slice(0, 5).map((item, index) => (
                         <div key={index} className="item">
                             {/* Use the imageUrl to construct the image URL */}
-                            <img className="sample" src={ingredient} alt={`inventory${index + 1}`} />
+                            <img className="sample" src={item.image} alt={`inventory${index + 1}`} />
                             <h3>{item.Item_name}</h3>
                         </div>
                     ))}

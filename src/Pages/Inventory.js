@@ -5,7 +5,7 @@ import { collection, getDocs, query, where } from 'firebase/firestore';
 import { FaWarehouse } from 'react-icons/fa';
 import { getAuth } from 'firebase/auth';
 import MiniDrawer from "../components/Drawer";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import typography from "./theme/typhography";
 import palette from "./theme/palette";
 import BoxTotal from "../components/atoms/boxtotal";
@@ -71,26 +71,26 @@ export const Inventory = () => {
         fetchInventoryHistory();
     }, [selectedItem]);
 
-    const openPopup = async (item) => {
-        setSelectedItem(item);
-        setModalOpen(true); // open modal
+    // const openPopup = async (item) => {
+    //     setSelectedItem(item);
+    //     setModalOpen(true); // open modal
 
-        try {
-            const historyQuery = query(
-                collection(db, 'ingredients_history'),
-                where('ItemId', '==', item.id)
-            );
-            const historySnapshot = await getDocs(historyQuery);
-            const historyList = historySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            console.log('Item History List:', historyList);
+    //     try {
+    //         const historyQuery = query(
+    //             collection(db, 'ingredients_history'),
+    //             where('ItemId', '==', item.id)
+    //         );
+    //         const historySnapshot = await getDocs(historyQuery);
+    //         const historyList = historySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    //         console.log('Item History List:', historyList);
 
-            if (historyList.length > 0) {
-                setSelectedHistoryItem(historyList[0]); // Select the first history item
-            }
-        } catch (error) {
-            console.error('Error fetching item history: ', error);
-        }
-    };
+    //         if (historyList.length > 0) {
+    //             setSelectedHistoryItem(historyList[0]); // Select the first history item
+    //         }
+    //     } catch (error) {
+    //         console.error('Error fetching item history: ', error);
+    //     }
+    // };
 
     const closePopup = () => {
         setSelectedItem(null);
@@ -185,7 +185,7 @@ export const Inventory = () => {
                                             <TableCell>Date Added</TableCell>
                                             <TableCell>Expiration Date</TableCell>
                                             <TableCell>Quantity</TableCell>
-                                            <TableCell>Action</TableCell>
+                                            {/* <TableCell>Action</TableCell> */}
                                         </TableRow>
                                     </TableHead>
                                     <TableBody sx={{ backgroundColor: 'white' }}>
@@ -194,7 +194,7 @@ export const Inventory = () => {
                                                 <TableCell>{historyItem.Date_added}</TableCell>
                                                 <TableCell>{historyItem.Expiry_date}</TableCell>
                                                 <TableCell>{historyItem.item_quantity}</TableCell> {/* Display item_quantity */}
-                                                <TableCell>
+                                                {/*<TableCell>
                                                     <Button
                                                         variant='contained'
                                                         color='success'
@@ -216,7 +216,7 @@ export const Inventory = () => {
                                                     >
                                                         AddToMarket
                                                     </Button>
-                                                </TableCell>
+                                                </TableCell> */}
                                             </TableRow>
                                         ))}
                                     </TableBody>
